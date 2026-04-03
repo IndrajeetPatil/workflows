@@ -2,7 +2,7 @@
 
 Reusable [GitHub Actions workflows](https://docs.github.com/en/actions/sharing-automations/reusing-workflows) for [IndrajeetPatil](https://github.com/IndrajeetPatil) repositories.
 
-All external actions are **pinned to commit SHAs** to prevent supply chain attacks.
+All external actions are **pinned to commit SHAs** to prevent supply chain attacks. R package workflows are **check-only** — they validate code but never modify or auto-commit changes.
 
 ## Usage
 
@@ -16,8 +16,8 @@ on:
     branches: [main, master]
 
 jobs:
-  check-spelling:
-    uses: IndrajeetPatil/workflows/.github/workflows/check-spelling.yaml@main
+  style:
+    uses: IndrajeetPatil/workflows/.github/workflows/style.yaml@main
 ```
 
 For workflows with inputs:
@@ -45,20 +45,12 @@ jobs:
 |----------|-------------|--------|
 | [`R-CMD-check.yaml`](.github/workflows/R-CMD-check.yaml) | R CMD check across multiple OS/R versions | `error-on`, `extra-packages` |
 | [`R-CMD-check-hard.yaml`](.github/workflows/R-CMD-check-hard.yaml) | R CMD check with hard (Imports) dependencies only | `extra-packages` |
-| [`check-no-warnings.yaml`](.github/workflows/check-no-warnings.yaml) | Run examples, tests, vignettes with warnings as errors | — |
-| [`check-random-test-order.yaml`](.github/workflows/check-random-test-order.yaml) | Validate tests are self-contained by randomizing execution order | — |
-| [`check-readme.yaml`](.github/workflows/check-readme.yaml) | Render and validate README.Rmd | `extra-packages`, `http-user-agent` |
-| [`check-spelling.yaml`](.github/workflows/check-spelling.yaml) | Spelling validation with `{spelling}` package | — |
-| [`check-styling.yaml`](.github/workflows/check-styling.yaml) | Code formatting check with [Air](https://posit-dev.github.io/air/) | — |
-| [`html-5-check.yaml`](.github/workflows/html-5-check.yaml) | HTML5 validation of R documentation pages | — |
-| [`lint.yaml`](.github/workflows/lint.yaml) | Full package linting with `{lintr}` | — |
-| [`lint-changed-files.yaml`](.github/workflows/lint-changed-files.yaml) | Lint only files changed in a PR | — |
-| [`pkgdown.yaml`](.github/workflows/pkgdown.yaml) | Build & deploy pkgdown documentation site | — |
-| [`pkgdown-no-suggests.yaml`](.github/workflows/pkgdown-no-suggests.yaml) | Build pkgdown site without Suggests dependencies | `pkgdown-source` |
-| [`pre-commit.yaml`](.github/workflows/pre-commit.yaml) | Run pre-commit hooks and auto-commit fixes | — |
-| [`styler.yaml`](.github/workflows/styler.yaml) | Auto-format R code with `{styler}` and auto-commit | — |
-| [`test-coverage.yaml`](.github/workflows/test-coverage.yaml) | Code coverage via unit tests with `{covr}` | `runner-os` |
-| [`test-coverage-examples.yaml`](.github/workflows/test-coverage-examples.yaml) | Code coverage via examples and vignettes | `threshold` |
+| [`check-extra.yaml`](.github/workflows/check-extra.yaml) | Six parallel extra checks: no-warnings, random test order, spelling, link rot, HTML5, README render | `extra-packages`, `http-user-agent` |
+| [`lint.yaml`](.github/workflows/lint.yaml) | Full package lint (always) + changed-files lint (PR only), both with `{lintr}` | — |
+| [`pkgdown.yaml`](.github/workflows/pkgdown.yaml) | Build & deploy pkgdown site; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests`, `pkgdown-source` |
+| [`pre-commit.yaml`](.github/workflows/pre-commit.yaml) | Run pre-commit hooks; fails if hooks would modify files | — |
+| [`style.yaml`](.github/workflows/style.yaml) | Check code style with `{styler}`; fails if any file needs reformatting | — |
+| [`test-coverage.yaml`](.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%) + examples/vignettes (configurable threshold) | `runner-os`, `threshold` |
 
 ## License
 

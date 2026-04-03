@@ -1,0 +1,204 @@
+# Each check below runs as a separate parallel job on its own runner (virtual machine).
+# This means R and dependencies are installed once per job — not shared between jobs.
+# That redundancy is intentional: parallel jobs give each check an independent status
+# badge and surface all failures at once, rather than stopping at the first failure as
+# sequential steps would. The trade-off (extra setup time per job) is worth it for the
+# faster, clearer feedback.
+on:
+  workflow_call:
+    inputs:
+      extra-packages:
+        type: string
+        default: ''
+        description: 'Additional packages for rendering README (e.g., any::ggthemes)'
+      http-user-agent:
+        type: string
+        default: ''
+        description: 'HTTP user agent for r-lib/actions/setup-r-dependencies'
+
+name: check-extra
+
+jobs:
+  check-no-warnings:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          extra-packages: |
+            any::devtools
+            local::.
+
+      - name: Run examples
+        run: |
+          options(crayon.enabled = TRUE,  warn = 2L)
+          devtools::run_examples(fresh = TRUE, run_dontrun = TRUE, run_donttest = TRUE)
+        shell: Rscript {0}
+
+      - name: Run Tests
+        run: |
+          options(crayon.enabled = TRUE)
+          pkgload::load_all()
+          # this workaround needed to play nicely with parallel testing
+          # see: https://github.com/r-lib/testthat/issues/1912
+          test_script_paths <- testthat::find_test_scripts("tests/testthat")
+          test_with_warning_as_error <- function(path) {
+            withr::local_options(list(warn = 2L))
+            testthat::test_file(path, stop_on_failure = TRUE, stop_on_warning = TRUE)
+          }
+          purrr::walk(test_script_paths, test_with_warning_as_error)
+        shell: Rscript {0}
+
+      - name: Build vignettes
+        run: |
+          options(crayon.enabled = TRUE, warn = 2L)
+          vignettes <- fs::dir_ls("vignettes/", glob = "*.Rmd", recurse = TRUE)
+          purrr::walk(vignettes, rmarkdown::render)
+        shell: Rscript {0}
+
+  check-random-test-order:
+    runs-on: macos-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          extra-packages: local::.
+
+      - name: Run Tests in Random Order
+        run: |
+          options(crayon.enabled = TRUE)
+          withr::local_envvar(TESTTHAT_PARALLEL = "FALSE")
+          seed <- sample.int(1e6, 1L)
+          cli::cli_inform("Chosen seed for the current test run: {seed}")
+          set.seed(seed)
+          testthat::test_dir("tests", shuffle = TRUE)
+        shell: Rscript {0}
+
+  check-spelling:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          dependencies: '"hard"'
+          extra-packages: |
+            any::rcmdcheck
+            any::spelling
+
+      - name: Spell check
+        run: |
+          options(crayon.enabled = TRUE)
+          spelling_mistakes <- spelling::spell_check_package()
+          cli::cli_rule()
+          if (length(spelling_mistakes$word) > 0L) {
+            print(spelling_mistakes)
+            cli::cli_abort("Spelling errors found. Either correct them or update `inst/WORDLIST` file.")
+          } else {
+            cli::cli_alert_success("No spelling errors found.")
+          }
+          cli::cli_rule()
+        shell: Rscript {0}
+
+  check-link-rot:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Link Checker
+        id: lychee
+        uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2.8.0
+        with:
+          fail: true
+
+  html-5-check:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          extra-packages: |
+            any::rcmdcheck
+            any::V8
+          dependencies: "character()"
+
+      - name: Install pdflatex
+        run: sudo apt-get install texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra
+
+      - name: Install tidy
+        run: sudo apt install tidy
+
+      - uses: r-lib/actions/check-r-package@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          args: 'c("--as-cran", "--no-codoc", "--no-examples", "--no-tests", "--no-vignettes", "--no-build-vignettes", "--ignore-vignettes", "--no-install")'
+          build_args: 'c("--no-build-vignettes")'
+          error-on: '"error"'
+        env:
+          _R_CHECK_CRAN_INCOMING_REMOTE_: false
+          _R_CHECK_CRAN_INCOMING_: false
+
+  check-readme:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: r-lib/actions/setup-pandoc@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          pandoc-version: "latest"
+
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          http-user-agent: ${{ inputs.http-user-agent }}
+          extra-packages: |
+            deps::.
+            ${{ inputs.extra-packages }}
+
+      - name: Render README
+        run: |
+          options(crayon.enabled = TRUE, warn = 2L)
+          rmarkdown::render("README.Rmd")
+        shell: Rscript {0}

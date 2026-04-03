@@ -2,6 +2,15 @@
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   workflow_call:
+    inputs:
+      no-suggests:
+        type: boolean
+        default: false
+        description: 'Build with hard dependencies only (no Suggests); skips deployment'
+      pkgdown-source:
+        type: string
+        default: 'r-lib/pkgdown'
+        description: 'Source for pkgdown package (e.g., r-lib/pkgdown or any::pkgdown)'
 
 name: pkgdown
 
@@ -13,6 +22,8 @@ jobs:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
@@ -24,10 +35,25 @@ jobs:
         with:
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+      - name: Install dependencies (no-suggests mode)
+        if: inputs.no-suggests
+        uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          dependencies: '"hard"'
+          cache: false
+          extra-packages: |
+            any::knitr
+            any::rmarkdown
+            ${{ inputs.pkgdown-source }}
+            local::.
+          needs: website
+
+      - name: Install dependencies (full mode)
+        if: ${{ !inputs.no-suggests }}
+        uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
         with:
           extra-packages: |
-            r-lib/pkgdown
+            ${{ inputs.pkgdown-source }}
             local::.
           needs: website
 
@@ -38,7 +64,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀
-        if: github.event_name != 'pull_request'
+        if: ${{ !inputs.no-suggests && github.event_name != 'pull_request' }}
         uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
         with:
           branch: gh-pages
