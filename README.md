@@ -37,7 +37,6 @@ jobs:
 | [`build-presentation-python.yaml`](.github/workflows/build-presentation-python.yaml) | Build & deploy Python/UV Quarto RevealJS presentation to GitHub Pages | `extra-render-args` |
 | [`build-presentation-r.yaml`](.github/workflows/build-presentation-r.yaml) | Build & deploy R Quarto RevealJS presentation to GitHub Pages | — |
 | [`check-link-rot.yaml`](.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
-| [`update-extensions.yaml`](.github/workflows/update-extensions.yaml) | Auto-update Quarto extensions via PR | — |
 
 ## R Package Workflows
 
