@@ -1,13 +1,12 @@
 # To understand the aim and scope of this workflow, have a look at these slides:
 # https://indrajeetpatil.github.io/preventive-r-package-care/
-
-name: check-styling
-
 on:
   workflow_call:
 
+name: style
+
 jobs:
-  check-styling:
+  style:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -25,9 +24,11 @@ jobs:
           dependencies: '"hard"'
           extra-packages: |
             local::.
+            r-lib/pkgapi
             r-lib/styler
+            anthonynorth/roxyglobals
           needs: |
-            styler
+            check
 
       - name: Enable styler cache
         run: |
@@ -62,7 +63,7 @@ jobs:
           styler::style_pkg(filetype = c(".R", ".Rmd", ".Rmarkdown", ".Rnw"))
         shell: Rscript {0}
 
-      - name: Check for changes
+      - name: Check for style violations
         run: |
           GREEN='\033[0;32m'
           RED='\033[0;31m'
