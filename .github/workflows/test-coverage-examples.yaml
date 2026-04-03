@@ -1,0 +1,53 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+on:
+  workflow_call:
+    inputs:
+      threshold:
+        type: number
+        default: 90
+        description: 'Minimum coverage threshold percentage'
+name: test-coverage-examples
+
+jobs:
+  test-coverage-examples:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          extra-packages: |
+            any::covr
+            local::.
+          needs: coverage
+
+      - name: Test example coverage
+        run: |
+          options(crayon.enabled = TRUE)
+          library(covr)
+          coverage <- covr::package_coverage(
+            type = c("examples", "vignettes"),
+            quiet = TRUE,
+            commentDonttest = FALSE,
+            commentDontrun = FALSE
+          )
+          print(coverage)
+          percent_coverage <- covr::percent_coverage(coverage)
+          threshold <- ${{ inputs.threshold }}
+          cli::cli_rule()
+          if (percent_coverage < threshold) {
+            cli::cli_abort("Code coverage using examples is below the required threshold ({threshold}%).")
+          } else {
+            cli::cli_alert_success("Code coverage using examples is above the required threshold ({threshold}%).")
+          }
+          cli::cli_rule()
+        shell: Rscript {0}

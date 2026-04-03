@@ -1,0 +1,57 @@
+on:
+  workflow_call:
+    inputs:
+      runner-os:
+        type: string
+        default: 'ubuntu-latest'
+        description: 'Runner OS (e.g., ubuntu-latest, macos-latest)'
+
+name: Build Presentation
+
+jobs:
+  build-presentation:
+    runs-on: ${{ inputs.runner-os }}
+    permissions:
+      contents: write
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup Pandoc
+        uses: r-lib/actions/setup-pandoc@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          pandoc-version: "latest"
+
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
+        with:
+          version: pre-release
+
+      - name: Install Quarto extensions
+        run: |
+          quarto --version
+          quarto install extension quarto-ext/fontawesome --no-prompt
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          use-public-rspm: true
+
+      - name: Install R dependencies
+        uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          pak-version: devel
+          upgrade: "TRUE"
+
+      - name: Render slides
+        run: quarto render index.qmd
+
+      - name: Deploy to GitHub pages 🚀
+        if: github.event_name != 'pull_request'
+        uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
+        with:
+          branch: docs
+          folder: .
+          clean: true

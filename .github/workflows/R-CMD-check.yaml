@@ -1,0 +1,76 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+on:
+  workflow_call:
+    inputs:
+      error-on:
+        type: string
+        default: '"note"'
+        description: 'Error on check result level'
+      extra-packages:
+        type: string
+        default: ''
+        description: 'Additional packages to install (e.g., any::pkg1, any::pkg2)'
+name: R-CMD-check
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          #- {os: macOS-latest, r: 'devel'}
+          - { os: macOS-latest, r: "release" }
+          - { os: macOS-latest, r: "oldrel" }
+
+          - { os: windows-latest, r: "devel" }
+          - { os: windows-latest, r: "release" }
+          - { os: windows-latest, r: "oldrel" }
+
+          #- { os: ubuntu-latest, r: "next" }
+          #- { os: ubuntu-latest, r: "devel" }
+          - { os: ubuntu-latest, r: "release" }
+          - { os: ubuntu-latest, r: "oldrel" }
+          - { os: ubuntu-latest, r: "oldrel-2" }
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: r-lib/actions/setup-pandoc@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          pandoc-version: "latest"
+
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          r-version: ${{ matrix.config.r }}
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          extra-packages: |
+            any::rcmdcheck
+            ${{ inputs.extra-packages }}
+          needs: check
+
+      - uses: r-lib/actions/check-r-package@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          upload-snapshots: true
+          upload-results: true
+          error-on: ${{ inputs.error-on }}
+        env:
+          _R_CHECK_CRAN_INCOMING_REMOTE_: false
+          _R_CHECK_CRAN_INCOMING_: false
+          _R_CHECK_FORCE_SUGGESTS_: false
+          _R_CHECK_STOP_ON_INVALID_NUMERIC_VERSION_INPUTS_: true

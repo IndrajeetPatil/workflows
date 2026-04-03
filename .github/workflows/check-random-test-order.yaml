@@ -1,0 +1,31 @@
+on:
+  workflow_call:
+
+name: check-random-test-order
+
+jobs:
+  check-random-test-order:
+    runs-on: macos-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          extra-packages: local::.
+
+      - name: Run Tests in Random Order
+        run: |
+          options(crayon.enabled = TRUE)
+          withr::local_envvar(TESTTHAT_PARALLEL = "FALSE")
+          seed <- sample.int(1e6, 1L)
+          cli::cli_inform("Chosen seed for the current test run: {seed}")
+          set.seed(seed)
+          testthat::test_dir("tests", shuffle = TRUE)
+        shell: Rscript {0}

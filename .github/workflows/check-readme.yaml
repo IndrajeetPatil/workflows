@@ -1,0 +1,56 @@
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+
+on:
+  workflow_call:
+    inputs:
+      extra-packages:
+        type: string
+        default: ''
+        description: 'Additional packages for rendering README (e.g., any::ggthemes)'
+      http-user-agent:
+        type: string
+        default: ''
+        description: 'HTTP user agent for r-lib/actions/setup-r-dependencies'
+name: check-readme
+
+jobs:
+  check-readme:
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { os: ubuntu-latest, r: "release" }
+          #- { os: ubuntu-latest, r: "devel" }
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: r-lib/actions/setup-pandoc@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          pandoc-version: "latest"
+
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          r-version: ${{ matrix.config.r }}
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          http-user-agent: ${{ inputs.http-user-agent }}
+          extra-packages: |
+            deps::.
+            ${{ inputs.extra-packages }}
+
+      - name: Render README
+        run: |
+          options(crayon.enabled = TRUE, warn = 2L)
+          rmarkdown::render("README.Rmd")
+        shell: Rscript {0}
