@@ -2,7 +2,7 @@
 
 Reusable [GitHub Actions workflows](https://docs.github.com/en/actions/sharing-automations/reusing-workflows) for [IndrajeetPatil](https://github.com/IndrajeetPatil) repositories.
 
-All external actions are **pinned to commit SHAs** to prevent supply chain attacks. All workflows are **check-only** — they validate code but never modify or auto-commit changes.
+All external actions are **pinned to commit SHAs** to prevent supply chain attacks. R package workflows are **check-only** — they validate code but never modify or auto-commit changes.
 
 ## Usage
 
