@@ -1,25 +1,17 @@
 on:
   workflow_call:
 
-name: pre-commit
+name: prek
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  pre-commit:
+  prek:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
-        with:
-          python-version: "3.13"
-
-      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
-        with:
-          use-public-rspm: true
-
-      - name: Run pre-commit
-        uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
+      - name: Run prek
+        uses: j178/prek-action@53276d8b0d10f8b6672aa85b4588c6921d0370cc # v2
