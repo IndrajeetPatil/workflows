@@ -1,3 +1,9 @@
+# Each check below runs as a separate parallel job on its own runner (virtual machine).
+# This means R and dependencies are installed once per job — not shared between jobs.
+# That redundancy is intentional: parallel jobs give each check an independent status
+# badge and surface all failures at once, rather than stopping at the first failure as
+# sequential steps would. The trade-off (extra setup time per job) is worth it for the
+# faster, clearer feedback.
 on:
   workflow_call:
     inputs:
