@@ -2,7 +2,7 @@
 
 Reusable [GitHub Actions workflows](https://docs.github.com/en/actions/sharing-automations/reusing-workflows) for [IndrajeetPatil](https://github.com/IndrajeetPatil) repositories.
 
-All external actions are **pinned to commit SHAs** to prevent supply chain attacks. R package workflows are **check-only** — they validate code but never modify or auto-commit changes.
+All external actions are **pinned to commit SHAs** to prevent supply chain attacks. Most R package workflows are **check-only** — they validate code but never modify or auto-commit changes. The exception is [`submit-cran.yaml`](.github/workflows/submit-cran.yaml), which builds a source tarball, creates a GitHub Release, and submits the package to CRAN.
 
 ## Usage
 
@@ -49,6 +49,7 @@ jobs:
 | [`pkgdown.yaml`](.github/workflows/pkgdown.yaml) | Build & deploy pkgdown site; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests`, `pkgdown-source` |
 | [`pre-commit.yaml`](.github/workflows/pre-commit.yaml) | Run pre-commit hooks; fails if hooks would modify files | — |
 | [`style.yaml`](.github/workflows/style.yaml) | Check code style with `{styler}`; fails if any file needs reformatting | — |
+| [`submit-cran.yaml`](.github/workflows/submit-cran.yaml) | Build source tarball, create GitHub Release, and submit package to CRAN | `extra-packages` |
 | [`test-coverage.yaml`](.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%) + examples/vignettes (configurable threshold) | `runner-os`, `threshold` |
 
 ## License
