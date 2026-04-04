@@ -35,10 +35,9 @@ jobs:
       - name: Resolve package metadata
         id: meta
         run: |
-          desc <- read.dcf("DESCRIPTION")
-          pkg  <- desc[, "Package"]
-          ver  <- desc[, "Version"]
-          out  <- Sys.getenv("GITHUB_OUTPUT")
+          pkg <- desc::desc_get_field("Package")
+          ver <- as.character(desc::desc_get_version())
+          out <- Sys.getenv("GITHUB_OUTPUT")
           cat("package=", pkg, "\n", sep = "", file = out, append = TRUE)
           cat("version=", ver, "\n", sep = "", file = out, append = TRUE)
           cat("tag=v",    ver, "\n", sep = "", file = out, append = TRUE)
