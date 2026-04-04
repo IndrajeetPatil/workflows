@@ -1,0 +1,68 @@
+# No official GitHub Action exists for CRAN submission; uses devtools::submit_cran()
+on:
+  workflow_call:
+    inputs:
+      extra-packages:
+        type: string
+        default: ''
+        description: 'Additional packages to install (e.g., any::pkg1, any::pkg2)'
+
+name: submit-cran
+
+permissions:
+  contents: write
+
+jobs:
+  submit-cran:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          extra-packages: |
+            any::devtools
+            any::pkgbuild
+            ${{ inputs.extra-packages }}
+
+      - name: Resolve package metadata
+        id: meta
+        run: |
+          pkg <- desc::desc_get_field("Package")
+          ver <- as.character(desc::desc_get_version())
+          out <- Sys.getenv("GITHUB_OUTPUT")
+          cat("package=", pkg, "\n", sep = "", file = out, append = TRUE)
+          cat("version=", ver, "\n", sep = "", file = out, append = TRUE)
+          cat("tag=v",    ver, "\n", sep = "", file = out, append = TRUE)
+          cat("title=",   pkg, " ", ver, "\n", sep = "", file = out, append = TRUE)
+        shell: Rscript {0}
+
+      - name: Build source tarball
+        id: build
+        run: |
+          tarball <- pkgbuild::build(".", dest_path = ".", binary = FALSE)
+          out <- Sys.getenv("GITHUB_OUTPUT")
+          cat("tarball=", tarball, "\n", sep = "", file = out, append = TRUE)
+        shell: Rscript {0}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2.6.1
+        with:
+          tag_name: ${{ steps.meta.outputs.tag }}
+          name: ${{ steps.meta.outputs.title }}
+          generate_release_notes: true
+          target_commitish: ${{ github.sha }}
+          files: ${{ steps.build.outputs.tarball }}
+
+      - name: Submit to CRAN
+        run: |
+          assignInNamespace("yesno", function(...) FALSE, "devtools")
+          devtools::submit_cran()
+        shell: Rscript {0}
