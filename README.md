@@ -2,7 +2,7 @@
 
 Reusable [GitHub Actions workflows](https://docs.github.com/en/actions/sharing-automations/reusing-workflows) for [IndrajeetPatil](https://github.com/IndrajeetPatil) repositories.
 
-All external actions are **pinned to commit SHAs** to prevent supply chain attacks. Most R package workflows are **check-only** — they validate code but never modify or auto-commit changes. The exception is [`submit-cran.yaml`](.github/workflows/submit-cran.yaml), which builds a source tarball, creates a GitHub Release, and submits the package to CRAN.
+All external actions are **pinned to commit SHAs** to prevent supply chain attacks. Most R package workflows are **check-only** — they validate code but never modify or auto-commit changes. Some workflows do perform deployment or release actions, including [`pkgdown.yaml`](.github/workflows/pkgdown.yaml), which deploys the pkgdown site to `gh-pages`, and [`submit-cran.yaml`](.github/workflows/submit-cran.yaml), which builds a source tarball, creates a GitHub Release, and submits the package to CRAN.
 
 ## Usage
 

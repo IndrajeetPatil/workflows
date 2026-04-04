@@ -45,7 +45,11 @@ jobs:
         shell: Rscript {0}
 
       - name: Build source tarball
-        run: pkgbuild::build(".", dest_path = ".", binary = FALSE)
+        id: build
+        run: |
+          tarball <- pkgbuild::build(".", dest_path = ".", binary = FALSE)
+          out <- Sys.getenv("GITHUB_OUTPUT")
+          cat("tarball=", tarball, "\n", sep = "", file = out, append = TRUE)
         shell: Rscript {0}
 
       - name: Create GitHub Release
@@ -55,7 +59,7 @@ jobs:
           name: ${{ steps.meta.outputs.title }}
           generate_release_notes: true
           target_commitish: ${{ github.sha }}
-          files: "*.tar.gz"
+          files: ${{ steps.build.outputs.tarball }}
 
       - name: Submit to CRAN
         run: |
