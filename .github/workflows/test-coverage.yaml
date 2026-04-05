@@ -7,10 +7,6 @@ on:
         type: string
         default: 'ubuntu-latest'
         description: 'Runner OS for test coverage job'
-      threshold:
-        type: number
-        default: 90
-        description: 'Minimum coverage threshold (%) for examples/vignettes coverage job'
 
 name: test-coverage
 
@@ -76,7 +72,7 @@ jobs:
           )
           print(coverage)
           percent_coverage <- covr::percent_coverage(coverage)
-          threshold <- ${{ inputs.threshold }}
+          threshold <- 100
           cli::cli_rule()
           if (percent_coverage < threshold) {
             cli::cli_abort("Code coverage using examples is below the required threshold ({threshold}%).")
