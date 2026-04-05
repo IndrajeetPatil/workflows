@@ -44,7 +44,7 @@ jobs:
 |----------|-------------|--------|
 | [`R-CMD-check.yaml`](.github/workflows/R-CMD-check.yaml) | R CMD check across multiple OS/R versions | `error-on`, `extra-packages` |
 | [`R-CMD-check-hard.yaml`](.github/workflows/R-CMD-check-hard.yaml) | R CMD check with hard (Imports) dependencies only | `extra-packages` |
-| [`check-extra.yaml`](.github/workflows/check-extra.yaml) | Six parallel extra checks: no-warnings, random test order, spelling, link rot, HTML5, README render | `extra-packages`, `http-user-agent` |
+| [`check-extra.yaml`](.github/workflows/check-extra.yaml) | Parallel extra checks: no-warnings, random test order, spelling, link rot, README render | `extra-packages`, `http-user-agent` |
 | [`lint.yaml`](.github/workflows/lint.yaml) | Full package lint (always) + changed-files lint (PR only), both with `{lintr}` | — |
 | [`pkgdown.yaml`](.github/workflows/pkgdown.yaml) | Build & deploy pkgdown site; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests`, `pkgdown-source` |
 | [`pre-commit.yaml`](.github/workflows/pre-commit.yaml) | Run pre-commit hooks; fails if hooks would modify files | — |
