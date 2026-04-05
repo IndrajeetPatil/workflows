@@ -48,7 +48,7 @@ jobs:
       - name: Render slides
         run: |
           PANDOC_DIR="$(dirname "$(command -v pandoc)")"
-          QUARTO_PANDOC="$PANDOC_DIR" uv run --no-project quarto render ${{ inputs.extra-render-args }}
+          QUARTO_PANDOC="$PANDOC_DIR" uv run --no-project quarto render
 
       - name: Configure GitHub Pages
         if: github.event_name != 'pull_request'
