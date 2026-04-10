@@ -30,15 +30,17 @@ jobs:
       error-on: '"note"'
 ```
 
-## Presentation Workflows
+## Python Packages
 
 | Workflow | Description | Inputs |
 |----------|-------------|--------|
-| [`build-presentation-python.yaml`](.github/workflows/build-presentation-python.yaml) | Build & deploy Python/UV Quarto RevealJS presentation to GitHub Pages | — |
-| [`build-presentation-r.yaml`](.github/workflows/build-presentation-r.yaml) | Build & deploy R Quarto RevealJS presentation to GitHub Pages | — |
+| [`python-docs.yaml`](.github/workflows/python-docs.yaml) | Build & deploy Python package documentation to GitHub Pages | — |
+| [`python-qa.yaml`](.github/workflows/python-qa.yaml) | Code Quality checks, including build, test coverage, and README render | — |
+| [`python-release.yaml`](.github/workflows/python-release.yaml) | Create GitHub Release and Publish to PyPI | `version` |
+| [`python-test.yaml`](.github/workflows/python-test.yaml) | Run Tests across multiple OS and Python versions | — |
 | [`check-link-rot.yaml`](.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
 
-## R Package Workflows
+## R Packages
 
 | Workflow | Description | Inputs |
 |----------|-------------|--------|
@@ -51,6 +53,15 @@ jobs:
 | [`style.yaml`](.github/workflows/style.yaml) | Check code style with `{styler}`; fails if any file needs reformatting | — |
 | [`submit-cran.yaml`](.github/workflows/submit-cran.yaml) | Build source tarball, create GitHub Release, and submit package to CRAN | `extra-packages` |
 | [`test-coverage.yaml`](.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%) + examples/vignettes (enforces 100%) | `runner-os` |
+| [`check-link-rot.yaml`](.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
+
+## Presentations
+
+| Workflow | Description | Inputs |
+|----------|-------------|--------|
+| [`build-presentation-python.yaml`](.github/workflows/build-presentation-python.yaml) | Build & deploy Python/UV Quarto RevealJS presentation to GitHub Pages | — |
+| [`build-presentation-r.yaml`](.github/workflows/build-presentation-r.yaml) | Build & deploy R Quarto RevealJS presentation to GitHub Pages | — |
+| [`check-link-rot.yaml`](.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
 
 ## License
 
