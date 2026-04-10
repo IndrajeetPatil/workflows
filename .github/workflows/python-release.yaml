@@ -2,12 +2,6 @@ name: Release
 
 on:
   workflow_call:
-    inputs:
-      version:
-        description: "Version to release (leave blank to use version from pyproject.toml)"
-        type: string
-        required: false
-        default: ""
 
 permissions:
   contents: write
@@ -28,13 +22,9 @@ jobs:
       - name: Resolve version
         id: version
         env:
-          INPUT_VERSION: ${{ inputs.version }}
           REPO_NAME: ${{ github.event.repository.name }}
         run: |
-          version="$INPUT_VERSION"
-          if [ -z "$version" ]; then
-            version=$(uv version | awk '{print $NF}')
-          fi
+          version=$(uv version | awk '{print $NF}')
           echo "tag=${version}" >> "$GITHUB_OUTPUT"
           echo "title=${REPO_NAME} ${version}" >> "$GITHUB_OUTPUT"
 
