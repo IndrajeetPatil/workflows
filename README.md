@@ -30,15 +30,6 @@ jobs:
       error-on: '"note"'
 ```
 
-## Generic
-
-Generic workflows are language-agnostic and provide utility across diverse types of projects, ensuring high code quality and robust documentation regardless of the underlying tech stack.
-
-| Workflow | Description | Inputs |
-|----------|-------------|--------|
-| [`check-formatting.yaml`](.github/workflows/check-formatting.yaml) | Check and suggest code formatting using [air](https://github.com/posit-dev/air) | — |
-| [`check-link-rot.yaml`](.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
-
 ## Python Packages
 
 | Workflow | Description | Inputs |
@@ -52,6 +43,7 @@ Generic workflows are language-agnostic and provide utility across diverse types
 
 | Workflow | Description | Inputs |
 |----------|-------------|--------|
+| [`check-formatting.yaml`](.github/workflows/check-formatting.yaml) | Check and suggest code formatting using [air](https://github.com/posit-dev/air) | — |
 | [`R-CMD-check.yaml`](.github/workflows/R-CMD-check.yaml) | R CMD check across multiple OS/R versions | `error-on`, `extra-packages` |
 | [`R-CMD-check-hard.yaml`](.github/workflows/R-CMD-check-hard.yaml) | R CMD check with hard (Imports) dependencies only | `extra-packages` |
 | [`check-extra.yaml`](.github/workflows/check-extra.yaml) | Parallel extra checks: no-warnings, random test order, spelling, link rot, README render | `extra-packages`, `http-user-agent` |
@@ -67,6 +59,14 @@ Generic workflows are language-agnostic and provide utility across diverse types
 |----------|-------------|--------|
 | [`build-presentation-python.yaml`](.github/workflows/build-presentation-python.yaml) | Build & deploy Python/UV Quarto RevealJS presentation to GitHub Pages | — |
 | [`build-presentation-r.yaml`](.github/workflows/build-presentation-r.yaml) | Build & deploy R Quarto RevealJS presentation to GitHub Pages | — |
+
+## Generic
+
+Generic workflows are language-agnostic and provide utility across diverse types of projects, ensuring high code quality and robust documentation regardless of the underlying tech stack.
+
+| Workflow | Description | Inputs |
+|----------|-------------|--------|
+| [`check-link-rot.yaml`](.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
 
 ## License
 
