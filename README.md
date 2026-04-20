@@ -16,8 +16,8 @@ on:
     branches: [main, master]
 
 jobs:
-  style:
-    uses: IndrajeetPatil/workflows/.github/workflows/style.yaml@main
+  format:
+    uses: IndrajeetPatil/workflows/.github/workflows/check-formatting.yaml@main
 ```
 
 For workflows with inputs:
@@ -30,6 +30,15 @@ jobs:
       error-on: '"note"'
 ```
 
+## Generic
+
+Generic workflows are language-agnostic and provide utility across diverse types of projects, ensuring high code quality and robust documentation regardless of the underlying tech stack.
+
+| Workflow | Description | Inputs |
+|----------|-------------|--------|
+| [`check-formatting.yaml`](.github/workflows/check-formatting.yaml) | Check and suggest code formatting using [air](https://github.com/posit-dev/air) | — |
+| [`check-link-rot.yaml`](.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
+
 ## Python Packages
 
 | Workflow | Description | Inputs |
@@ -38,7 +47,6 @@ jobs:
 | [`python-qa.yaml`](.github/workflows/python-qa.yaml) | Code Quality checks, including build, test coverage, and README render | — |
 | [`python-release.yaml`](.github/workflows/python-release.yaml) | Create GitHub Release and Publish to PyPI | — |
 | [`python-test.yaml`](.github/workflows/python-test.yaml) | Run Tests across multiple OS and Python versions | — |
-| [`check-link-rot.yaml`](.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
 
 ## R Packages
 
@@ -50,10 +58,8 @@ jobs:
 | [`lint.yaml`](.github/workflows/lint.yaml) | Package linting with `{lintr}` | — |
 | [`pkgdown.yaml`](.github/workflows/pkgdown.yaml) | Build & deploy pkgdown site; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests`, `pkgdown-source` |
 | [`pre-commit.yaml`](.github/workflows/pre-commit.yaml) | Run pre-commit hooks; fails if hooks would modify files | — |
-| [`style.yaml`](.github/workflows/style.yaml) | Check code style with `{styler}`; fails if any file needs reformatting | — |
 | [`submit-cran.yaml`](.github/workflows/submit-cran.yaml) | Build source tarball, create GitHub Release, and submit package to CRAN | `extra-packages` |
-| [`test-coverage.yaml`](.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%) + examples/vignettes (enforces 100%) | `runner-os` |
-| [`check-link-rot.yaml`](.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
+| [`test-coverage.yaml`](.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%) + examples/vignettes (enforces 100%) | — |
 
 ## Presentations
 
@@ -61,7 +67,6 @@ jobs:
 |----------|-------------|--------|
 | [`build-presentation-python.yaml`](.github/workflows/build-presentation-python.yaml) | Build & deploy Python/UV Quarto RevealJS presentation to GitHub Pages | — |
 | [`build-presentation-r.yaml`](.github/workflows/build-presentation-r.yaml) | Build & deploy R Quarto RevealJS presentation to GitHub Pages | — |
-| [`check-link-rot.yaml`](.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
 
 ## License
 
