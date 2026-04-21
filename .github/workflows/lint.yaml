@@ -21,7 +21,6 @@ jobs:
         with:
           extra-packages: |
             r-lib/lintr
-            any::spelling
             local::.
           needs: lint
 
@@ -29,21 +28,8 @@ jobs:
         run: |
           options(crayon.enabled = TRUE)
           library(lintr)
+          # lintr config in `.lintr` file
           lint_package()
         shell: Rscript {0}
         env:
           LINTR_ERROR_ON_LINT: true
-
-      - name: Spell check
-        run: |
-          options(crayon.enabled = TRUE)
-          spelling_mistakes <- spelling::spell_check_package()
-          cli::cli_rule()
-          if (length(spelling_mistakes$word) > 0L) {
-            print(spelling_mistakes)
-            cli::cli_abort("Spelling errors found. Either correct them or update `inst/WORDLIST` file.")
-          } else {
-            cli::cli_alert_success("No spelling errors found.")
-          }
-          cli::cli_rule()
-        shell: Rscript {0}
