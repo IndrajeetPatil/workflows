@@ -18,26 +18,5 @@ jobs:
         with:
           fail: true
 
-      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
-        with:
-          use-public-rspm: true
-
-      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
-        with:
-          dependencies: '"hard"'
-          extra-packages: |
-            any::spelling
-
-      - name: Spell check
-        run: |
-          options(crayon.enabled = TRUE)
-          spelling_mistakes <- spelling::spell_check_package()
-          cli::cli_rule()
-          if (length(spelling_mistakes$word) > 0L) {
-            print(spelling_mistakes)
-            cli::cli_abort("Spelling errors found. Either correct them or update `inst/WORDLIST` file.")
-          } else {
-            cli::cli_alert_success("No spelling errors found.")
-          }
-          cli::cli_rule()
-        shell: Rscript {0}
+      - name: Spell Checker
+        uses: crate-ci/typos@5ca5db740be4c6b2e6ce383819386a7340babd1e # v1.45.1
