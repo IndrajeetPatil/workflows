@@ -7,10 +7,6 @@ on:
         type: boolean
         default: false
         description: 'Build with hard dependencies only (no Suggests); skips deployment'
-      pkgdown-source:
-        type: string
-        default: 'r-lib/pkgdown'
-        description: 'Source for pkgdown package (e.g., r-lib/pkgdown or any::pkgdown)'
 
 name: pkgdown
 
@@ -44,7 +40,7 @@ jobs:
           extra-packages: |
             any::knitr
             any::rmarkdown
-            ${{ inputs.pkgdown-source }}
+            r-lib/pkgdown
             local::.
           needs: website
 
@@ -53,7 +49,7 @@ jobs:
         uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
         with:
           extra-packages: |
-            ${{ inputs.pkgdown-source }}
+            r-lib/pkgdown
             local::.
           needs: website
 
