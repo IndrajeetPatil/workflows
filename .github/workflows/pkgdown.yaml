@@ -12,6 +12,7 @@ name: pkgdown
 
 jobs:
   pkgdown:
+    if: ${{ !inputs.no-suggests || github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     # Only restrict concurrency for non-PR jobs
     concurrency:
