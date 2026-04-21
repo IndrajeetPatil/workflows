@@ -22,19 +22,45 @@ jobs:
         with:
           extra-packages: |
             any::covr
+            any::xml2
           needs: coverage
 
       - name: Test coverage
         run: |
           options(crayon.enabled = TRUE)
-          cov <- covr::package_coverage()
+          cov <- covr::package_coverage(
+            quiet = FALSE,
+            clean = FALSE,
+            install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
+          )
           pct <- covr::percent_coverage(cov)
           cat(sprintf("\nCode coverage: %.2f%%\n", pct))
-          covr::codecov(coverage = cov, quiet = FALSE)
+          covr::to_cobertura(cov)
           if (pct < 100) {
             stop(sprintf("Code coverage is %.2f%%, which is below the required 100%%", pct))
           }
         shell: Rscript {0}
+
+      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+        with:
+          fail_ci_if_error: ${{ github.event_name != 'pull_request' || secrets.CODECOV_TOKEN }}
+          file: ./cobertura.xml
+          plugin: noop
+          disable_search: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Show testthat output
+        if: always()
+        run: |
+          find '${{ runner.temp }}/package' -name 'testthat.Rout*' -exec cat '{}' \; || true
+        shell: bash
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: coverage-test-failures
+          path: ${{ runner.temp }}/package
 
   examples-coverage:
     runs-on: ubuntu-latest
