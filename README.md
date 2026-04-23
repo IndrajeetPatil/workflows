@@ -36,7 +36,6 @@ jobs:
 |----------|-------------|--------|
 | [`python-docs.yaml`](.github/workflows/python-docs.yaml) | Build & deploy Python package documentation to GitHub Pages | — |
 | [`python-qa.yaml`](.github/workflows/python-qa.yaml) | Code Quality checks, including build, test coverage, and README render | — |
-| [`python-release.yaml`](.github/workflows/python-release.yaml) | Create GitHub Release and Publish to PyPI | — |
 | [`python-test.yaml`](.github/workflows/python-test.yaml) | Run Tests across multiple OS and Python versions | — |
 
 ## R Packages
