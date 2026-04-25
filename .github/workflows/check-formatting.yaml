@@ -12,7 +12,7 @@ jobs:
     name: check-formatting
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v4
 
       - name: Install
         uses: posit-dev/setup-air@cf390573ff4fe0f198f35df3a642b1409328d859 # v1
