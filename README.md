@@ -47,7 +47,7 @@ jobs:
 |----------|-------------|--------|
 | [`check-docs.yaml`](.github/workflows/check-docs.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) and spelling using [typos](https://github.com/crate-ci/typos) | — |
 | [`check-formatting.yaml`](.github/workflows/check-formatting.yaml) | Check and suggest code formatting using [air](https://github.com/posit-dev/air) | — |
-| [`R-CMD-check.yaml`](.github/workflows/R-CMD-check.yaml) | R CMD check across multiple OS/R versions; use `hard: true` for a hard-deps-only CI check (PR-only) | `error-on`, `extra-packages`, `hard` |
+| [`R-CMD-check.yaml`](.github/workflows/R-CMD-check.yaml) | R CMD check across multiple OS/R versions; use `hard: true` for a hard-deps-only CI check (PR-only) | `extra-packages`, `hard` |
 | [`check-extra.yaml`](.github/workflows/check-extra.yaml) | Parallel extra checks: no-warnings, random test order, README render | `extra-packages` |
 | [`lint.yaml`](.github/workflows/lint.yaml) | Package linting with `{lintr}` | — |
 | [`pkgdown.yaml`](.github/workflows/pkgdown.yaml) | Build & deploy pkgdown site; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests` |
