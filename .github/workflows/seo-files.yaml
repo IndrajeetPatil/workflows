@@ -23,8 +23,10 @@ jobs:
           ref: gh-pages
 
       - name: Create robots.txt
+        env:
+          PACKAGE_NAME: ${{ inputs.package-name }}
         run: |
-          cat > robots.txt << 'EOF'
+          cat > robots.txt << EOF
           User-agent: *
           Allow: /
 
@@ -53,19 +55,21 @@ jobs:
           User-agent: Google-Extended
           Allow: /
 
-          Sitemap: https://www.indrapatil.com/${{ inputs.package-name }}/sitemap.xml
+          Sitemap: https://www.indrapatil.com/${PACKAGE_NAME}/sitemap.xml
           EOF
 
       - name: Create .well-known/llms.txt
+        env:
+          PACKAGE_NAME: ${{ inputs.package-name }}
         run: |
           mkdir -p .well-known
-          cat > .well-known/llms.txt << 'EOF'
-          # LLM Documentation Index for ${{ inputs.package-name }}
+          cat > .well-known/llms.txt << EOF
+          # LLM Documentation Index for ${PACKAGE_NAME}
           # Machine-readable package documentation for AI assistants
           # See https://llmstxt.org/ for the specification
 
-          /${{ inputs.package-name }}/llms.txt: Concise package overview optimised for AI assistants
-          /${{ inputs.package-name }}/llms-full.txt: Complete package documentation for AI assistants
+          /${PACKAGE_NAME}/llms.txt: Concise package overview optimised for AI assistants
+          /${PACKAGE_NAME}/llms-full.txt: Complete package documentation for AI assistants
           EOF
 
       - name: Commit and push
