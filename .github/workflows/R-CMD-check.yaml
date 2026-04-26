@@ -12,10 +12,6 @@ on:
         type: boolean
         default: false
         description: 'Run with hard dependencies only (no Suggests); only runs on PRs'
-      error-on:
-        type: string
-        default: '"note"'
-        description: 'Error on check result level (only used when hard: false)'
       extra-packages:
         type: string
         default: ''
@@ -84,7 +80,7 @@ jobs:
         with:
           upload-snapshots: true
           upload-results: true
-          error-on: ${{ inputs.error-on }}
+          error-on: '"note"'
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
           _R_CHECK_CRAN_INCOMING_: false
