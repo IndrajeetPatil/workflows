@@ -1,12 +1,21 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+#
+# NOTE: When hard: true, only "hard" dependencies (Depends, Imports, LinkingTo) are installed.
+# Suggests are never installed (except testthat, knitr, rmarkdown, curl). The cache is
+# never used to avoid accidentally restoring a cache containing a suggested dependency.
+# Hard mode only runs on pull requests, not on pushes to main.
 on:
   workflow_call:
     inputs:
+      hard:
+        type: boolean
+        default: false
+        description: 'Run with hard dependencies only (no Suggests); only runs on PRs'
       error-on:
         type: string
         default: '"note"'
-        description: 'Error on check result level'
+        description: 'Error on check result level (only used when hard: false)'
       extra-packages:
         type: string
         default: ''
@@ -19,6 +28,7 @@ concurrency:
 
 jobs:
   R-CMD-check:
+    if: ${{ !inputs.hard }}
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
@@ -80,3 +90,45 @@ jobs:
           _R_CHECK_CRAN_INCOMING_: false
           _R_CHECK_FORCE_SUGGESTS_: false
           _R_CHECK_STOP_ON_INVALID_NUMERIC_VERSION_INPUTS_: true
+
+  R-CMD-check-hard:
+    if: ${{ inputs.hard && github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - name: Restrict to IndrajeetPatil repositories
+        if: github.repository_owner != 'IndrajeetPatil'
+        run: |
+          echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
+          exit 1
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: r-lib/actions/setup-pandoc@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          pandoc-version: "latest"
+
+      - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          dependencies: '"hard"'
+          cache: false
+          extra-packages: |
+            any::knitr
+            any::rcmdcheck
+            any::rmarkdown
+            any::curl
+            any::testthat
+            ${{ inputs.extra-packages }}
+          needs: check
+
+      - uses: r-lib/actions/check-r-package@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+        with:
+          upload-snapshots: true
