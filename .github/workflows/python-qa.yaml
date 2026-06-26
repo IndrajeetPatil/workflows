@@ -42,7 +42,7 @@ jobs:
           uv run coverage html
 
       - name: Install Pandoc
-        uses: r-lib/actions/setup-pandoc@a51a8012b0aab7c32ef9d19bf54da93f3254335e # v2.12.0
+        uses: r-lib/actions/setup-pandoc@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
 
       - name: Install Quarto
         uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
