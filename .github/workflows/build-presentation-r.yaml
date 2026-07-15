@@ -35,11 +35,10 @@ jobs:
         with:
           version: release
 
-      - name: Install Quarto extensions
+      - name: Report tool versions
         run: |
           quarto --version
           pandoc --version | head -n 1
-          quarto install extension quarto-ext/fontawesome --no-prompt
 
       - name: Setup R
         uses: r-lib/actions/setup-r@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
