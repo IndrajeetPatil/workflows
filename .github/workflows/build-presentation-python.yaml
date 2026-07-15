@@ -44,11 +44,10 @@ jobs:
         with:
           pandoc-version: latest
 
-      - name: Install Quarto extensions
+      - name: Report tool versions
         run: |
           quarto --version
           pandoc --version | head -n 1
-          quarto install extension quarto-ext/fontawesome --no-prompt
 
       - name: Install dependencies
         run: uv sync --frozen --no-install-project
