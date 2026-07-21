@@ -66,6 +66,104 @@ jobs:
           pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
 
+      - name: Add and verify canonical URLs
+        run: |
+          config_candidates <- c(
+            Sys.getenv("PKGDOWN_CONFIG", unset = ""),
+            "_pkgdown.yml",
+            "_pkgdown.yaml",
+            "pkgdown/_pkgdown.yml",
+            "pkgdown/_pkgdown.yaml"
+          )
+          config_candidates <- config_candidates[
+            nzchar(config_candidates) & file.exists(config_candidates)
+          ]
+          if (length(config_candidates) == 0) {
+            stop("Cannot add canonical URLs: no pkgdown configuration file found.")
+          }
+
+          site_url <- yaml::read_yaml(config_candidates[[1]])$url
+          if (is.null(site_url) || !grepl("^https://", site_url)) {
+            stop("Cannot add canonical URLs: pkgdown 'url' must be an absolute HTTPS URL.")
+          }
+          site_url <- sub("/+$", "", site_url)
+
+          html_files <- list.files(
+            "docs",
+            pattern = "\\.html$",
+            recursive = TRUE,
+            full.names = TRUE
+          )
+          if (length(html_files) == 0) {
+            stop("Cannot add canonical URLs: pkgdown generated no HTML files.")
+          }
+          indexable_html_files <- html_files[basename(html_files) != "404.html"]
+
+          canonical_pattern <- "<link[^>]+rel\\s*=\\s*[\"']canonical[\"'][^>]*>"
+          added <- 0L
+          for (html_file in indexable_html_files) {
+            html <- readLines(html_file, warn = FALSE, encoding = "UTF-8")
+            document <- paste(html, collapse = "\n")
+            if (grepl(canonical_pattern, document, ignore.case = TRUE, perl = TRUE)) {
+              next
+            }
+
+            relative_path <- sub("^docs/", "", html_file)
+            canonical_url <- paste0(
+              site_url,
+              "/",
+              utils::URLencode(relative_path, reserved = FALSE)
+            )
+            canonical_tag <- sprintf(
+              "<link rel=\"canonical\" href=\"%s\">",
+              canonical_url
+            )
+
+            insertion_line <- grep("<title(?:\\s|>)", html, ignore.case = TRUE, perl = TRUE)[1]
+            if (is.na(insertion_line)) {
+              insertion_line <- grep("<head(?:\\s|>)", html, ignore.case = TRUE, perl = TRUE)[1]
+            }
+            if (is.na(insertion_line)) {
+              stop("Cannot add a canonical URL to ", html_file, ": no <head> element found.")
+            }
+
+            html <- append(html, canonical_tag, after = insertion_line)
+            writeLines(html, html_file, useBytes = TRUE)
+            added <- added + 1L
+          }
+
+          invalid <- vapply(indexable_html_files, function(html_file) {
+            document <- paste(
+              readLines(html_file, warn = FALSE, encoding = "UTF-8"),
+              collapse = "\n"
+            )
+            matches <- gregexpr(
+              canonical_pattern,
+              document,
+              ignore.case = TRUE,
+              perl = TRUE
+            )[[1]]
+            canonical_count <- if (matches[[1]] == -1L) 0L else length(matches)
+            canonical_count != 1L
+          }, logical(1))
+          if (any(invalid)) {
+            stop(
+              "Expected exactly one canonical URL in every indexable HTML file; invalid files: ",
+              paste(indexable_html_files[invalid], collapse = ", ")
+            )
+          }
+
+          message(
+            "Verified exactly one canonical URL in ",
+            length(indexable_html_files),
+            " indexable HTML files (added ",
+            added,
+            "); skipped ",
+            length(html_files) - length(indexable_html_files),
+            " 404 utility page(s)."
+          )
+        shell: Rscript {0}
+
       - name: Deploy to GitHub pages 🚀
         if: ${{ !inputs.no-suggests && github.event_name != 'pull_request' }}
         uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0

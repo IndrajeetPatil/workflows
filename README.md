@@ -50,7 +50,7 @@ jobs:
 | [`R-CMD-check.yaml`](.github/workflows/R-CMD-check.yaml) | R CMD check across multiple OS/R versions; use `hard: true` for a hard-deps-only CI check (PR-only) | `extra-packages`, `hard` |
 | [`check-extra.yaml`](.github/workflows/check-extra.yaml) | Parallel extra checks: no-warnings, random test order, README render | `extra-packages` |
 | [`lint.yaml`](.github/workflows/lint.yaml) | Package linting with `{lintr}` | — |
-| [`pkgdown.yaml`](.github/workflows/pkgdown.yaml) | Build & deploy pkgdown site; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests` |
+| [`pkgdown.yaml`](.github/workflows/pkgdown.yaml) | Build & deploy a pkgdown site with verified canonical URLs; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests` |
 | [`pre-commit.yaml`](.github/workflows/pre-commit.yaml) | Run pre-commit hooks; fails if hooks would modify files | — |
 | [`seo-files.yaml`](.github/workflows/seo-files.yaml) | Deploy SEO and AI-discovery files (`robots.txt`, `.well-known/llms.txt`) to `gh-pages` after pkgdown build | `package-name` |
 | [`submit-cran.yaml`](.github/workflows/submit-cran.yaml) | Build source tarball, create GitHub Release, and submit package to CRAN | `extra-packages` |
