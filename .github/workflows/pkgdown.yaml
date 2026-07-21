@@ -97,10 +97,11 @@ jobs:
           if (length(html_files) == 0) {
             stop("Cannot add canonical URLs: pkgdown generated no HTML files.")
           }
+          indexable_html_files <- html_files[basename(html_files) != "404.html"]
 
           canonical_pattern <- "<link[^>]+rel\\s*=\\s*[\"']canonical[\"'][^>]*>"
           added <- 0L
-          for (html_file in html_files) {
+          for (html_file in indexable_html_files) {
             html <- readLines(html_file, warn = FALSE, encoding = "UTF-8")
             document <- paste(html, collapse = "\n")
             if (grepl(canonical_pattern, document, ignore.case = TRUE, perl = TRUE)) {
@@ -108,9 +109,6 @@ jobs:
             }
 
             relative_path <- sub("^docs/", "", html_file)
-            if (basename(relative_path) == "index.html") {
-              relative_path <- sub("index\\.html$", "", relative_path)
-            }
             canonical_url <- paste0(
               site_url,
               "/",
@@ -134,7 +132,7 @@ jobs:
             added <- added + 1L
           }
 
-          invalid <- vapply(html_files, function(html_file) {
+          invalid <- vapply(indexable_html_files, function(html_file) {
             document <- paste(
               readLines(html_file, warn = FALSE, encoding = "UTF-8"),
               collapse = "\n"
@@ -150,17 +148,19 @@ jobs:
           }, logical(1))
           if (any(invalid)) {
             stop(
-              "Expected exactly one canonical URL in every generated HTML file; invalid files: ",
-              paste(html_files[invalid], collapse = ", ")
+              "Expected exactly one canonical URL in every indexable HTML file; invalid files: ",
+              paste(indexable_html_files[invalid], collapse = ", ")
             )
           }
 
           message(
             "Verified exactly one canonical URL in ",
-            length(html_files),
-            " HTML files (added ",
+            length(indexable_html_files),
+            " indexable HTML files (added ",
             added,
-            ")."
+            "); skipped ",
+            length(html_files) - length(indexable_html_files),
+            " 404 utility page(s)."
           )
         shell: Rscript {0}
 
