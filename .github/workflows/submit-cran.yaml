@@ -78,6 +78,8 @@ jobs:
           devtools::submit_cran()
         shell: Rscript {0}
 
+  # Publish only after CRAN submission succeeds so a transient submission
+  # failure does not leave a GitHub release without its intended CRAN upload.
   release:
     name: Create GitHub Release
     needs: submit-cran
