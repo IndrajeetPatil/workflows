@@ -8,9 +8,16 @@ on:
 
 name: Deploy SEO and agentic discovery files
 
+permissions:
+  contents: read
+
 jobs:
   deploy-seo-files:
+    name: Deploy SEO files
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # Required for the intentional push to gh-pages.
     steps:
       - name: Restrict to IndrajeetPatil repositories
         if: github.repository_owner != 'IndrajeetPatil'
@@ -18,9 +25,20 @@ jobs:
           echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
           exit 1
 
+      # The final step intentionally pushes to gh-pages.
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           ref: gh-pages
+          persist-credentials: true
+
+      - name: Validate package name
+        env:
+          PACKAGE_NAME: ${{ inputs.package-name }}
+        run: |
+          if [[ ! "$PACKAGE_NAME" =~ ^[A-Za-z][A-Za-z0-9._-]*$ ]]; then
+            echo "::error::package-name must contain only letters, numbers, dots, underscores, and hyphens."
+            exit 1
+          fi
 
       - name: Create robots.txt
         env:
