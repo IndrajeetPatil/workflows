@@ -13,11 +13,9 @@ permissions:
 
 jobs:
   build-presentation:
+    name: Build presentation
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
+    timeout-minutes: 30
     steps:
       - name: Restrict to IndrajeetPatil repositories
         if: github.repository_owner != 'IndrajeetPatil'
@@ -27,6 +25,8 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
 
       - name: Install uv
         uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
@@ -57,12 +57,6 @@ jobs:
           PANDOC_DIR="$(dirname "$(command -v pandoc)")"
           QUARTO_PANDOC="$PANDOC_DIR" uv run --no-project quarto render
 
-      - name: Configure GitHub Pages
-        if: github.event_name != 'pull_request'
-        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
-        with:
-          enablement: true
-
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
@@ -70,12 +64,14 @@ jobs:
           path: _site
 
   deploy:
+    name: Deploy presentation
     if: github.event_name != 'pull_request'
     needs: build-presentation
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
-      pages: write
-      id-token: write
+      pages: write # Required to configure and deploy GitHub Pages.
+      id-token: write # Required for Pages OIDC authentication.
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -85,6 +81,11 @@ jobs:
         run: |
           echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
           exit 1
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+        with:
+          enablement: true
 
       - name: Deploy to GitHub Pages
         id: deployment

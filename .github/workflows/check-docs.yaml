@@ -3,9 +3,14 @@ on:
 
 name: check-docs
 
+permissions:
+  contents: read
+
 jobs:
   check-link-rot:
+    name: Check link rot
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -17,6 +22,8 @@ jobs:
           exit 1
 
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
 
       - name: Link Checker
         id: lychee
@@ -25,7 +32,9 @@ jobs:
           fail: true
 
   check-spelling:
+    name: Check spelling
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Restrict to IndrajeetPatil repositories
@@ -35,6 +44,8 @@ jobs:
           exit 1
 
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
 
       - name: Spell Checker
         uses: crate-ci/typos@bee27e3a4fd1ea2111cf90ab89cd076c870fce14 # v1.48.0

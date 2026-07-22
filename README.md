@@ -1,11 +1,28 @@
 # Reusable GitHub Actions Workflows
 
 > [!WARNING]
-> These workflows are intended solely for use by [@IndrajeetPatil](https://github.com/IndrajeetPatil) repositories. They are tuned to specific personal conventions and are not designed for general use. Workflows will explicitly fail if called from a repository not owned by `IndrajeetPatil`.
+> These workflows are intended solely for use by
+> [@IndrajeetPatil](https://github.com/IndrajeetPatil) repositories. They are
+> tuned to specific personal conventions and are not designed for general use.
+> Workflows will explicitly fail if called from a repository not owned by
+> `IndrajeetPatil`.
 
 Reusable [GitHub Actions workflows](https://docs.github.com/en/actions/sharing-automations/reusing-workflows) for [IndrajeetPatil](https://github.com/IndrajeetPatil) repositories.
 
-All external actions are **pinned to commit SHAs** to prevent supply chain attacks. Most R package workflows are **check-only** — they validate code but never modify or auto-commit changes. Some workflows do perform deployment or release actions, including [`pkgdown.yaml`](.github/workflows/pkgdown.yaml), which deploys the pkgdown site to `gh-pages`, and [`submit-cran.yaml`](.github/workflows/submit-cran.yaml), which builds a source tarball, creates a GitHub Release, and submits the package to CRAN.
+All external actions are **pinned to commit SHAs** to prevent supply chain
+attacks. The workflows default to read-only token access, disable persisted
+checkout credentials except for the one intentional push job, and bound every
+job with a timeout. Write credentials are isolated in deployment and release
+jobs rather than exposed while repository code and dependencies are built or
+tested.
+
+Most R package workflows are **check-only** — they validate code but never
+modify or auto-commit changes. Some workflows do perform deployment or release
+actions, including [`pkgdown.yaml`](.github/workflows/pkgdown.yaml), which
+deploys the pkgdown site to `gh-pages`, and
+[`submit-cran.yaml`](.github/workflows/submit-cran.yaml), which builds and
+submits a source tarball before creating a GitHub Release in a separate
+least-privilege job.
 
 ## Usage
 
@@ -20,7 +37,7 @@ on:
 
 jobs:
   format:
-    uses: IndrajeetPatil/workflows/.github/workflows/check-formatting.yaml@main
+    uses: IndrajeetPatil/workflows/.github/workflows/check-formatting.yaml@<full-commit-sha>
 ```
 
 For workflows with inputs:
@@ -28,10 +45,21 @@ For workflows with inputs:
 ```yaml
 jobs:
   R-CMD-check:
-    uses: IndrajeetPatil/workflows/.github/workflows/R-CMD-check.yaml@main
+    uses: IndrajeetPatil/workflows/.github/workflows/R-CMD-check.yaml@<full-commit-sha>
     with:
-      error-on: '"note"'
+      hard: true
 ```
+
+Pin reusable workflows to a full commit SHA. A branch such as `@main` is
+convenient but mutable; immutable references prevent an upstream change from
+silently altering a caller's CI. Callers must also grant only the permissions
+required by the selected workflow. GitHub can maintain or reduce permissions
+through a reusable-workflow chain, but a called workflow cannot elevate scopes
+that its caller did not grant.
+
+Avoid `secrets: inherit` when a workflow needs only one named secret. Pass that
+secret explicitly so unrelated repository or organization secrets are not made
+available to the called workflow.
 
 ## Python Packages
 
@@ -53,7 +81,7 @@ jobs:
 | [`pkgdown.yaml`](.github/workflows/pkgdown.yaml) | Build & deploy a pkgdown site with verified canonical URLs; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests` |
 | [`pre-commit.yaml`](.github/workflows/pre-commit.yaml) | Run pre-commit hooks; fails if hooks would modify files | — |
 | [`seo-files.yaml`](.github/workflows/seo-files.yaml) | Deploy SEO and AI-discovery files (`robots.txt`, `.well-known/llms.txt`) to `gh-pages` after pkgdown build | `package-name` |
-| [`submit-cran.yaml`](.github/workflows/submit-cran.yaml) | Build source tarball, create GitHub Release, and submit package to CRAN | `extra-packages` |
+| [`submit-cran.yaml`](.github/workflows/submit-cran.yaml) | Build and submit a source tarball to CRAN, then create a GitHub Release | `extra-packages` |
 | [`test-coverage.yaml`](.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%) + examples/vignettes (enforces 100%) | — |
 
 ## Presentations
@@ -65,7 +93,9 @@ jobs:
 
 ## Generic
 
-Generic workflows are language-agnostic and provide utility across diverse types of projects, ensuring high code quality and robust documentation regardless of the underlying tech stack.
+Generic workflows are language-agnostic and provide utility across diverse
+types of projects, ensuring high code quality and robust documentation
+regardless of the underlying tech stack.
 
 | Workflow | Description | Inputs |
 |----------|-------------|--------|

@@ -5,12 +5,14 @@ on:
 
 name: check-formatting
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   check-formatting:
     name: check-formatting
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Restrict to IndrajeetPatil repositories
         if: github.repository_owner != 'IndrajeetPatil'
@@ -19,6 +21,8 @@ jobs:
           exit 1
 
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
 
       - name: Install
         uses: posit-dev/setup-air@cf390573ff4fe0f198f35df3a642b1409328d859 # v1
