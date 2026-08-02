@@ -1,0 +1,74 @@
+name: Security Scan
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secret-scan:
+    name: Secret Scan (Gitleaks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Restrict to IndrajeetPatil repositories
+        if: github.repository_owner != 'IndrajeetPatil'
+        run: |
+          echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
+          exit 1
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install Gitleaks
+        env:
+          GITLEAKS_VERSION: "8.30.1"
+          GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+        run: |
+          archive="${RUNNER_TEMP}/gitleaks.tar.gz"
+          install_dir="${RUNNER_TEMP}/gitleaks"
+          curl --fail --location --silent --show-error \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            --output "$archive"
+          echo "${GITLEAKS_SHA256}  ${archive}" | sha256sum --check
+          mkdir -p "$install_dir"
+          tar --extract --gzip --file "$archive" --directory "$install_dir" gitleaks
+          echo "$install_dir" >> "$GITHUB_PATH"
+
+      - name: Scan complete Git history
+        run: gitleaks git --log-opts="--all" --no-banner --redact .
+
+  workflow-audit:
+    name: Workflow Audit (zizmor)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Restrict to IndrajeetPatil repositories
+        if: github.repository_owner != 'IndrajeetPatil'
+        run: |
+          echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
+          exit 1
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          enable-cache: false
+
+      - name: Run zizmor
+        run: uvx zizmor@1.28.0 --format=github --pedantic .github/workflows/
+        env:
+          GH_TOKEN: ${{ github.token }}

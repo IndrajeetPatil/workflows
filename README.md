@@ -16,6 +16,12 @@ job with a timeout. Write credentials are isolated in deployment and release
 jobs rather than exposed while repository code and dependencies are built or
 tested.
 
+The repository's only standalone workflow is
+[`security.yml`](.github/workflows/security.yml). It runs on pull requests to
+`main`, scans the complete Git history with Gitleaks, and audits every workflow
+with zizmor in pedantic mode so future changes cannot silently weaken these
+controls.
+
 Most R package workflows are **check-only** — they validate code but never
 modify or auto-commit changes. Some workflows do perform deployment or release
 actions, including [`pkgdown.yaml`](.github/workflows/pkgdown.yaml), which
