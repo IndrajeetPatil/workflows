@@ -36,7 +36,7 @@ Run these checks before publishing workflow changes:
 
 ```bash
 actionlint
-gitleaks detect --source . --log-opts="--all" --no-banner --redact
+gitleaks git --log-opts="--all" --no-banner --redact .
 uvx zizmor@1.28.0 --pedantic .github/workflows/
 git diff --check
 ```
