@@ -37,8 +37,6 @@ jobs:
           persist-credentials: false
 
       - uses: r-lib/actions/setup-r@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
-        with:
-          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
         with:
@@ -55,15 +53,7 @@ jobs:
       - name: Run Tests
         run: |
           options(crayon.enabled = TRUE)
-          pkgload::load_all()
-          # this workaround needed to play nicely with parallel testing
-          # see: https://github.com/r-lib/testthat/issues/1912
-          test_script_paths <- testthat::find_test_scripts("tests/testthat")
-          test_with_warning_as_error <- function(path) {
-            withr::local_options(list(warn = 2L))
-            testthat::test_file(path, stop_on_failure = TRUE, stop_on_warning = TRUE)
-          }
-          purrr::walk(test_script_paths, test_with_warning_as_error)
+          testthat::test_local(stop_on_warning = TRUE)
         shell: Rscript {0}
 
       - name: Build vignettes
@@ -92,8 +82,6 @@ jobs:
           persist-credentials: false
 
       - uses: r-lib/actions/setup-r@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
-        with:
-          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
         with:
@@ -106,7 +94,7 @@ jobs:
           seed <- sample.int(1e6, 1L)
           cli::cli_inform("Chosen seed for the current test run: {seed}")
           set.seed(seed)
-          testthat::test_dir("tests", shuffle = TRUE)
+          testthat::test_local(shuffle = TRUE)
         shell: Rscript {0}
 
   check-readme:
@@ -132,8 +120,6 @@ jobs:
           pandoc-version: "latest"
 
       - uses: r-lib/actions/setup-r@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
-        with:
-          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
         with:

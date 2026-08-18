@@ -37,16 +37,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          #- {os: macOS-latest, r: 'devel'}
           - { os: macOS-latest, r: "release" }
-          - { os: macOS-latest, r: "oldrel" }
 
-          - { os: windows-latest, r: "devel" }
           - { os: windows-latest, r: "release" }
-          - { os: windows-latest, r: "oldrel" }
 
-          #- { os: ubuntu-latest, r: "next" }
-          #- { os: ubuntu-latest, r: "devel" }
+          - { os: ubuntu-latest, r: "devel" }
           - { os: ubuntu-latest, r: "release" }
           - { os: ubuntu-latest, r: "oldrel" }
 
@@ -72,7 +67,6 @@ jobs:
       - uses: r-lib/actions/setup-r@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
         with:
           r-version: ${{ matrix.config.r }}
-          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
         with:
@@ -88,9 +82,6 @@ jobs:
           error-on: '"note"'
         env:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
-          _R_CHECK_CRAN_INCOMING_: false
-          _R_CHECK_FORCE_SUGGESTS_: false
-          _R_CHECK_STOP_ON_INVALID_NUMERIC_VERSION_INPUTS_: true
 
   R-CMD-check-hard:
     name: Hard dependencies only
@@ -118,8 +109,6 @@ jobs:
           pandoc-version: "latest"
 
       - uses: r-lib/actions/setup-r@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
-        with:
-          use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
         with:
