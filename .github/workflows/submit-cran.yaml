@@ -20,6 +20,8 @@ jobs:
     outputs:
       release-tag: ${{ steps.meta.outputs.tag }}
       release-title: ${{ steps.meta.outputs.title }}
+      release-target: ${{ steps.source.outputs.sha }}
+      release-pr: ${{ steps.source.outputs.pr-number }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -36,24 +38,84 @@ jobs:
 
       - uses: r-lib/actions/setup-r@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
 
-      - uses: r-lib/actions/setup-r-dependencies@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
-        with:
-          extra-packages: |
-            any::devtools
-            any::pkgbuild
-            ${{ inputs.extra-packages }}
-
       - name: Resolve package metadata
         id: meta
         run: |
-          pkg <- desc::desc_get_field("Package")
-          ver <- as.character(desc::desc_get_version())
+          meta <- read.dcf("DESCRIPTION", fields = c("Package", "Version"))[1L, ]
+          pkg <- unname(meta[["Package"]])
+          ver <- unname(meta[["Version"]])
           out <- Sys.getenv("GITHUB_OUTPUT")
           cat("package=", pkg, "\n", sep = "", file = out, append = TRUE)
           cat("version=", ver, "\n", sep = "", file = out, append = TRUE)
           cat("tag=v",    ver, "\n", sep = "", file = out, append = TRUE)
           cat("title=",   pkg, " ", ver, "\n", sep = "", file = out, append = TRUE)
         shell: Rscript {0}
+
+      - name: Resolve submitted release commit
+        id: source
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          PACKAGE_VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          submitted_sha="$GITHUB_SHA"
+          pr_number=""
+
+          if [[ "$GITHUB_REF_TYPE" == "branch" && "$GITHUB_REF_NAME" == "$DEFAULT_BRANCH" ]]; then
+            pulls_url="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/pulls?state=closed&base=${DEFAULT_BRANCH}&per_page=100&sort=updated&direction=desc"
+            response="$(curl --fail --silent --show-error \
+              --header "Accept: application/vnd.github+json" \
+              --header "User-Agent: IndrajeetPatil-workflows" \
+              "$pulls_url")"
+            match="$(jq --arg title "CRAN Release ${PACKAGE_VERSION}" '
+              [
+                .[]
+                | select(.merged_at != null and (.title | contains($title)))
+              ]
+              | sort_by(.merged_at)
+              | reverse
+              | .[0]
+            ' <<<"$response")"
+            submitted_sha="$(jq -r '.head.sha // empty' <<<"$match")"
+            pr_number="$(jq -r '.number // empty' <<<"$match")"
+
+            if [[ ! "$submitted_sha" =~ ^[0-9a-f]{40}$ || -z "$pr_number" ]]; then
+              echo "::error::No merged CRAN Release ${PACKAGE_VERSION} pull request was found."
+              exit 1
+            fi
+
+            echo "::notice::Releasing submitted tree from pull request #${pr_number} at ${submitted_sha}."
+          fi
+
+          echo "sha=${submitted_sha}" >> "$GITHUB_OUTPUT"
+          echo "pr-number=${pr_number}" >> "$GITHUB_OUTPUT"
+
+      - name: Check out submitted release commit
+        if: >-
+          github.ref_type == 'branch' &&
+          github.ref_name == github.event.repository.default_branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ steps.source.outputs.sha }}
+          persist-credentials: false
+
+      - name: Verify submitted package metadata
+        env:
+          EXPECTED_PACKAGE: ${{ steps.meta.outputs.package }}
+          EXPECTED_VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          meta <- read.dcf("DESCRIPTION", fields = c("Package", "Version"))[1L, ]
+          stopifnot(
+            identical(unname(meta[["Package"]]), Sys.getenv("EXPECTED_PACKAGE")),
+            identical(unname(meta[["Version"]]), Sys.getenv("EXPECTED_VERSION"))
+          )
+        shell: Rscript {0}
+
+      - uses: r-lib/actions/setup-r-dependencies@d3c5be51b12e724e68f33216ca3c148b66d5f0b6 # v2.12.1
+        with:
+          extra-packages: |
+            any::devtools
+            any::pkgbuild
+            ${{ inputs.extra-packages }}
 
       - name: Build source tarball
         id: build
@@ -101,6 +163,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ needs.submit-cran.outputs.release-target }}
           persist-credentials: false
 
       - name: Download source tarball
@@ -129,7 +192,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ needs.submit-cran.outputs.release-tag }}
           RELEASE_TITLE: ${{ needs.submit-cran.outputs.release-title }}
-          TARGET_COMMIT: ${{ github.sha }}
+          TARGET_COMMIT: ${{ needs.submit-cran.outputs.release-target }}
         run: >-
           gh release create "$RELEASE_TAG" release-assets/*.tar.gz
           --title "$RELEASE_TITLE"

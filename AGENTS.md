@@ -10,8 +10,10 @@ owned by `IndrajeetPatil`.
   pull requests targeting `main`.
 - Keep `submit-cran.yaml` two-stage: non-default release branches may submit to
   CRAN but must not create tags or GitHub Releases; the default branch may
-  create the release after merge but must not resubmit to CRAN. Release notes
-  must copy the matching `NEWS.md` section rather than use generated notes.
+  create the release after merge but must not resubmit to CRAN. The release tag,
+  tarball, and NEWS must come from the original submitted pull-request head, not
+  from unrelated changes later added to `main`. Release notes must copy the
+  matching `NEWS.md` section rather than use generated notes.
 - Preserve the owner guard as the first step in every job.
 - Before changing a reusable workflow interface or permissions, search the
   `IndrajeetPatil` organization for callers and verify their granted scopes.
