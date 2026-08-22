@@ -71,16 +71,22 @@ jobs:
           retention-days: 1
 
       - name: Submit to CRAN
+        if: >-
+          github.ref_type == 'branch' &&
+          github.ref_name != github.event.repository.default_branch
         run: |
           assignInNamespace("yesno", function(...) FALSE, "devtools")
           devtools::submit_cran()
         shell: Rscript {0}
 
-  # Publish only after CRAN submission succeeds so a transient submission
-  # failure does not leave a GitHub release without its intended CRAN upload.
+  # The release branch is submitted while its PR remains open. Publish only
+  # when this workflow is rerun from the default branch after that PR is merged.
   release:
     name: Create GitHub Release
     needs: submit-cran
+    if: >-
+      github.ref_type == 'branch' &&
+      github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -103,6 +109,21 @@ jobs:
           name: source-tarball
           path: release-assets
 
+      - name: Extract release notes from NEWS.md
+        env:
+          RELEASE_TITLE: ${{ needs.submit-cran.outputs.release-title }}
+        run: |
+          awk -v heading="# ${RELEASE_TITLE}" '
+            $0 == heading { capture = 1 }
+            capture && /^# / && $0 != heading { exit }
+            capture { print }
+          ' NEWS.md > release-notes.md
+
+          if [[ ! -s release-notes.md ]]; then
+            echo "::error::NEWS.md has no section for ${RELEASE_TITLE}."
+            exit 1
+          fi
+
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -112,5 +133,5 @@ jobs:
         run: >-
           gh release create "$RELEASE_TAG" release-assets/*.tar.gz
           --title "$RELEASE_TITLE"
-          --generate-notes
+          --notes-file release-notes.md
           --target "$TARGET_COMMIT"
