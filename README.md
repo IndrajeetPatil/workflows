@@ -27,8 +27,9 @@ modify or auto-commit changes. Some workflows do perform deployment or release
 actions, including [`pkgdown.yaml`](.github/workflows/pkgdown.yaml), which
 deploys the pkgdown site to `gh-pages`, and
 [`submit-cran.yaml`](.github/workflows/submit-cran.yaml), which builds and
-submits a source tarball before creating a GitHub Release in a separate
-least-privilege job.
+submits a source tarball from a release branch and creates a GitHub Release only
+when rerun from the default branch after merge, in a separate least-privilege
+job.
 
 ## Usage
 
@@ -87,7 +88,7 @@ available to the called workflow.
 | [`pkgdown.yaml`](.github/workflows/pkgdown.yaml) | Build & deploy a pkgdown site with verified canonical URLs; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests` |
 | [`pre-commit.yaml`](.github/workflows/pre-commit.yaml) | Run pre-commit hooks; fails if hooks would modify files | — |
 | [`seo-files.yaml`](.github/workflows/seo-files.yaml) | Deploy SEO and AI-discovery files (`robots.txt`, `.well-known/llms.txt`) to `gh-pages` after pkgdown build | `package-name` |
-| [`submit-cran.yaml`](.github/workflows/submit-cran.yaml) | Build and submit a source tarball to CRAN, then create a GitHub Release | `extra-packages` |
+| [`submit-cran.yaml`](.github/workflows/submit-cran.yaml) | On a release branch, build and submit to CRAN without releasing; on the default branch after merge, build and create a GitHub Release using the matching `NEWS.md` section without resubmitting | `extra-packages` |
 | [`test-coverage.yaml`](.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%) + examples/vignettes (enforces 100%) | — |
 
 ## Presentations
