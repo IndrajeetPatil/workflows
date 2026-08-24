@@ -96,17 +96,18 @@ available to the called workflow.
 
 Setting `no-suggests: true` makes `pkgdown.yaml` validate that a package website
 can be built with hard package dependencies plus the documentation tooling,
-without installing the package's `Suggests`. The job uses a dedicated
-`hard-deps-1` dependency-cache namespace. This matters because
-`setup-r-dependencies` fallback cache keys do not include the generated
-lockfile hash: sharing the normal pkgdown namespace could restore a library
-containing suggested packages and weaken the hard-only check.
+without installing the package's `Suggests`. The job uses a dedicated cache
+namespace that includes a hash of the caller's `DESCRIPTION`. This matters
+because `setup-r-dependencies` fallback cache keys do not include the generated
+lockfile hash: sharing the normal pkgdown namespace, or reusing a hard-only
+namespace after declared dependencies change, could restore packages that are
+no longer hard dependencies and weaken the check.
 
-The first run for a new hard-dependency cache is necessarily a cold install.
-Later runs can restore that isolated cache, avoiding the much longer runtime
-caused by rebuilding the hard-dependency graph on every pull request. Increment
-the hard-dependency cache version only when that cache intentionally needs to
-be invalidated.
+The first run for each `DESCRIPTION` state is necessarily a cold install. Later
+runs with the same dependency metadata can restore that isolated cache,
+avoiding the much longer runtime caused by rebuilding the hard-dependency graph
+on every pull request. Increment the static cache-generation prefix only when
+all hard-only caches intentionally need to be invalidated.
 
 ## Presentations
 
