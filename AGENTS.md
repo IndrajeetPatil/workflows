@@ -36,6 +36,19 @@ owned by `IndrajeetPatil`.
 - Keep the pull-request security gate fail-closed: scan the complete Git history
   with Gitleaks and run zizmor in pedantic mode across every workflow.
 
+## Dependency cache isolation
+
+- Preserve `dependencies: '"hard"'` for the `pkgdown.yaml` no-Suggests mode.
+- Keep its dependency cache enabled under a namespace distinct from the normal
+  Suggests-enabled pkgdown job and derived from the caller's `DESCRIPTION`.
+  The action's fallback cache key omits the lockfile hash, so a shared or static
+  namespace can restore packages that are no longer hard dependencies and
+  invalidate the hard-only check.
+- Do not routinely set the no-Suggests cache to `false`; that forces every run
+  to rebuild the hard-dependency graph. Preserve the dependency-metadata hash
+  in `cache-version`, and increment its static generation prefix only when all
+  hard-only caches must be invalidated.
+
 ## Validation
 
 Run these checks before publishing workflow changes:
