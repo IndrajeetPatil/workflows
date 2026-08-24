@@ -92,6 +92,22 @@ available to the called workflow.
 | [`submit-cran.yaml`](.github/workflows/submit-cran.yaml) | On a release branch, build and submit to CRAN without releasing; on the default branch after merge, rebuild and tag the submitted PR head and create a GitHub Release using the matching `NEWS.md` section without resubmitting | `extra-packages` |
 | [`test-coverage.yaml`](.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%) + examples/vignettes (enforces 100%) | — |
 
+### Hard-dependency pkgdown checks
+
+Setting `no-suggests: true` makes `pkgdown.yaml` validate that a package website
+can be built with hard package dependencies plus the documentation tooling,
+without installing the package's `Suggests`. The job uses a dedicated
+`hard-deps-1` dependency-cache namespace. This matters because
+`setup-r-dependencies` fallback cache keys do not include the generated
+lockfile hash: sharing the normal pkgdown namespace could restore a library
+containing suggested packages and weaken the hard-only check.
+
+The first run for a new hard-dependency cache is necessarily a cold install.
+Later runs can restore that isolated cache, avoiding the much longer runtime
+caused by rebuilding the hard-dependency graph on every pull request. Increment
+the hard-dependency cache version only when that cache intentionally needs to
+be invalidated.
+
 ## Presentations
 
 | Workflow | Description | Inputs |
