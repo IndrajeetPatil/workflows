@@ -118,7 +118,7 @@ all hard-only caches intentionally need to be invalidated.
 
 Both presentation workflows install `quarto-revealjs-a11y` 0.2.3 from the
 [vendored release archive](vendor/README.md) in this repository. They download
-its stored bytes from `workflows/main` and verify SHA-256
+its stored bytes from a fixed `workflows` commit and verify SHA-256
 `854bf2cc4229facb041b375253b75038f866f3a5a86aafd826adb0ea817a6994`
 before passing the local file to Quarto. A checksum mismatch stops the build.
 The archive is tracked in Git, so GitHub source-archive regeneration cannot

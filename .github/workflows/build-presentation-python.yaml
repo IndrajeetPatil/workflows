@@ -54,7 +54,7 @@ jobs:
 
       - name: Install RevealJS accessibility extension
         env:
-          A11Y_URL: https://raw.githubusercontent.com/IndrajeetPatil/workflows/main/vendor/a11y-v0.2.3.tar.gz
+          A11Y_URL: https://raw.githubusercontent.com/IndrajeetPatil/workflows/62dba71c994b0f87385da537606e5df076de8ff2/vendor/a11y-v0.2.3.tar.gz
           A11Y_SHA256: 854bf2cc4229facb041b375253b75038f866f3a5a86aafd826adb0ea817a6994
         run: |
           archive="$RUNNER_TEMP/quarto-revealjs-a11y.tar.gz"

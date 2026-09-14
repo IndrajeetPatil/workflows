@@ -10,10 +10,13 @@ extension files were also compared byte-for-byte with that commit's source.
 The archive includes the upstream MIT licence at `_extensions/a11y/LICENSE`.
 
 Both presentation workflows and downstream local installers download this
-stored file from `workflows/main` and verify its digest before invoking Quarto.
+stored file from commit `62dba71c994b0f87385da537606e5df076de8ff2` and verify
+its digest before invoking Quarto. The fixed revision keeps this archive
+available even if a later commit removes or renames the file.
 Unlike GitHub's generated source archives, these compressed bytes are tracked
 in Git and do not depend on GitHub's archive generator.
 
 Keep existing versioned archives unchanged. For an upgrade, add a new release
 asset after verifying its provenance and contents; update the archive URL and
 SHA-256 in both presentation workflows and downstream installation recipes.
+Pin the download URL to a commit that already contains the new archive.
