@@ -116,32 +116,6 @@ all hard-only caches intentionally need to be invalidated.
 | [`build-presentation-python.yaml`](.github/workflows/build-presentation-python.yaml) | Build & deploy Python/UV Quarto RevealJS presentation to GitHub Pages | — |
 | [`build-presentation-r.yaml`](.github/workflows/build-presentation-r.yaml) | Build & deploy R Quarto RevealJS presentation to GitHub Pages | — |
 
-Both presentation workflows install `quarto-revealjs-a11y` 0.2.3 from the
-[vendored release archive](vendor/README.md) in this repository. They download
-its stored bytes from `workflows/main` and verify SHA-256
-`854bf2cc4229facb041b375253b75038f866f3a5a86aafd826adb0ea817a6994`
-before passing the local file to Quarto. A checksum mismatch stops the build.
-The archive is tracked in Git, so GitHub source-archive regeneration cannot
-change its compressed bytes.
-The R workflow exposes `GITHUB_PAT` only to the R dependency installation step.
-Enable the extension in the calling deck's YAML:
-
-```yaml
-format:
-  revealjs:
-    revealjs-plugins:
-      - a11y
-```
-
-For local renders, use the same vendored archive URL and checksum verification
-before installing the downloaded file. The archive installs as `_extensions/a11y`;
-the workflows remove the older `_extensions/mcanouil/a11y` copy if present so
-Quarto cannot load a stale duplicate. Add a new versioned archive and update its
-URL, digest, and the caller's local installation recipe together when upgrading;
-retain existing archives.
-The extension supplies accessibility features; authors still need to check
-their content, styling, and keyboard interactions.
-
 ## Generic
 
 Generic workflows are language-agnostic and provide utility across diverse
