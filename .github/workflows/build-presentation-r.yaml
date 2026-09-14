@@ -11,8 +11,6 @@ jobs:
     name: Build presentation
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Restrict to IndrajeetPatil repositories
         if: github.repository_owner != 'IndrajeetPatil'
@@ -44,12 +42,26 @@ jobs:
         uses: r-lib/actions/setup-r@465b7d8e732ca3921382b1674c59bada9cbf3399 # v2.13.0
 
       - name: Install R dependencies
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         uses: r-lib/actions/setup-r-dependencies@465b7d8e732ca3921382b1674c59bada9cbf3399 # v2.13.0
         with:
           upgrade: "TRUE"
 
       - name: Install RevealJS accessibility extension
-        run: quarto add mcanouil/quarto-revealjs-a11y@0.2.3 --no-prompt
+        env:
+          A11Y_COMMIT: 0ae858c05f6108558d7bd5204a3dbb540dc8f5e6 # 0.2.3
+          A11Y_SHA256: b119ec845f942b8e9e61a9c596dfde7a644baa59c8e0ec29257706aa969e07db
+        run: |
+          archive="$RUNNER_TEMP/quarto-revealjs-a11y.tar.gz"
+          curl --fail --location --silent --show-error \
+            "https://github.com/mcanouil/quarto-revealjs-a11y/archive/${A11Y_COMMIT}.tar.gz" \
+            --output "$archive"
+          echo "${A11Y_SHA256}  ${archive}" | sha256sum --check
+          quarto add "$archive" --no-prompt
+          if [ -d _extensions/mcanouil/a11y ]; then
+            quarto remove mcanouil/a11y --no-prompt
+          fi
 
       - name: Render slides
         run: quarto render
