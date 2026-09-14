@@ -36,6 +36,10 @@ owned by `IndrajeetPatil`.
 - Keep the pull-request security gate fail-closed: scan the complete Git history
   with Gitleaks and run zizmor in pedantic mode across every workflow.
 
+The Quarto accessibility extension is intentionally installed directly from
+upstream with `quarto add mcanouil/quarto-revealjs-a11y --no-prompt`. Do not add
+version pins, vendored archives, or checksum infrastructure for this extension.
+
 ## Dependency cache isolation
 
 - Preserve `dependencies: '"hard"'` for the `pkgdown.yaml` no-Suggests mode.
