@@ -116,6 +116,22 @@ all hard-only caches intentionally need to be invalidated.
 | [`build-presentation-python.yaml`](.github/workflows/build-presentation-python.yaml) | Build & deploy Python/UV Quarto RevealJS presentation to GitHub Pages | — |
 | [`build-presentation-r.yaml`](.github/workflows/build-presentation-r.yaml) | Build & deploy R Quarto RevealJS presentation to GitHub Pages | — |
 
+Both presentation workflows install
+[`mcanouil/quarto-revealjs-a11y@0.2.3`](https://github.com/mcanouil/quarto-revealjs-a11y/releases/tag/0.2.3)
+before rendering. Enable it in the calling deck's YAML:
+
+```yaml
+format:
+  revealjs:
+    revealjs-plugins:
+      - a11y
+```
+
+For local renders, install the same version with
+`quarto add mcanouil/quarto-revealjs-a11y@0.2.3 --no-prompt`.
+The extension supplies accessibility features; authors still need to check
+their content, styling, and keyboard interactions.
+
 ## Generic
 
 Generic workflows are language-agnostic and provide utility across diverse

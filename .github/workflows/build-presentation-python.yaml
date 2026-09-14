@@ -52,6 +52,9 @@ jobs:
       - name: Install dependencies
         run: uv sync --frozen --no-install-project
 
+      - name: Install RevealJS accessibility extension
+        run: quarto add mcanouil/quarto-revealjs-a11y@0.2.3 --no-prompt
+
       - name: Render slides
         run: |
           PANDOC_DIR="$(dirname "$(command -v pandoc)")"
