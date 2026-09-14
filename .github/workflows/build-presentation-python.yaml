@@ -52,6 +52,21 @@ jobs:
       - name: Install dependencies
         run: uv sync --frozen --no-install-project
 
+      - name: Install RevealJS accessibility extension
+        env:
+          A11Y_URL: https://raw.githubusercontent.com/IndrajeetPatil/workflows/main/vendor/a11y-v0.2.3.tar.gz
+          A11Y_SHA256: 854bf2cc4229facb041b375253b75038f866f3a5a86aafd826adb0ea817a6994
+        run: |
+          archive="$RUNNER_TEMP/quarto-revealjs-a11y.tar.gz"
+          curl --fail --location --silent --show-error \
+            "$A11Y_URL" \
+            --output "$archive"
+          echo "${A11Y_SHA256}  ${archive}" | sha256sum --check
+          quarto add "$archive" --no-prompt
+          if [ -d _extensions/mcanouil/a11y ]; then
+            quarto remove mcanouil/a11y --no-prompt
+          fi
+
       - name: Render slides
         run: |
           PANDOC_DIR="$(dirname "$(command -v pandoc)")"
