@@ -1,10 +1,9 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 #
-# NOTE: When hard: true, only "hard" dependencies (Depends, Imports, LinkingTo) are installed.
-# Suggests are never installed (except testthat, knitr, rmarkdown, curl). The cache is
-# never used to avoid accidentally restoring a cache containing a suggested dependency.
-# Hard mode only runs on pull requests, not on pushes to main.
+# Hard mode installs hard package dependencies, checking tools, and Config/Needs/check
+# entries. Its cache is disabled to avoid restoring suggested dependencies.
+# Hard mode only runs on pull requests.
 on:
   workflow_call:
     inputs:
@@ -12,10 +11,6 @@ on:
         type: boolean
         default: false
         description: 'Run with hard dependencies only (no Suggests); only runs on PRs'
-      extra-packages:
-        type: string
-        default: ''
-        description: 'Additional packages to install (e.g., any::pkg1, any::pkg2)'
 name: R-CMD-check
 
 permissions:
@@ -70,9 +65,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@465b7d8e732ca3921382b1674c59bada9cbf3399 # v2.13.0
         with:
-          extra-packages: |
-            any::rcmdcheck
-            ${{ inputs.extra-packages }}
+          extra-packages: any::rcmdcheck
           needs: check
 
       - uses: r-lib/actions/check-r-package@465b7d8e732ca3921382b1674c59bada9cbf3399 # v2.13.0
@@ -120,7 +113,6 @@ jobs:
             any::rmarkdown
             any::curl
             any::testthat
-            ${{ inputs.extra-packages }}
           needs: check
 
       - uses: r-lib/actions/check-r-package@465b7d8e732ca3921382b1674c59bada9cbf3399 # v2.13.0
