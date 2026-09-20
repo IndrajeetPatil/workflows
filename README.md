@@ -77,6 +77,12 @@ available to the called workflow.
 | [`python-qa.yaml`](.github/workflows/python-qa.yaml) | Code Quality checks, including build, test coverage, and README render | — |
 | [`python-test.yaml`](.github/workflows/python-test.yaml) | Run Tests across multiple OS and Python versions | — |
 
+The Python QA, Python test, and prek workflows enable ANSI color in captured CI
+logs with job-level `FORCE_COLOR=1` and `CLICOLOR_FORCE=1`. Together these cover
+Ruff, ty, pytest, uv, pyrefly, and prek, including tools invoked by Make targets
+and hooks. The settings live in the reusable workflows so callers do not need
+to configure them. Output without built-in color styling remains plain text.
+
 ## R Packages
 
 | Workflow | Description | Inputs |

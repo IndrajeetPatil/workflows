@@ -15,6 +15,10 @@ jobs:
     name: Run prek hooks
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # prek-action colors its own output; hooks also need to inherit color settings.
+    env:
+      FORCE_COLOR: "1"
+      CLICOLOR_FORCE: "1"
     steps:
       - name: Restrict to IndrajeetPatil repositories
         if: github.repository_owner != 'IndrajeetPatil'

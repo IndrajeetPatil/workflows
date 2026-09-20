@@ -11,6 +11,10 @@ jobs:
     name: Code Quality Check
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    # CI output is captured without a terminal; tools use different color conventions.
+    env:
+      FORCE_COLOR: "1"
+      CLICOLOR_FORCE: "1"
 
     steps:
       - name: Restrict to IndrajeetPatil repositories

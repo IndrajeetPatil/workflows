@@ -11,6 +11,10 @@ jobs:
     name: Run Tests
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
+    # Cover pytest, uv, and any tools invoked by the tests on every runner OS.
+    env:
+      FORCE_COLOR: "1"
+      CLICOLOR_FORCE: "1"
     strategy:
       matrix:
         include:
