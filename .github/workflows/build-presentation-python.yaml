@@ -32,7 +32,7 @@ jobs:
         uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
 
       - name: Set up Python
-        run: uv python install
+        run: uv python install --color=always
 
       - name: Setup Quarto
         uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
@@ -50,7 +50,7 @@ jobs:
           pandoc --version | head -n 1
 
       - name: Install dependencies
-        run: uv sync --frozen --no-install-project
+        run: uv sync --frozen --no-install-project --color=always
 
       - name: Install RevealJS accessibility extension
         run: quarto add mcanouil/quarto-revealjs-a11y --no-prompt

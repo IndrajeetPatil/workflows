@@ -77,6 +77,14 @@ available to the called workflow.
 | [`python-qa.yaml`](.github/workflows/python-qa.yaml) | Code Quality checks, including build, test coverage, and README render | — |
 | [`python-test.yaml`](.github/workflows/python-test.yaml) | Run Tests across multiple OS and Python versions | — |
 
+The repository's internal zizmor audit enables ANSI color in captured CI logs
+with job-level `FORCE_COLOR=1` and `CLICOLOR_FORCE=1`, while retaining its
+GitHub annotation format. In the reusable Python and presentation workflows,
+color is strictly enabled via command-line flags on `uv` and `pytest`
+rather than job-level variables. This prevents ANSI escapes from bleeding into
+caller-supplied content such as `prek` hooks, Make targets, or captured
+presentation cells. `prek` itself remains colorized via the `prek-action` defaults.
+
 ## R Packages
 
 | Workflow | Description | Inputs |
