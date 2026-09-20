@@ -1,10 +1,5 @@
 on:
   workflow_call:
-    inputs:
-      extra-render-args:
-        type: string
-        default: ''
-        description: 'Extra arguments to pass to quarto render'
 
 name: Build and Deploy Presentation
 
