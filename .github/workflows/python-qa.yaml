@@ -29,20 +29,20 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv --color=always python install
-          uv --color=always sync --all-extras --dev
+          uv python install --color=always
+          uv sync --all-extras --dev --color=always
 
       - name: Build the package
-        run: uv --color=always build
+        run: uv build --color=always
 
       - name: Run QA checks
         run: make qa
 
       - name: Compute Coverage
         run: |
-          uv --color=always run coverage run -m pytest --color=yes tests/
-          uv --color=always run coverage report --fail-under=95
-          uv --color=always run coverage html
+          uv run coverage run -m pytest tests/ --color=yes
+          uv run coverage report --fail-under=95
+          uv run coverage html
 
       - name: Install Pandoc
         uses: r-lib/actions/setup-pandoc@465b7d8e732ca3921382b1674c59bada9cbf3399 # v2.13.0
