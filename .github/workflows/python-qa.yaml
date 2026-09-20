@@ -41,7 +41,7 @@ jobs:
       - name: Compute Coverage
         run: |
           uv run coverage run -m pytest tests/ --color=yes
-          uv run coverage report --fail-under=95
+          uv run coverage report --fail-under=100
           uv run coverage html
 
       - name: Install Pandoc
