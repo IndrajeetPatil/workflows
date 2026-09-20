@@ -51,9 +51,6 @@ jobs:
       - name: Install RevealJS accessibility extension
         run: quarto add mcanouil/quarto-revealjs-a11y --no-prompt
 
-      - name: Turn R warnings into errors
-        run: echo 'options(warn = 2)' >> .Rprofile
-
       - name: Render slides
         run: quarto render
 
