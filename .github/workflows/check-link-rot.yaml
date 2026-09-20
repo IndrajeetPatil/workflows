@@ -30,3 +30,12 @@ jobs:
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
           fail: true
+          # The action defaults to '*.md', '*.html' and '*.rst' only, which
+          # silently skips the slide sources themselves: presentation decks keep
+          # nearly all of their outbound links in index.qmd, and the llms.txt /
+          # llms-full.txt mirrors are plain text. Without these globs the check
+          # reports success while never reading the files it exists to guard.
+          args: >-
+            --verbose --no-progress
+            './**/*.md' './**/*.html' './**/*.rst'
+            './**/*.qmd' './**/*.txt'
