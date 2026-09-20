@@ -20,8 +20,12 @@ owned by `IndrajeetPatil`.
 
 ## Security requirements
 
-- Pin every external action to a full commit SHA and retain the release version
-  in an inline comment.
+- Pin every external, third-party action to a full commit SHA and retain the
+  release version in an inline comment.
+- Reference first-party `IndrajeetPatil/*` reusable workflows as `@main` so that
+  callers always track the reviewed source of truth. Never pin them to a commit
+  SHA: such pins rot silently and hold callers on a revision that has since lost
+  hardening applied here.
 - Default `GITHUB_TOKEN` to `contents: read`. Give a job only the additional
   write scopes it needs, and isolate deploy or release credentials from jobs
   that build or test repository code.
@@ -60,7 +64,7 @@ Run these checks before publishing workflow changes:
 ```bash
 actionlint
 gitleaks git --log-opts="--all" --no-banner --redact .
-uvx zizmor@1.28.0 --pedantic .github/workflows/
+uvx zizmor@1.30.1 --pedantic .github/workflows/
 git diff --check
 ```
 
