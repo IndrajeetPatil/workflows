@@ -1,0 +1,136 @@
+on:
+  workflow_call:
+    inputs:
+      backend:
+        type: string
+        required: true
+        description: "Presentation backend: python or r"
+
+name: Check Presentation Template Drift
+
+permissions:
+  contents: read
+
+jobs:
+  check-drift:
+    name: Check template drift
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Restrict to IndrajeetPatil repositories
+        if: github.repository_owner != 'IndrajeetPatil'
+        run: |
+          echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
+          exit 1
+
+      - name: Validate backend
+        env:
+          BACKEND: ${{ inputs.backend }}
+        run: |
+          if [[ "$BACKEND" != "python" && "$BACKEND" != "r" ]]; then
+            echo "::error::backend must be either 'python' or 'r' (got: '$BACKEND')."
+            exit 1
+          fi
+
+      - name: Checkout presentation repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Templates are read from the default branch of the workflows repository,
+      # so a deck comparing itself is always checked against the current
+      # canonical files rather than the revision it pinned this workflow to.
+      - name: Checkout shared templates
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: IndrajeetPatil/workflows
+          path: .templates
+          persist-credentials: false
+
+      - name: Compare deck files against shared templates
+        env:
+          BACKEND: ${{ inputs.backend }}
+        run: |
+          set -uo pipefail
+
+          templates=".templates/templates/presentation"
+          repo_name="${GITHUB_REPOSITORY##*/}"
+
+          summary_rows=""
+          drift_count=0
+
+          compare() {
+            deck_file="$1"
+            template_file="$2"
+            label="$3"
+
+            if [[ ! -f "$template_file" ]]; then
+              echo "::error::Shared template '$label' was not found in IndrajeetPatil/workflows."
+              summary_rows+="| \`$deck_file\` | template \`$label\` missing |"$'\n'
+              drift_count=$((drift_count + 1))
+              return
+            fi
+
+            if [[ ! -f "$deck_file" ]]; then
+              echo "::error file=$deck_file::'$deck_file' is missing; it should be a copy of '$label'."
+              summary_rows+="| \`$deck_file\` | **missing** |"$'\n'
+              drift_count=$((drift_count + 1))
+              return
+            fi
+
+            if diff -u --label "template: $label" "$template_file" --label "deck: $deck_file" "$deck_file"; then
+              echo "match: $deck_file == $label"
+              summary_rows+="| \`$deck_file\` | matches \`$label\` |"$'\n'
+            else
+              echo "::error file=$deck_file::'$deck_file' has drifted from '$label'."
+              summary_rows+="| \`$deck_file\` | **drifted** from \`$label\` |"$'\n'
+              drift_count=$((drift_count + 1))
+            fi
+          }
+
+          compare "accessibility.html" "$templates/accessibility.html" "accessibility.html"
+          compare "_quarto-a11y.yml" "$templates/_quarto-a11y.yml" "_quarto-a11y.yml"
+          compare ".editorconfig" "$templates/.editorconfig" ".editorconfig"
+          compare "justfile" "$templates/justfile.$BACKEND" "justfile.$BACKEND"
+          compare ".gitignore" "$templates/gitignore.$BACKEND" "gitignore.$BACKEND"
+          compare \
+            ".github/workflows/build-presentation.yaml" \
+            "$templates/build-presentation.$BACKEND.yaml" \
+            "build-presentation.$BACKEND.yaml"
+
+          # robots.txt is generated from a template whose {{SLUG}} placeholder is
+          # the calling repository's name.
+          robots_template="$templates/robots.txt.tmpl"
+          if [[ -f "$robots_template" ]]; then
+            rendered="$(mktemp)"
+            robots_content="$(cat "$robots_template")"
+            printf '%s\n' "${robots_content//\{\{SLUG\}\}/$repo_name}" > "$rendered"
+            compare "robots.txt" "$rendered" "robots.txt.tmpl ({{SLUG}} -> $repo_name)"
+          else
+            compare "robots.txt" "$robots_template" "robots.txt.tmpl"
+          fi
+
+          {
+            echo "## Presentation template drift"
+            echo
+            echo "Backend: \`$BACKEND\`"
+            echo
+            echo "| Deck file | Status |"
+            echo "|-----------|--------|"
+            printf '%s' "$summary_rows"
+            echo
+            if [[ "$drift_count" -gt 0 ]]; then
+              echo "$drift_count file(s) differ from the shared templates in"
+              echo "\`IndrajeetPatil/workflows\` under \`templates/presentation/\`."
+              echo "See the job log for the full diff of each file."
+            else
+              echo "All files match the shared templates."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [[ "$drift_count" -gt 0 ]]; then
+            echo "::error::$drift_count file(s) have drifted from the shared presentation templates."
+            exit 1
+          fi
+
+          echo "All presentation template files match the shared templates."
