@@ -119,6 +119,11 @@ all hard-only caches intentionally need to be invalidated.
 |----------|-------------|--------|
 | [`build-presentation-python.yaml`](.github/workflows/build-presentation-python.yaml) | Build & deploy Python/UV Quarto RevealJS presentation to GitHub Pages | — |
 | [`build-presentation-r.yaml`](.github/workflows/build-presentation-r.yaml) | Build & deploy R Quarto RevealJS presentation to GitHub Pages | — |
+| [`check-presentation-drift.yaml`](.github/workflows/check-presentation-drift.yaml) | Check a deck's shared files (`accessibility.html`, `justfile`, `.gitignore`, `robots.txt`, …) against the canonical copies in [`templates/presentation/`](templates/presentation); use `backend: python` or `backend: r` | `backend` |
+
+The canonical presentation files themselves live in
+[`templates/presentation/`](templates/presentation), which documents what each
+template maps to in a deck repository.
 
 ## Generic
 
