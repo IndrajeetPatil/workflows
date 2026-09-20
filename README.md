@@ -77,11 +77,13 @@ available to the called workflow.
 | [`python-qa.yaml`](.github/workflows/python-qa.yaml) | Code Quality checks, including build, test coverage, and README render | — |
 | [`python-test.yaml`](.github/workflows/python-test.yaml) | Run Tests across multiple OS and Python versions | — |
 
-The Python QA, Python test, and prek workflows enable ANSI color in captured CI
+The Python QA, test, documentation, and presentation build jobs, prek hooks,
+and the repository's uvx-based zizmor audit enable ANSI color in captured CI
 logs with job-level `FORCE_COLOR=1` and `CLICOLOR_FORCE=1`. Together these cover
-Ruff, ty, pytest, uv, pyrefly, and prek, including tools invoked by Make targets
-and hooks. The settings live in the reusable workflows so callers do not need
-to configure them. Output without built-in color styling remains plain text.
+Ruff, ty, pytest, uv, pyrefly, prek, and other tools that honor these settings,
+including subprocesses invoked by Make targets, builds, and hooks. Callers do
+not need to configure color themselves. Output without built-in color styling
+remains plain text, and zizmor retains its GitHub annotation format.
 
 ## R Packages
 

@@ -11,6 +11,10 @@ jobs:
     name: Build documentation
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Enable color for uv, documentation tools, and Python subprocesses in CI.
+    env:
+      FORCE_COLOR: "1"
+      CLICOLOR_FORCE: "1"
     steps:
       - name: Restrict to IndrajeetPatil repositories
         if: github.repository_owner != 'IndrajeetPatil'
