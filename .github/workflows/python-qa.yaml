@@ -11,10 +11,6 @@ jobs:
     name: Code Quality Check
     runs-on: ubuntu-latest
     timeout-minutes: 45
-    # CI output is captured without a terminal; tools use different color conventions.
-    env:
-      FORCE_COLOR: "1"
-      CLICOLOR_FORCE: "1"
 
     steps:
       - name: Restrict to IndrajeetPatil repositories
@@ -33,20 +29,20 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv python install
-          uv sync --all-extras --dev
+          uv --color=always python install
+          uv --color=always sync --all-extras --dev
 
       - name: Build the package
-        run: uv build
+        run: uv --color=always build
 
       - name: Run QA checks
         run: make qa
 
       - name: Compute Coverage
         run: |
-          uv run coverage run -m pytest tests/
-          uv run coverage report --fail-under=95
-          uv run coverage html
+          uv --color=always run coverage run -m pytest --color=yes tests/
+          uv --color=always run coverage report --fail-under=95
+          uv --color=always run coverage html
 
       - name: Install Pandoc
         uses: r-lib/actions/setup-pandoc@465b7d8e732ca3921382b1674c59bada9cbf3399 # v2.13.0
