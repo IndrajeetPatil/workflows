@@ -16,18 +16,18 @@ jobs:
         include:
           # Ubuntu with all supported Python versions
           - os: ubuntu-latest
-            python-version: "3.10"
+            python-version: "3.12"
           - os: ubuntu-latest
-            python-version: 3.11
+            python-version: "3.13"
           - os: ubuntu-latest
-            python-version: 3.12
-          - os: ubuntu-latest
-            python-version: 3.14
+            python-version: "3.14"
           # macOS and windows with the latest Python version
           - os: macos-latest
-            python-version: 3.14
+            python-version: "3.14"
           - os: windows-latest
-            python-version: 3.14
+            python-version: "3.14"
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
     steps:
       - name: Restrict to IndrajeetPatil repositories
         if: github.repository_owner != 'IndrajeetPatil'
@@ -49,7 +49,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: uv sync --all-extras --dev --color=always
+        run: uv sync --all-extras --dev --locked --color=always
 
       - name: Run Tests
-        run: uv run pytest . --color=yes
+        run: uv run --locked pytest . --color=yes
