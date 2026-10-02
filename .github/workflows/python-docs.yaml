@@ -32,11 +32,7 @@ jobs:
           uv sync --all-extras --dev --color=always
 
       - name: Build Docs
-        run: |
-          if [ -f scripts/generate_llmstxt.py ]; then
-            uv run python scripts/generate_llmstxt.py
-          fi
-          uv run zensical build
+        run: uv run zensical build
 
       - name: Upload artifact
         if: github.ref == 'refs/heads/main'
