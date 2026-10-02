@@ -46,7 +46,7 @@ jobs:
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
 
       - name: Set up Python
-        run: uv python install
+        run: uv python install --color=always
 
       - name: Install dependencies
         run: uv sync --all-extras --dev --locked --color=always
