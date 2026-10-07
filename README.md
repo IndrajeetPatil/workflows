@@ -74,7 +74,7 @@ available to the called workflow.
 | Workflow | Description | Inputs |
 |----------|-------------|--------|
 | [`python-docs.yaml`](.github/workflows/python-docs.yaml) | Build & deploy Python package documentation to GitHub Pages | — |
-| [`python-qa.yaml`](.github/workflows/python-qa.yaml) | Code Quality checks, including build, test coverage, and README render | — |
+| [`python-qa.yaml`](.github/workflows/python-qa.yaml) | Code Quality checks, including build and test coverage | — |
 | [`python-test.yaml`](.github/workflows/python-test.yaml) | Run Tests across multiple OS and Python versions | — |
 
 The repository's internal zizmor audit enables ANSI color in captured CI logs
