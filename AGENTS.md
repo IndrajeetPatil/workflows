@@ -21,8 +21,9 @@ owned by `IndrajeetPatil`.
 
 ## Security requirements
 
-- Pin every external action to a full commit SHA and retain the release version
-  in an inline comment.
+- Pin every external action to a full commit SHA and retain the most specific
+  release version available in an inline comment. Do not use sliding major-version
+  tags (e.g. `v2`) if a more specific version tag exists (e.g. `v2.14.0`).
 - Default `GITHUB_TOKEN` to `contents: read`. Give a job only the additional
   write scopes it needs, and isolate deploy or release credentials from jobs
   that build or test repository code.
