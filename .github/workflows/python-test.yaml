@@ -21,13 +21,14 @@ jobs:
             python-version: "3.13"
           - os: ubuntu-latest
             python-version: "3.14"
+          # Use the available release candidate until uv ships 3.15.0 final.
           - os: ubuntu-latest
-            python-version: "3.15"
+            python-version: "3.15.0rc3"
           # macOS and windows with the latest Python version
           - os: macos-latest
-            python-version: "3.15"
+            python-version: "3.15.0rc3"
           - os: windows-latest
-            python-version: "3.15"
+            python-version: "3.15.0rc3"
     env:
       UV_PYTHON: ${{ matrix.python-version }}
     steps:
