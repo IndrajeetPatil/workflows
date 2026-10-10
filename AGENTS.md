@@ -42,6 +42,20 @@ The Quarto accessibility extension is intentionally installed directly from
 upstream with `quarto add mcanouil/quarto-revealjs-a11y --no-prompt`. Do not add
 version pins, vendored archives, or checksum infrastructure for this extension.
 
+## Python toolchain and test matrix
+
+- Omit the `version` input of `astral-sh/setup-uv`. Let the action install the
+  newest uv version satisfying the caller's `required-version`, or the latest
+  release when no requirement is declared. Keep the action itself pinned to a
+  full commit SHA with its release version in the inline comment.
+- Test every supported Python version on Ubuntu. Only the latest stable Python
+  release also runs on macOS and Windows; older releases and prereleases run on
+  Ubuntu only.
+- When adopting a new stable Python release, replace the previous macOS and
+  Windows matrix entries. Update consumers' required status checks to the new
+  job names after validating them, rather than retaining obsolete platform jobs
+  to satisfy stale branch-protection settings.
+
 ## Dependency cache isolation
 
 - Preserve `dependencies: '"hard"'` for the `pkgdown.yaml` no-Suggests mode
