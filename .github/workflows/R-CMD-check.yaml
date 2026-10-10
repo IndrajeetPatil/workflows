@@ -2,7 +2,8 @@
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 #
 # Hard mode installs hard package dependencies, checking tools, and Config/Needs/check
-# entries. Its cache is disabled to avoid restoring suggested dependencies.
+# entries. Its cache lives in a separate namespace derived from DESCRIPTION so that it
+# never restores suggested dependencies from the full-dependency cache.
 # Hard mode only runs on pull requests.
 on:
   workflow_call:
@@ -43,6 +44,8 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      # testthat defaults to 2 parallel workers; GitHub-hosted runners have 3-4 vCPUs.
+      TESTTHAT_CPUS: 4
 
     steps:
       - name: Restrict to IndrajeetPatil repositories
@@ -85,6 +88,8 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      # testthat defaults to 2 parallel workers; GitHub-hosted runners have 3-4 vCPUs.
+      TESTTHAT_CPUS: 4
 
     steps:
       - name: Restrict to IndrajeetPatil repositories
@@ -106,7 +111,8 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
         with:
           dependencies: '"hard"'
-          cache: false
+          # Isolate hard-only caches and invalidate them when DESCRIPTION changes.
+          cache-version: check-hard-deps-1-${{ hashFiles('DESCRIPTION') }}
           extra-packages: |
             any::knitr
             any::rcmdcheck

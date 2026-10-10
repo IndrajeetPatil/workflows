@@ -18,6 +18,8 @@ jobs:
     timeout-minutes: 45
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      # testthat defaults to 2 parallel workers; GitHub-hosted runners have 4 vCPUs.
+      TESTTHAT_CPUS: 4
 
     steps:
       - name: Restrict to IndrajeetPatil repositories
