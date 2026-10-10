@@ -21,8 +21,9 @@ owned by `IndrajeetPatil`.
 
 ## Security requirements
 
-- Pin every external action to a full commit SHA and retain the release version
-  in an inline comment.
+- Pin every external action to a full commit SHA and retain the most specific
+  release version available in an inline comment. Do not use sliding major-version
+  tags (e.g. `v2`) if a more specific version tag exists (e.g. `v2.14.0`).
 - Default `GITHUB_TOKEN` to `contents: read`. Give a job only the additional
   write scopes it needs, and isolate deploy or release credentials from jobs
   that build or test repository code.
@@ -43,13 +44,15 @@ version pins, vendored archives, or checksum infrastructure for this extension.
 
 ## Dependency cache isolation
 
-- Preserve `dependencies: '"hard"'` for the `pkgdown.yaml` no-Suggests mode.
-- Keep its dependency cache enabled under a namespace distinct from the normal
-  Suggests-enabled pkgdown job and derived from the caller's `DESCRIPTION`.
+- Preserve `dependencies: '"hard"'` for the `pkgdown.yaml` no-Suggests mode
+  and the `R-CMD-check.yaml` hard mode.
+- Keep their dependency caches enabled under namespaces distinct from each
+  other and from the normal Suggests-enabled jobs, derived from the caller's
+  `DESCRIPTION`.
   The action's fallback cache key omits the lockfile hash, so a shared or static
   namespace can restore packages that are no longer hard dependencies and
   invalidate the hard-only check.
-- Do not routinely set the no-Suggests cache to `false`; that forces every run
+- Do not routinely set the hard-only caches to `false`; that forces every run
   to rebuild the hard-dependency graph. Preserve the dependency-metadata hash
   in `cache-version`, and increment its static generation prefix only when all
   hard-only caches must be invalidated.

@@ -104,12 +104,14 @@ Declare package-specific checking tools in `Config/Needs/check` in the caller's
 `DESCRIPTION`. `R-CMD-check.yaml` installs these entries in both normal and
 hard-dependency modes.
 
-### Hard-dependency pkgdown checks
+### Hard-dependency checks
 
 Setting `no-suggests: true` makes `pkgdown.yaml` validate that a package website
 can be built with hard package dependencies plus the documentation tooling,
-without installing the package's `Suggests`. The job uses a dedicated cache
-namespace that includes a hash of the caller's `DESCRIPTION`. This matters
+without installing the package's `Suggests`. Likewise, `hard: true` makes
+`R-CMD-check.yaml` run R CMD check with only hard dependencies and checking
+tools. Each job uses its own dedicated cache namespace that includes a hash of
+the caller's `DESCRIPTION`. This matters
 because `setup-r-dependencies` fallback cache keys do not include the generated
 lockfile hash: sharing the normal pkgdown namespace, or reusing a hard-only
 namespace after declared dependencies change, could restore packages that are
