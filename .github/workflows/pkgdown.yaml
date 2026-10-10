@@ -69,7 +69,73 @@ jobs:
       - name: Build site
         run: |
           options(crayon.enabled = TRUE)
-          pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+
+          # pkgdown builds every page serially. Prebuild the expensive pages
+          # (R Markdown articles and reference topics with examples) in parallel
+          # worker processes, then let the lazy site build skip any page whose
+          # output is newer than its source. A page that fails here is simply
+          # rebuilt, with pkgdown's usual error reporting, by the final build.
+          override <- list(destination = "docs")
+          pkg <- pkgdown::as_pkgdown(".", override = override)
+          pkgdown::clean_site(pkg)
+          pkgdown::init_site(pkg)
+
+          articles <- pkg$vignettes[pkg$vignettes$type == "rmd", ]
+          topic_files <- file.path(pkg$src_path, "man", pkg$topics$file_in)
+          has_examples <- vapply(
+            topic_files,
+            function(path) any(grepl("\\examples{", readLines(path, warn = FALSE), fixed = TRUE)),
+            logical(1)
+          )
+          topics <- pkg$topics[has_examples, ]
+
+          jobs <- c(
+            lapply(articles$name, function(name) list(type = "article", name = name)),
+            lapply(topics$name, function(name) list(type = "topic", name = name))
+          )
+          # Hand out the largest sources first so long jobs don't start last.
+          sizes <- file.size(c(file.path(pkg$src_path, articles$file_in), topic_files[has_examples]))
+          jobs <- jobs[order(sizes, decreasing = TRUE)]
+
+          workers <- min(length(jobs), parallel::detectCores())
+          if (workers > 1L) {
+            cli::cli_rule("Prebuilding {length(jobs)} page{?s} with {workers} workers")
+            cluster <- parallel::makeCluster(workers, outfile = "")
+            results <- parallel::parLapplyLB(cluster, jobs, function(job, src_path, override) {
+              start <- Sys.time()
+              error <- tryCatch(
+                {
+                  if (job$type == "article") {
+                    pkgdown::build_article(job$name, pkg = src_path, override = override)
+                  } else {
+                    pkgdown::build_reference(
+                      pkg = src_path,
+                      topics = job$name,
+                      devel = FALSE,
+                      override = override
+                    )
+                  }
+                  NULL
+                },
+                error = conditionMessage
+              )
+              elapsed <- as.numeric(difftime(Sys.time(), start, units = "secs"))
+              c(job, list(elapsed = elapsed, error = error))
+            }, src_path = pkg$src_path, override = override, chunk.size = 1L)
+            parallel::stopCluster(cluster)
+
+            for (result in results) {
+              status <- if (is.null(result$error)) "ok" else "failed; rebuilding serially"
+              cli::cli_inform("{result$type} {.file {result$name}}: {round(result$elapsed)}s ({status})")
+            }
+          }
+
+          pkgdown::build_site_github_pages(
+            clean = FALSE,
+            lazy = TRUE,
+            new_process = FALSE,
+            install = FALSE
+          )
         shell: Rscript {0}
 
       - name: Add and verify canonical URLs
