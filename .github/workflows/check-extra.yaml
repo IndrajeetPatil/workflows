@@ -36,7 +36,11 @@ jobs:
         with:
           persist-credentials: false
 
+      # setup-r sets `options(Ncpus = 1)` by default, which testthat reads before
+      # TESTTHAT_CPUS, so parallel tests would otherwise run in a single process.
       - uses: r-lib/actions/setup-r@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
+        with:
+          Ncpus: 4
 
       - uses: r-lib/actions/setup-r-dependencies@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
         with:
