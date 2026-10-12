@@ -213,9 +213,10 @@ jobs:
           TARGET_COMMIT: ${{ needs.submit-cran.outputs.release-target }}
         run: |
           git show "${TARGET_COMMIT}:NEWS.md" | awk -v heading="# ${RELEASE_TITLE}" '
-            $0 == heading { capture = 1 }
-            capture && /^# / && $0 != heading { exit }
-            capture { print }
+            $0 == heading { capture = 1; next }
+            capture && /^# / { exit }
+            capture && !started && /^$/ { next }
+            capture { started = 1; print }
           ' > release-notes.md
 
           if [[ ! -s release-notes.md ]]; then
