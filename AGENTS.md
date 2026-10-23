@@ -78,7 +78,7 @@ Run these checks before publishing workflow changes:
 ```bash
 actionlint
 gitleaks git --log-opts="--all" --no-banner --redact .
-uvx zizmor@1.28.0 --pedantic .github/workflows/
+uvx zizmor@1.31.1 --pedantic .github/workflows/
 git diff --check
 ```
 
