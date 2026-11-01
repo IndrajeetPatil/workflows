@@ -217,8 +217,10 @@ project-specific hooks freely.
 > local hook with `language = "fail"` and `types = ["directory"]`.
 
 In CI, the hooks that duplicate a workflow step (`no-commit-to-branch`,
-`gitleaks`, `typos`, `rumdl-check`, `vite-plus`) are skipped automatically;
-`prek-skip` adds further project-specific skips.
+`gitleaks`, `typos`, `rumdl-check`, `vite-plus`) are skipped automatically.
+`prek-skip` adds further skips, but only of project-specific hooks: naming a
+baseline hook, a project or an unknown id fails the job, so a caller cannot
+quietly drop a baseline check.
 
 Rust and Go tools are installed from release binaries verified against pinned
 SHA-256 checksums, which takes seconds rather than a Node or Python install.

@@ -30,8 +30,10 @@ on:
         default: false
       prek-skip:
         description: >-
-          Comma-separated prek hook ids to skip in CI, in addition to the
-          baseline hooks this workflow already runs as its own steps.
+          Comma-separated ids of project-specific prek hooks to skip in CI,
+          in addition to the baseline hooks this workflow already runs as its
+          own steps. Naming a baseline hook, or anything that is not a
+          configured pre-commit hook, fails the job.
         type: string
         default: ""
       lychee-args:
@@ -193,9 +195,21 @@ jobs:
           install-only: true
 
       # Every caller keeps the same baseline hooks, so local commits get the
-      # same fast feedback everywhere. Project hooks may be added freely.
+      # same fast feedback everywhere. Project hooks may be added freely, and
+      # `prek-skip` may name only those: never a baseline hook or a project.
       - name: prek baseline hooks present
+        env:
+          CALLER_SKIPS: ${{ inputs.prek-skip }}
         run: |
+          pre_commit=(
+            trailing-whitespace end-of-file-fixer fix-byte-order-marker
+            mixed-line-ending check-merge-conflict check-case-conflict
+            check-yaml check-toml check-json check-added-large-files
+            detect-private-key check-shebang-scripts-are-executable
+            check-executables-have-shebangs check-symlinks destroyed-symlinks
+            check-illegal-windows-names forbid-submodules no-commit-to-branch
+            gitleaks typos rumdl-check vite-plus
+          )
           check_stage() {
             local stage="$1"; shift
             local configured missing=()
@@ -209,16 +223,23 @@ jobs:
             fi
           }
           status=0
-          check_stage pre-commit \
-            trailing-whitespace end-of-file-fixer fix-byte-order-marker \
-            mixed-line-ending check-merge-conflict check-case-conflict \
-            check-yaml check-toml check-json check-added-large-files \
-            detect-private-key check-shebang-scripts-are-executable \
-            check-executables-have-shebangs check-symlinks destroyed-symlinks \
-            check-illegal-windows-names forbid-submodules no-commit-to-branch \
-            gitleaks typos rumdl-check vite-plus || status=1
+          check_stage pre-commit "${pre_commit[@]}" || status=1
           check_stage commit-msg conventional-pre-commit || status=1
           check_stage pre-push typecheck test || status=1
+
+          configured="$(prek list --hook-stage pre-commit | sed 's/^.*://')"
+          IFS=',' read -ra skips <<< "$CALLER_SKIPS"
+          for skip in "${skips[@]}"; do
+            skip="${skip//[[:space:]]/}"
+            [[ -z "$skip" ]] && continue
+            if printf '%s\n' "${pre_commit[@]}" | grep -Fxq -- "$skip"; then
+              echo "::error::prek-skip must not skip the baseline hook: $skip"
+              status=1
+            elif ! grep -Fxq -- "$skip" <<< "$configured"; then
+              echo "::error::prek-skip names no configured pre-commit hook: $skip"
+              status=1
+            fi
+          done
           exit "$status"
 
       # Runs after the dependency install because project hooks may lint
