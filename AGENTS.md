@@ -5,7 +5,8 @@ owned by `IndrajeetPatil`.
 
 ## Scope
 
-- Never commit or push directly to the `main` branch. Always create a new branch and submit changes via a pull request.
+- Never commit or push directly to the `main` branch. Always create a new
+  branch and submit changes via a pull request.
 - Keep reusable workflow files limited to `workflow_call`. The repository-local
   `security.yml` workflow is the sole intentional exception and runs only for
   pull requests targeting `main`.
