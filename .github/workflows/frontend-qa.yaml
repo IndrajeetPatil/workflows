@@ -29,9 +29,11 @@ on:
         type: boolean
         default: false
       prek-skip:
-        description: Comma-separated prek hook ids to skip (the `SKIP` variable).
+        description: >-
+          Comma-separated prek hook ids to skip in CI, in addition to the
+          baseline hooks this workflow already runs as its own steps.
         type: string
-        default: no-commit-to-branch
+        default: ""
       lychee-args:
         description: >-
           Extra lychee arguments, one per line, passed verbatim before the
@@ -183,16 +185,50 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
         run: vp install --frozen-lockfile -- --loglevel=warn
 
-      # Runs after the dependency install because project hooks may lint
-      # against node_modules. A hook that rewrites a file fails the step.
-      - name: prek hooks
+      - name: Install prek
         uses: j178/prek-action@44924fe9ef4a6f88253c4b6b1bf11c689d3ce53d # v3.1.0
         with:
           # Pinned so hook behaviour only changes with a deliberate bump.
           prek-version: "0.5.7"
-          extra-args: --all-files --stage pre-commit
+          install-only: true
+
+      # Every caller keeps the same baseline hooks, so local commits get the
+      # same fast feedback everywhere. Project hooks may be added freely.
+      - name: prek baseline hooks present
+        run: |
+          check_stage() {
+            local stage="$1"; shift
+            local configured missing=()
+            configured="$(prek list --hook-stage "$stage" | sed 's/^.*://')"
+            for id in "$@"; do
+              grep -Fxq -- "$id" <<< "$configured" || missing+=("$id")
+            done
+            if (( ${#missing[@]} )); then
+              echo "::error::Missing baseline $stage hooks: ${missing[*]}"
+              return 1
+            fi
+          }
+          status=0
+          check_stage pre-commit \
+            trailing-whitespace end-of-file-fixer fix-byte-order-marker \
+            mixed-line-ending check-merge-conflict check-case-conflict \
+            check-yaml check-toml check-json check-added-large-files \
+            detect-private-key check-shebang-scripts-are-executable \
+            check-executables-have-shebangs check-symlinks destroyed-symlinks \
+            check-illegal-windows-names forbid-submodules no-commit-to-branch \
+            gitleaks typos rumdl-check vite-plus || status=1
+          check_stage commit-msg conventional-pre-commit || status=1
+          check_stage pre-push typecheck test || status=1
+          exit "$status"
+
+      # Runs after the dependency install because project hooks may lint
+      # against node_modules. A hook that rewrites a file fails the step.
+      # Hooks that duplicate a step of this workflow are skipped here: they
+      # exist for local feedback, and CI runs the same tool on everything.
+      - name: prek hooks
         env:
-          SKIP: ${{ inputs.prek-skip }}
+          SKIP: no-commit-to-branch,gitleaks,typos,rumdl-check,vite-plus,${{ inputs.prek-skip }}
+        run: prek run --all-files --stage pre-commit --show-diff-on-failure --color=always
 
       - name: Format, lint and types (vp run check)
         working-directory: ${{ inputs.working-directory }}

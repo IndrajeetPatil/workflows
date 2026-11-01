@@ -153,7 +153,7 @@ flowchart LR
   A[Checkout and<br/>pinned tools] --> L[lychee<br/>background]
   A --> B[typos · rumdl<br/>actionlint · zizmor<br/>Gitleaks]
   B --> C[vp install]
-  C --> D[prek hooks]
+  C --> D[prek baseline<br/>check and hooks]
   D --> E[vp run check<br/>typecheck · test]
   E --> F[vp run build<br/>prod audit]
   F --> G[extra-command]
@@ -169,13 +169,35 @@ flowchart LR
 | Workflow correctness | [actionlint](https://github.com/rhysd/actionlint) (with shellcheck) | `.github/actionlint.yaml` |
 | Workflow security | [zizmor](https://github.com/zizmorcore/zizmor), online audits | `.github/zizmor.yml` |
 | Secrets in full history | [Gitleaks](https://github.com/gitleaks/gitleaks) | `.gitleaks.toml` |
-| Repository hooks | [prek](https://github.com/j178/prek), pre-commit stage, all files | `prek.toml` or `.pre-commit-config.yaml` (required) |
+| Hook baseline | `prek list`: every caller declares the baseline hooks below | `prek.toml` or `.pre-commit-config.yaml` (required) |
+| Repository hooks | [prek](https://github.com/j178/prek), pre-commit stage, all files | same |
 | Format, lint, types | `vp run check` | Vite+ task (required) |
 | Astro and TypeScript types | `vp run typecheck` | Vite+ task (required) |
 | Unit tests and coverage | `vp run test` | Vite+ task (required unless `test: false`) |
 | Production build | `vp run build` | Vite+ task (required) |
 | Production dependency advisories | `vp pm audit -- --prod` | — |
 | Link rot | [lychee](https://github.com/lycheeverse/lychee) | `lychee.toml` |
+
+### Baseline hooks
+
+Each caller's prek configuration must declare these hook ids, so every
+repository gives the same fast feedback before code leaves the machine. Add
+project-specific hooks freely.
+
+| Stage | Hook ids |
+|-------|----------|
+| `pre-commit` | `trailing-whitespace`, `end-of-file-fixer`, `fix-byte-order-marker`, `mixed-line-ending`, `check-merge-conflict`, `check-case-conflict`, `check-yaml`, `check-toml`, `check-json`, `check-added-large-files`, `detect-private-key`, `check-shebang-scripts-are-executable`, `check-executables-have-shebangs`, `check-symlinks`, `destroyed-symlinks`, `check-illegal-windows-names`, `forbid-submodules`, `no-commit-to-branch`, `gitleaks`, `typos`, `rumdl-check`, `vite-plus` |
+| `commit-msg` | `conventional-pre-commit` |
+| `pre-push` | `typecheck`, `test` |
+
+> [!TIP]
+> prek's `builtin` repository implements most hygiene hooks natively, with no
+> Python environment. `forbid-submodules` is not built in; declare it as a
+> local hook with `language = "fail"` and `types = ["directory"]`.
+
+In CI, the hooks that duplicate a workflow step (`no-commit-to-branch`,
+`gitleaks`, `typos`, `rumdl-check`, `vite-plus`) are skipped automatically;
+`prek-skip` adds further project-specific skips.
 
 Rust and Go tools are installed from release binaries verified against pinned
 SHA-256 checksums, which takes seconds rather than a Node or Python install.
