@@ -155,7 +155,7 @@ all hard-only caches intentionally need to be invalidated.
 
 | Workflow | Description | Inputs |
 |----------|-------------|--------|
-| [`frontend-qa.yaml`](.github/workflows/frontend-qa.yaml) | Standardized quality gate for [Vite+](https://viteplus.dev) frontends: spelling, Markdown, workflow lint and audit, secret scan, prek hooks, format/lint/types, unit tests, production build, dependency audit and link check | `working-directory`, `test`, `python`, `prek-skip`, `lychee-args`, `extra-command`, `browser-command`, `timeout-minutes` |
+| [`frontend-qa.yaml`](.github/workflows/frontend-qa.yaml) | Standardized quality gate for [Vite+](https://viteplus.dev) frontends: spelling, Markdown, workflow lint and audit, secret scan, prek hooks, format/lint/types, unit tests, production build, dependency audit and link check | `working-directory`, `test`, `python`, `lychee-args`, `extra-command`, `browser-command`, `timeout-minutes` |
 
 Every caller gets the same baseline gates; inputs can only **add**
 project-specific gates or adapt the layout, never remove a baseline check.
@@ -216,11 +216,9 @@ project-specific hooks freely.
 > Python environment. `forbid-submodules` is not built in; declare it as a
 > local hook with `language = "fail"` and `types = ["directory"]`.
 
-In CI, the hooks that duplicate a workflow step (`no-commit-to-branch`,
-`gitleaks`, `typos`, `rumdl-check`, `vite-plus`) are skipped automatically.
-`prek-skip` adds further skips, but only of project-specific hooks: naming a
-baseline hook, a project or an unknown id fails the job, so a caller cannot
-quietly drop a baseline check.
+In CI, only the `vite-plus` hook is skipped, because the next step runs the
+same `vp run check`. Every other hook runs on all files; the rest of the
+duplicates (typos, rumdl, the staged-only Gitleaks scan) take seconds.
 
 Rust and Go tools are installed from release binaries verified against pinned
 SHA-256 checksums, which takes seconds rather than a Node or Python install.
