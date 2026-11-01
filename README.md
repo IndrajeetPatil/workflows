@@ -155,7 +155,7 @@ all hard-only caches intentionally need to be invalidated.
 
 | Workflow | Description | Inputs |
 |----------|-------------|--------|
-| [`frontend-qa.yaml`](.github/workflows/frontend-qa.yaml) | Standardized quality gate for [Vite+](https://viteplus.dev) frontends: spelling, Markdown, workflow lint and audit, secret scan, prek hooks, format/lint/types, unit tests, production build, dependency audit and link check | `working-directory`, `test`, `python`, `lychee-args`, `extra-command`, `browser-command`, `timeout-minutes` |
+| [`frontend-qa.yaml`](.github/workflows/frontend-qa.yaml) | Standardised quality gate for [Vite+](https://viteplus.dev) frontends: spelling, Markdown, workflow lint and audit, secret scan, prek hooks, format/lint/types, unit tests, production build, dependency audit and link check | `working-directory`, `test`, `python`, `lychee-args`, `extra-command`, `browser-command`, `timeout-minutes` |
 
 Every caller gets the same baseline gates; inputs can only **add**
 project-specific gates or adapt the layout, never remove a baseline check.
