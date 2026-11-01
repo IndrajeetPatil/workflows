@@ -87,7 +87,7 @@ third-party action the workflow uses; for the frontend workflows that is
 GitHub-owned actions.
 
 Avoid `secrets: inherit` when a workflow needs only one named secret. Pass that
-secret explicitly so unrelated repository or organization secrets are not made
+secret explicitly so unrelated repository or organisation secrets are not made
 available to the called workflow.
 
 ## Python Packages
