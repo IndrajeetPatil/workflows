@@ -45,7 +45,7 @@ on:
 
 jobs:
   format:
-    uses: IndrajeetPatil/workflows/.github/workflows/check-formatting.yaml@<full-commit-sha>
+    uses: IndrajeetPatil/workflows/.github/workflows/check-formatting.yaml@main
 ```
 
 For workflows with inputs:
@@ -53,17 +53,38 @@ For workflows with inputs:
 ```yaml
 jobs:
   R-CMD-check:
-    uses: IndrajeetPatil/workflows/.github/workflows/R-CMD-check.yaml@<full-commit-sha>
+    uses: IndrajeetPatil/workflows/.github/workflows/R-CMD-check.yaml@main
     with:
       hard: true
 ```
 
-Pin reusable workflows to a full commit SHA. A branch such as `@main` is
-convenient but mutable; immutable references prevent an upstream change from
-silently altering a caller's CI. Callers must also grant only the permissions
-required by the selected workflow. GitHub can maintain or reduce permissions
-through a reusable-workflow chain, but a called workflow cannot elevate scopes
-that its caller did not grant.
+Reference these workflows by `@main`. They are maintained alongside their
+callers, so a branch reference delivers fixes to every caller at once instead
+of leaving SHA pins to go stale. The safeguard is on this side: `main` accepts
+changes only through pull requests that pass the Gitleaks and zizmor checks.
+Callers that run zizmor should allow this with a narrow policy and keep every
+third-party action SHA-pinned:
+
+```yaml
+# .github/zizmor.yml
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        "IndrajeetPatil/*": ref-pin
+        "*": hash-pin
+```
+
+Callers must also grant only the permissions required by the selected
+workflow. GitHub can maintain or reduce permissions through a reusable-workflow
+chain, but a called workflow cannot elevate scopes that its caller did not
+grant.
+
+A reusable workflow runs under the **caller's** Actions policy. A caller that
+allows only selected actions must allow `IndrajeetPatil/*` and every
+third-party action the workflow uses; for the frontend workflows that is
+`voidzero-dev/setup-vp`, `j178/prek-action` and `astral-sh/setup-uv`, plus
+GitHub-owned actions.
 
 Avoid `secrets: inherit` when a workflow needs only one named secret. Pass that
 secret explicitly so unrelated repository or organization secrets are not made
@@ -237,7 +258,7 @@ concurrency:
 
 jobs:
   frontend-qa:
-    uses: IndrajeetPatil/workflows/.github/workflows/frontend-qa.yaml@<full-commit-sha>
+    uses: IndrajeetPatil/workflows/.github/workflows/frontend-qa.yaml@main
     with:
       python: true
       extra-command: make lint-python
@@ -276,7 +297,7 @@ concurrency:
 
 jobs:
   conventional-commits:
-    uses: IndrajeetPatil/workflows/.github/workflows/conventional-commits.yaml@<full-commit-sha>
+    uses: IndrajeetPatil/workflows/.github/workflows/conventional-commits.yaml@main
 ```
 
 ## License

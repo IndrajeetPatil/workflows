@@ -6,7 +6,8 @@ owned by `IndrajeetPatil`.
 ## Scope
 
 - Never commit or push directly to the `main` branch. Always create a new
-  branch and submit changes via a pull request.
+  branch and submit changes via a pull request. A ruleset enforces this and
+  requires the Gitleaks and zizmor checks, because callers reference `@main`.
 - Keep reusable workflow files limited to `workflow_call`. The repository-local
   `security.yml` workflow is the sole intentional exception and runs only for
   pull requests targeting `main`.
@@ -23,6 +24,9 @@ owned by `IndrajeetPatil`.
   is the only exception).
 - Before changing a reusable workflow interface or permissions, search the
   `IndrajeetPatil` organization for callers and verify their granted scopes.
+- When a workflow starts using a new third-party action, document it in the
+  README: callers that allow only selected actions must add it to their
+  Actions policy.
 
 ## Security requirements
 
