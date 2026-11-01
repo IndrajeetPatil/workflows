@@ -16,6 +16,10 @@ owned by `IndrajeetPatil`.
   from unrelated changes later added to `main`. Release notes must copy the
   matching `NEWS.md` section rather than use generated notes.
 - Preserve the owner guard as the first step in every job.
+- Keep `frontend-qa.yaml` a single job and its baseline gates unconditional.
+  Inputs may add project-specific gates or adapt paths, but must not let a
+  caller drop a baseline check (`test: false` for frontends without unit tests
+  is the only exception).
 - Before changing a reusable workflow interface or permissions, search the
   `IndrajeetPatil` organization for callers and verify their granted scopes.
 
@@ -35,6 +39,10 @@ owned by `IndrajeetPatil`.
 - Set a finite `timeout-minutes` on every job.
 - Prefer runner-provided tools over additional third-party actions when the
   built-in tool provides the required behavior.
+- Install standalone release binaries only with a pinned version and a pinned
+  SHA-256 checksum of the downloaded archive, verified before extraction.
+  Cross-check the checksum against the release's published checksums when one
+  exists, and update version and checksum together.
 - Keep the pull-request security gate fail-closed: scan the complete Git history
   with Gitleaks and run zizmor in pedantic mode across every workflow.
 

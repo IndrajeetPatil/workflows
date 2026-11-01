@@ -1,0 +1,91 @@
+name: Conventional Commits
+
+# Validates every commit on a pull request and its title (the default squash
+# subject) against Conventional Commits. Keep this separate from heavier QA:
+# callers also trigger it on `edited`, so a title change re-runs only this
+# cheap check.
+on:
+  workflow_call:
+    inputs:
+      extra-types:
+        description: Space-separated commit types allowed in addition to the Conventional Commits defaults.
+        type: string
+        default: ""
+      strict:
+        description: Also reject `fixup!` and merge commits.
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  commits:
+    name: Conventional Commits
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Restrict to IndrajeetPatil repositories
+        if: github.repository_owner != 'IndrajeetPatil'
+        run: |
+          echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
+          exit 1
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          enable-cache: false
+
+      - name: Validate commit messages and title
+        env:
+          EXTRA_TYPES: ${{ inputs.extra-types }}
+          STRICT: ${{ inputs.strict }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          read -ra types <<< "$EXTRA_TYPES"
+          for type in "${types[@]}"; do
+            if [[ ! "$type" =~ ^[a-z][a-z0-9-]*$ ]]; then
+              echo "::error::Invalid commit type: $type"
+              exit 1
+            fi
+          done
+          flags=(--verbose)
+          [[ "$STRICT" == true ]] && flags+=(--strict)
+
+          check() {
+            uvx --from conventional-pre-commit==4.4.0 conventional-pre-commit \
+              "${flags[@]}" "${types[@]}" "$1"
+          }
+
+          message="$RUNNER_TEMP/message"
+          status=0
+          if [[ -n "$BASE_SHA" ]]; then
+            commits="$(git rev-list --reverse --end-of-options "${BASE_SHA}..${HEAD_SHA}")"
+          else
+            commits="$HEAD_SHA"
+          fi
+          for commit in $commits; do
+            echo "Checking commit $commit"
+            git show --no-patch --format=%B "$commit" > "$message"
+            check "$message" || status=1
+          done
+
+          if [[ -n "$PR_TITLE" ]]; then
+            echo "Checking pull request title"
+            printf '%s\n' "$PR_TITLE" > "$message"
+            check "$message" || status=1
+          fi
+          exit "$status"
