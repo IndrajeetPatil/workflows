@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 900" role="img" aria-labelledby="title description">
+  <title id="title">Frontend QA runs one ordered job with a parallel link check</title>
+  <desc id="description">Checkout and pinned tools start both the main quality gate and a background lychee link check. The main job then scans the repository, installs dependencies, runs prek hooks, runs Vite+ checks and a production build, and runs optional project and browser gates. The link result is collected at the end.</desc>
+  <defs>
+    <style>
+      .paper { fill: #faf8f4 }
+      .surface { fill: #fdfcf9; stroke: #e3ded2; stroke-width: 1.5 }
+      .ink { fill: #201d18 }
+      .muted { fill: #5d574c }
+      .accent { fill: #14584d }
+      .rule { fill: none; stroke: #e3ded2; stroke-width: 2 }
+      .route { fill: none; stroke: #14584d; stroke-width: 2 }
+      .icon { fill: none; stroke: #14584d; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round }
+      .heading { font: 600 33px Fraunces, Georgia, serif }
+      .label { font: 600 18px 'Hanken Grotesk', Arial, sans-serif }
+      .body { font: 15px 'Hanken Grotesk', Arial, sans-serif }
+      .small { font: 600 12px 'Hanken Grotesk', Arial, sans-serif; letter-spacing: 1.4px }
+    </style>
+    <symbol id="source" viewBox="0 0 32 32">
+      <path d="M9 6v17a5 5 0 1 0 5 5M9 11a5 5 0 0 0 5 5h5a5 5 0 1 0 5-5"/>
+      <circle cx="9" cy="5" r="3"/><circle cx="24" cy="8" r="3"/><circle cx="9" cy="26" r="3"/>
+    </symbol>
+    <symbol id="shield" viewBox="0 0 32 32">
+      <path d="M16 3 27 7v8c0 7-4 11-11 14C9 26 5 22 5 15V7z"/>
+      <path d="m11 16 4 4 7-8"/>
+    </symbol>
+    <symbol id="package" viewBox="0 0 32 32">
+      <path d="m16 3 12 7v13l-12 7L4 23V10zM4 10l12 7 12-7M16 17v13M10 6l12 7"/>
+    </symbol>
+    <symbol id="hooks" viewBox="0 0 32 32">
+      <path d="M8 4v11a8 8 0 0 0 16 0V4M8 9h16M16 23v6"/>
+      <circle cx="16" cy="29" r="1"/>
+    </symbol>
+    <symbol id="terminal" viewBox="0 0 32 32">
+      <rect x="3" y="5" width="26" height="22" rx="2"/>
+      <path d="m8 12 5 4-5 4m9 0h7"/>
+    </symbol>
+    <symbol id="browser" viewBox="0 0 32 32">
+      <rect x="3" y="5" width="26" height="22" rx="2"/>
+      <path d="M3 11h26M8 8h.1M12 8h.1M10 19l4 4 8-9"/>
+    </symbol>
+    <symbol id="link" viewBox="0 0 32 32">
+      <path d="M13 10 10 13a7 7 0 0 0 10 10l3-3M19 22l3-3a7 7 0 0 0-10-10l-3 3M12 20l8-8"/>
+    </symbol>
+  </defs>
+
+  <rect class="paper" width="1120" height="900"/>
+  <text class="heading ink" x="48" y="62">One job, ordered checks</text>
+  <text class="body muted" x="49" y="91">The shared baseline runs for every caller. A link check travels alongside the main sequence.</text>
+  <path class="rule" d="M48 111H1072"/>
+
+  <text class="small accent" x="48" y="144">MAIN JOB</text>
+  <text class="small accent" x="821" y="144">PARALLEL LINK CHECK</text>
+  <path class="rule" d="M80 181V793"/>
+  <path class="route" d="M80 181V750"/>
+  <path class="route" d="m75 745 5 7 5-7"/>
+
+  <g class="surface">
+    <rect x="118" y="160" width="650" height="81" rx="6"/>
+    <rect x="118" y="258" width="650" height="81" rx="6"/>
+    <rect x="118" y="356" width="650" height="81" rx="6"/>
+    <rect x="118" y="454" width="650" height="81" rx="6"/>
+    <rect x="118" y="552" width="650" height="81" rx="6"/>
+    <rect x="118" y="650" width="650" height="81" rx="6"/>
+    <rect x="118" y="748" width="650" height="81" rx="6"/>
+    <rect x="807" y="160" width="265" height="117" rx="6"/>
+    <rect x="807" y="748" width="265" height="81" rx="6"/>
+  </g>
+
+  <g class="route">
+    <path d="M80 200h38M80 298h38M80 396h38M80 494h38M80 592h38M80 690h38M80 788h38"/>
+    <path d="M768 200h39"/>
+    <path d="M940 277v471" stroke-dasharray="5 7"/>
+    <path d="m935 741 5 7 5-7"/>
+    <path d="M807 788h-39m7-5-7 5 7 5"/>
+  </g>
+  <g class="paper" stroke="#14584d" stroke-width="2">
+    <circle cx="80" cy="200" r="6"/><circle cx="80" cy="298" r="6"/>
+    <circle cx="80" cy="396" r="6"/><circle cx="80" cy="494" r="6"/>
+    <circle cx="80" cy="592" r="6"/><circle cx="80" cy="690" r="6"/>
+    <circle cx="80" cy="788" r="6"/>
+  </g>
+
+  <g class="icon">
+    <use href="#source" x="139" y="182" width="32" height="32"/>
+    <use href="#shield" x="139" y="280" width="32" height="32"/>
+    <use href="#package" x="139" y="378" width="32" height="32"/>
+    <use href="#hooks" x="139" y="476" width="32" height="32"/>
+    <use href="#terminal" x="139" y="574" width="32" height="32"/>
+    <use href="#browser" x="139" y="672" width="32" height="32"/>
+    <use href="#link" x="139" y="770" width="32" height="32"/>
+    <use href="#link" x="826" y="181" width="32" height="32"/>
+    <use href="#link" x="826" y="769" width="32" height="32"/>
+  </g>
+
+  <g class="ink label">
+    <text x="190" y="191">Checkout and pinned tools</text>
+    <text x="190" y="289">Repository scans</text>
+    <text x="190" y="387">Install dependencies</text>
+    <text x="190" y="485">prek hooks</text>
+    <text x="190" y="583">Vite+ tasks and production audit</text>
+    <text x="190" y="681">Project and browser gates</text>
+    <text x="190" y="779">Collect link result</text>
+    <text x="872" y="191">Start lychee</text>
+    <text x="872" y="779">Return result</text>
+  </g>
+  <g class="muted body">
+    <text x="190" y="217">Full history; credentials are not persisted</text>
+    <text x="190" y="315">typos · rumdl · actionlint · zizmor · Gitleaks</text>
+    <text x="190" y="413">Vite+ toolchain, then locked packages</text>
+    <text x="190" y="511">Repository hooks and required baseline hook list</text>
+    <text x="190" y="609">check · typecheck · test* · build · dependency audit</text>
+    <text x="190" y="707">extra-command, then browser-command when configured</text>
+    <text x="190" y="805">Report broken links alongside other findings</text>
+    <text x="826" y="223">Network-bound link scan</text>
+    <text x="826" y="246">continues in the background</text>
+    <text x="872" y="805">Collected last</text>
+  </g>
+  <path class="rule" d="M48 852H1072"/>
+  <text class="body muted" x="49" y="878">* Unit tests may be skipped only when a frontend has none.</text>
+</svg>

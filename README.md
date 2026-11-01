@@ -169,19 +169,7 @@ every job repeats checkout and setup, so one sequential job costs less than a
 fan-out. The network-bound link check starts in the background straight after
 checkout and is collected last, so it adds almost no wall-clock time.
 
-```mermaid
-flowchart LR
-  A[Checkout and<br/>pinned tools] --> L[lychee<br/>background]
-  A --> B[typos · rumdl<br/>actionlint · zizmor<br/>Gitleaks]
-  B --> C[vp install]
-  C --> D[prek baseline<br/>check and hooks]
-  D --> E[vp run check<br/>typecheck · test]
-  E --> F[vp run build<br/>prod audit]
-  F --> G[extra-command]
-  G --> H[browser-command]
-  H --> I[Collect lychee]
-  L -.-> I
-```
+![Frontend QA sequence: one ordered job runs repository scans, dependency installation, hooks, Vite+ tasks and optional gates while lychee checks links in the background.](docs/figures/frontend-qa.svg)
 
 | Gate | Tool | Caller configuration |
 |------|------|----------------------|
