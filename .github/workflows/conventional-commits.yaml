@@ -55,12 +55,16 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          read -ra types <<< "$EXTRA_TYPES"
-          for type in "${types[@]}"; do
+          # Passing any type replaces the linter's defaults (except feat and
+          # fix), so list the Conventional Commits defaults explicitly.
+          types=(build chore ci docs feat fix perf refactor revert style test)
+          read -ra extra_types <<< "$EXTRA_TYPES"
+          for type in "${extra_types[@]}"; do
             if [[ ! "$type" =~ ^[a-z][a-z0-9-]*$ ]]; then
               echo "::error::Invalid commit type: $type"
               exit 1
             fi
+            types+=("$type")
           done
           flags=(--verbose)
           [[ "$STRICT" == true ]] && flags+=(--strict)
