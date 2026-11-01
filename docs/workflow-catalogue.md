@@ -8,9 +8,9 @@ permissions.
 
 | Workflow | Description | Inputs |
 |----------|-------------|--------|
-| [`python-docs.yaml`](../.github/workflows/python-docs.yaml) | Build & deploy Python package documentation to GitHub Pages | — |
-| [`python-qa.yaml`](../.github/workflows/python-qa.yaml) | Code Quality checks, including build and test coverage | — |
-| [`python-test.yaml`](../.github/workflows/python-test.yaml) | Run Tests across multiple OS and Python versions | — |
+| [`python-docs.yaml`](../.github/workflows/python-docs.yaml) | Build and deploy Python package documentation to GitHub Pages | — |
+| [`python-qa.yaml`](../.github/workflows/python-qa.yaml) | Code quality checks, including build and test coverage | — |
+| [`python-test.yaml`](../.github/workflows/python-test.yaml) | Run tests across multiple OS and Python versions | — |
 
 The repository's internal zizmor audit enables ANSI color in captured CI logs
 with job-level `FORCE_COLOR=1` and `CLICOLOR_FORCE=1`, while retaining its
@@ -29,7 +29,7 @@ presentation cells. `prek` itself remains colorized via the `prek-action` defaul
 | [`R-CMD-check.yaml`](../.github/workflows/R-CMD-check.yaml) | R CMD check across multiple operating systems plus current, devel, and previous R releases; use `hard: true` for a hard-deps-only CI check (PR-only) | `hard` |
 | [`check-extra.yaml`](../.github/workflows/check-extra.yaml) | Parallel extra checks: no-warnings, random test order, README render | `extra-packages` |
 | [`lint.yaml`](../.github/workflows/lint.yaml) | Package linting with `{lintr}` | — |
-| [`pkgdown.yaml`](../.github/workflows/pkgdown.yaml) | Build & deploy a pkgdown site with verified canonical URLs; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests` |
+| [`pkgdown.yaml`](../.github/workflows/pkgdown.yaml) | Build and deploy a pkgdown site with verified canonical URLs; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests` |
 | [`pre-commit.yaml`](../.github/workflows/pre-commit.yaml) | Run pre-commit hooks; fails if hooks would modify files | — |
 | [`seo-files.yaml`](../.github/workflows/seo-files.yaml) | Deploy SEO and AI-discovery files (`robots.txt`, `.well-known/llms.txt`) to `gh-pages` after pkgdown build | `package-name` |
 | [`submit-cran.yaml`](../.github/workflows/submit-cran.yaml) | On a release branch, build and submit to CRAN without releasing; on the default branch after merge, rebuild and tag the submitted PR head and create a GitHub Release using the matching `NEWS.md` section without resubmitting | `extra-packages` |
@@ -43,8 +43,8 @@ the release boundary.
 
 | Workflow | Description | Inputs |
 |----------|-------------|--------|
-| [`build-presentation-python.yaml`](../.github/workflows/build-presentation-python.yaml) | Build & deploy Python/UV Quarto RevealJS presentation to GitHub Pages | — |
-| [`build-presentation-r.yaml`](../.github/workflows/build-presentation-r.yaml) | Build & deploy R Quarto RevealJS presentation to GitHub Pages | — |
+| [`build-presentation-python.yaml`](../.github/workflows/build-presentation-python.yaml) | Build and deploy Python/UV Quarto RevealJS presentation to GitHub Pages | — |
+| [`build-presentation-r.yaml`](../.github/workflows/build-presentation-r.yaml) | Build and deploy R Quarto RevealJS presentation to GitHub Pages | — |
 
 ## Frontends
 
