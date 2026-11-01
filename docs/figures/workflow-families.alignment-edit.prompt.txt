@@ -1,0 +1,5 @@
+Use case: precise-object-edit
+Asset type: corrected version of the existing five-family GitHub README illustration.
+Input image: the supplied image is the edit target, not just a style reference.
+Primary request: fix alignment only. Keep the five equal columns, hairline dividers, warm paper palette, motifs, and exact text. In each column, centre the motif horizontally over its own label and give all five motifs one consistent visual centre and comparable optical size. The Generic link-and-commit motif is currently smaller and high relative to the others; enlarge and centre it within its column. The Python motif is low and visually crowded near its label; raise it and match the shared icon centre. Align the R, Presentations, and Frontends motifs to the same shared centre. Keep all five labels on one common baseline, each centred under its own motif: "Python", "R", "Presentations", "Frontends", "Generic".
+Constraints: edit only motif sizing and placement for alignment; do not change the words, spelling, panel order, separators, canvas ratio, icons' meanings, background, colours, or overall flat style. No extra text, arrows, shadows, gradients, or 3D.
