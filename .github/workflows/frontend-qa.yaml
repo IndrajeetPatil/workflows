@@ -1,0 +1,267 @@
+name: Frontend QA
+
+# One standardized quality gate for Vite+ frontends (Astro, Vite, ...). Every
+# caller gets the same baseline; project-specific gates are added through
+# `extra-command` and `browser-command`, never by dropping a baseline check.
+#
+# Everything runs in ONE job, ordered cheapest-first: GitHub bills each job
+# rounded up to the minute and every job repeats checkout, toolchain and
+# dependency setup, so a single sequential job is the cheapest layout and still
+# fails fast. The link check is network-bound, so it starts in the background
+# right after checkout and is collected at the end instead of adding its own
+# wall-clock time.
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: >-
+          Directory holding the frontend's package.json, lockfile and
+          .node-version, relative to the repository root. Vite+ steps run
+          here; repository-wide checks always run from the root.
+        type: string
+        default: "."
+      test:
+        description: Run the Vite+ `test` task. Disable only when the frontend has no unit tests.
+        type: boolean
+        default: true
+      python:
+        description: Install uv for Python gates run by prek hooks, `extra-command` or `browser-command`.
+        type: boolean
+        default: false
+      lychee-args:
+        description: >-
+          Extra lychee arguments, one per line, passed verbatim before the
+          `.` input. Configuration belongs in lychee.toml; use this only for
+          CI-specific differences.
+        type: string
+        default: ""
+      extra-command:
+        description: >-
+          Project-specific gates, run with bash from the repository root
+          after the standard gates and the production build.
+        type: string
+        default: ""
+      browser-command:
+        description: >-
+          Optional browser audits (for example axe-core or Lighthouse), run
+          with bash from the repository root after `extra-command`. The
+          runner's Google Chrome is available.
+        type: string
+        default: ""
+      timeout-minutes:
+        description: Job timeout in minutes.
+        type: number
+        default: 20
+
+permissions:
+  contents: read
+
+# GitHub's implicit shell has no `-o pipefail`; naming bash opts into it.
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  qa:
+    name: Frontend QA
+    runs-on: ubuntu-latest
+    timeout-minutes: ${{ inputs.timeout-minutes }}
+
+    steps:
+      - name: Restrict to IndrajeetPatil repositories
+        if: github.repository_owner != 'IndrajeetPatil'
+        run: |
+          echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
+          exit 1
+
+      # Full history so Gitleaks also finds a secret committed and later
+      # deleted. Nothing in this job pushes, so no credential is persisted.
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # Prebuilt Rust and Go binaries install in seconds, unlike Node-based
+      # equivalents. Each archive is verified against a pinned SHA-256.
+      - name: Install pinned QA tools
+        env:
+          LYCHEE_VERSION: "0.24.2"
+          LYCHEE_SHA256: 1f4e0ef7f6554a6ed33dd7ac144fb2e1bbed98598e7af973042fc5cd43951c9a
+          TYPOS_VERSION: "1.51.1"
+          TYPOS_SHA256: 93c301fd4120ff076e2cc2a6d6a61cab4a4bdb81899287c0938b452e56d1f454
+          RUMDL_VERSION: "0.3.2"
+          RUMDL_SHA256: 395c4061041c5a25301c7b3564a93c4a661ed4df93427a77b6fc9e426ec8a13a
+          GITLEAKS_VERSION: "8.30.1"
+          GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+          ACTIONLINT_VERSION: "1.7.12"
+          ACTIONLINT_SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
+          ZIZMOR_VERSION: "1.31.1"
+          ZIZMOR_SHA256: d185f726bdaf92df78273217dfdd24ebcd6b0ef48cf3ce776ff5762b6e138c99
+        run: |
+          bin_dir="$RUNNER_TEMP/qa-bin"
+          mkdir -p "$bin_dir"
+
+          install_tool() {
+            local name="$1" url="$2" sha256="$3"
+            local archive="$RUNNER_TEMP/$name.tar.gz" unpack="$RUNNER_TEMP/$name-unpack"
+            curl --fail --location --silent --show-error --retry 3 --output "$archive" "$url"
+            echo "$sha256  $archive" | sha256sum --check --quiet
+            mkdir -p "$unpack"
+            tar --extract --gzip --file "$archive" --directory "$unpack"
+            install -m 0755 "$(find "$unpack" -type f -name "$name" -print -quit)" "$bin_dir/$name"
+          }
+
+          gh_release="https://github.com"
+          install_tool lychee "$gh_release/lycheeverse/lychee/releases/download/lychee-v${LYCHEE_VERSION}/lychee-x86_64-unknown-linux-gnu.tar.gz" "$LYCHEE_SHA256"
+          install_tool typos "$gh_release/crate-ci/typos/releases/download/v${TYPOS_VERSION}/typos-v${TYPOS_VERSION}-x86_64-unknown-linux-musl.tar.gz" "$TYPOS_SHA256"
+          install_tool rumdl "$gh_release/rvben/rumdl/releases/download/v${RUMDL_VERSION}/rumdl-v${RUMDL_VERSION}-x86_64-unknown-linux-musl.tar.gz" "$RUMDL_SHA256"
+          install_tool gitleaks "$gh_release/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" "$GITLEAKS_SHA256"
+          install_tool actionlint "$gh_release/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz" "$ACTIONLINT_SHA256"
+          install_tool zizmor "$gh_release/zizmorcore/zizmor/releases/download/v${ZIZMOR_VERSION}/zizmor-x86_64-unknown-linux-gnu.tar.gz" "$ZIZMOR_SHA256"
+
+          echo "$bin_dir" >> "$GITHUB_PATH"
+
+      # Reads lychee.toml from the repository root. The process outlives this
+      # step and writes its exit status for the collecting step at the end.
+      - name: Start link check (lychee)
+        id: lychee-start
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          LYCHEE_ARGS: ${{ inputs.lychee-args }}
+        run: |
+          args=()
+          while IFS= read -r arg; do
+            [[ -n "$arg" ]] && args+=("$arg")
+          done <<< "$LYCHEE_ARGS"
+          # The inner script expands its own variables, so it is single-quoted.
+          # shellcheck disable=SC2016
+          nohup bash -c 'lychee --no-progress "$@" . > "$RUNNER_TEMP/lychee.log" 2>&1; echo "$?" > "$RUNNER_TEMP/lychee.status"' \
+            lychee "${args[@]}" > /dev/null 2>&1 &
+
+      - name: Spelling (typos)
+        run: typos --color always
+
+      - name: Markdown lint (rumdl)
+        run: rumdl check --color always .
+
+      # actionlint checks workflow correctness, including every `run:` block
+      # through the runner's shellcheck; zizmor checks security posture, with
+      # the token enabling its online audits.
+      - name: Workflow lint (actionlint)
+        run: actionlint -color
+
+      - name: Workflow audit (zizmor)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: zizmor --color=always .github/workflows/
+
+      - name: Secret scan (Gitleaks)
+        run: gitleaks git --log-opts="--all" --no-banner --redact --verbose --log-level=warn .
+
+      - name: Install uv
+        if: inputs.python
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+
+      # Vite+ provisions Node from .node-version and pnpm from packageManager;
+      # its own version comes from the locked vite-plus devDependency.
+      - name: Install Vite+
+        uses: voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76 # v1.22.0
+        with:
+          working-directory: ${{ inputs.working-directory }}
+          # Resolved relative to working-directory.
+          node-version-file: .node-version
+          cache: true
+          cache-toolchain: true
+          run-install: false
+
+      - name: Install dependencies
+        working-directory: ${{ inputs.working-directory }}
+        run: vp install --frozen-lockfile -- --loglevel=warn
+
+      # After the dependency install: project hooks lint against node_modules.
+      # A hook that rewrites a file fails the step.
+      - name: prek hooks
+        uses: j178/prek-action@44924fe9ef4a6f88253c4b6b1bf11c689d3ce53d # v3.1.0
+        with:
+          # Pinned so hook behaviour only changes with a deliberate bump.
+          prek-version: "0.5.7"
+          extra-args: --all-files --stage pre-commit
+        env:
+          # The next step runs the same `vp run check`; don't run it twice.
+          SKIP: vite-plus
+
+      # Every caller declares the same baseline hooks, so local commits get the
+      # same fast feedback everywhere. Project hooks may be added freely.
+      - name: prek baseline hooks present
+        run: |
+          missing=()
+          for hook in \
+            pre-commit:{trailing-whitespace,end-of-file-fixer,fix-byte-order-marker,mixed-line-ending} \
+            pre-commit:{check-merge-conflict,check-case-conflict,check-yaml,check-toml,check-json} \
+            pre-commit:{check-added-large-files,detect-private-key,check-symlinks,destroyed-symlinks} \
+            pre-commit:{check-shebang-scripts-are-executable,check-executables-have-shebangs} \
+            pre-commit:{check-illegal-windows-names,forbid-submodules,no-commit-to-branch} \
+            pre-commit:{gitleaks,typos,rumdl-check,vite-plus} \
+            commit-msg:conventional-pre-commit pre-push:{typecheck,test}; do
+            prek list --hook-stage "${hook%%:*}" | grep -q ":${hook#*:}$" || missing+=("$hook")
+          done
+          if (( ${#missing[@]} )); then
+            echo "::error::Missing baseline prek hooks: ${missing[*]}"
+            exit 1
+          fi
+
+      - name: Format, lint and types (vp run check)
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          FORCE_COLOR: "1"
+        run: vp run check
+
+      - name: Astro and TypeScript types (vp run typecheck)
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          FORCE_COLOR: "1"
+        run: vp run typecheck
+
+      - name: Unit tests and coverage (vp run test)
+        if: inputs.test
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          FORCE_COLOR: "1"
+        run: vp run test
+
+      - name: Production build (vp run build)
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          FORCE_COLOR: "1"
+        run: |
+          echo "::group::Production build details"
+          trap 'echo "::endgroup::"' EXIT
+          vp run build
+
+      # Production dependencies only: they ship to the browser, so any advisory
+      # is actionable. The audit reads the lockfile.
+      - name: Dependency audit (production)
+        working-directory: ${{ inputs.working-directory }}
+        run: vp pm audit -- --prod
+
+      - name: Project-specific gates
+        if: inputs.extra-command != ''
+        env:
+          EXTRA_COMMAND: ${{ inputs.extra-command }}
+        run: bash -euo pipefail -c "$EXTRA_COMMAND"
+
+      - name: Browser audits
+        if: inputs.browser-command != ''
+        env:
+          BROWSER_COMMAND: ${{ inputs.browser-command }}
+        run: bash -euo pipefail -c "$BROWSER_COMMAND"
+
+      # Collected even after an earlier failure, so one run reports broken
+      # links alongside the other findings. The job timeout bounds the wait.
+      - name: Link check (lychee)
+        if: ${{ !cancelled() && steps.lychee-start.outcome == 'success' }}
+        run: |
+          until [[ -f "$RUNNER_TEMP/lychee.status" ]]; do sleep 2; done
+          cat "$RUNNER_TEMP/lychee.log"
+          exit "$(cat "$RUNNER_TEMP/lychee.status")"
