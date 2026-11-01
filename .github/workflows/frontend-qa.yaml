@@ -28,13 +28,6 @@ on:
         description: Install uv for Python gates run by prek hooks, `extra-command` or `browser-command`.
         type: boolean
         default: false
-      lychee-args:
-        description: >-
-          Extra lychee arguments, one per line, passed verbatim before the
-          `.` input. Configuration belongs in lychee.toml; use this only for
-          CI-specific differences.
-        type: string
-        default: ""
       extra-command:
         description: >-
           Project-specific gates, run with bash from the repository root
@@ -128,16 +121,11 @@ jobs:
         id: lychee-start
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          LYCHEE_ARGS: ${{ inputs.lychee-args }}
         run: |
-          args=()
-          while IFS= read -r arg; do
-            [[ -n "$arg" ]] && args+=("$arg")
-          done <<< "$LYCHEE_ARGS"
           # The inner script expands its own variables, so it is single-quoted.
           # shellcheck disable=SC2016
-          nohup bash -c 'lychee --no-progress "$@" . > "$RUNNER_TEMP/lychee.log" 2>&1; echo "$?" > "$RUNNER_TEMP/lychee.status"' \
-            lychee "${args[@]}" > /dev/null 2>&1 &
+          nohup bash -c 'lychee --no-progress . > "$RUNNER_TEMP/lychee.log" 2>&1; echo "$?" > "$RUNNER_TEMP/lychee.status"' \
+            > /dev/null 2>&1 &
 
       - name: Spelling (typos)
         run: typos --color always

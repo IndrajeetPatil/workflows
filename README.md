@@ -165,7 +165,7 @@ matching `NEWS.md` section from that same commit.
 
 | Workflow | Description | Inputs |
 |----------|-------------|--------|
-| [`frontend-qa.yaml`](.github/workflows/frontend-qa.yaml) | Standardised quality gate for [Vite+](https://viteplus.dev) frontends: spelling, Markdown, workflow lint and audit, secret scan, prek hooks, format/lint/types, unit tests, production build, dependency audit and link check | `working-directory`, `test`, `python`, `lychee-args`, `extra-command`, `browser-command`, `timeout-minutes` |
+| [`frontend-qa.yaml`](.github/workflows/frontend-qa.yaml) | Standardised quality gate for [Vite+](https://viteplus.dev) frontends: spelling, Markdown, workflow lint and audit, secret scan, prek hooks, format/lint/types, unit tests, production build, dependency audit and link check | `working-directory`, `test`, `python`, `extra-command`, `browser-command`, `timeout-minutes` |
 
 Every caller gets the same baseline gates; inputs can only **add**
 project-specific gates or adapt the layout, never remove a baseline check.
@@ -195,7 +195,7 @@ checkout and is collected last, so it adds almost no wall-clock time.
 | Unit tests and coverage | `vp run test` | Vite+ task (required unless `test: false`) |
 | Production build | `vp run build` | Vite+ task (required) |
 | Production dependency advisories | `vp pm audit -- --prod` | — |
-| Link rot | [lychee](https://github.com/lycheeverse/lychee) | `lychee.toml` |
+| Link rot | [lychee](https://github.com/lycheeverse/lychee) | `lychee.toml` (the only way to configure it, so local and CI runs match) |
 
 ### Baseline hooks
 
