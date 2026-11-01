@@ -56,9 +56,9 @@
     <path d="M736 249h69m-8-6 8 6-8 6"/>
   </g>
   <g class="icon">
-    <use href="#branch" x="97" y="214" width="32" height="32"/>
-    <use href="#archive" x="460" y="214" width="32" height="32"/>
-    <use href="#merge" x="823" y="214" width="32" height="32"/>
+    <use href="#branch" x="97" y="202" width="32" height="32"/>
+    <use href="#archive" x="460" y="202" width="32" height="32"/>
+    <use href="#merge" x="823" y="202" width="32" height="32"/>
   </g>
   <g class="ink label">
     <text x="140" y="224">Release PR head</text>
@@ -90,9 +90,9 @@
     <path d="M736 522h69m-8-6 8 6-8 6"/>
   </g>
   <g class="icon">
-    <use href="#verify" x="97" y="487" width="32" height="32"/>
-    <use href="#news" x="460" y="487" width="32" height="32"/>
-    <use href="#tag" x="823" y="487" width="32" height="32"/>
+    <use href="#verify" x="97" y="475" width="32" height="32"/>
+    <use href="#news" x="460" y="475" width="32" height="32"/>
+    <use href="#tag" x="823" y="475" width="32" height="32"/>
   </g>
   <g class="ink label">
     <text x="140" y="497">Find and verify PR head</text>
