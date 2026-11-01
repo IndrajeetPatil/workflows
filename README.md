@@ -87,7 +87,7 @@ third-party action the workflow uses; for the frontend workflows that is
 GitHub-owned actions.
 
 Avoid `secrets: inherit` when a workflow needs only one named secret. Pass that
-secret explicitly so unrelated repository or organization secrets are not made
+secret explicitly so unrelated repository or organisation secrets are not made
 available to the called workflow.
 
 ## Python Packages
@@ -143,6 +143,16 @@ runs with the same dependency metadata can restore that isolated cache,
 avoiding the much longer runtime caused by rebuilding the hard-dependency graph
 on every pull request. Increment the static cache-generation prefix only when
 all hard-only caches intentionally need to be invalidated.
+
+### CRAN release lifecycle
+
+The release branch submits its source tarball to CRAN while the release pull
+request is open. After that pull request merges, rerun `submit-cran.yaml` from
+the default branch to create the tag and GitHub Release from the original
+submitted pull-request head. The second run rebuilds the tarball and reads the
+matching `NEWS.md` section from that same commit.
+
+![CRAN release lifecycle: a release-branch run submits the original pull-request head to CRAN, and a default-branch run after merge verifies that head before creating the tag and GitHub Release.](docs/figures/cran-release.svg)
 
 ## Presentations
 
