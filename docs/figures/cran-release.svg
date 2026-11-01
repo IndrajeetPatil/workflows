@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 690" role="img" aria-labelledby="title description">
+  <title id="title">CRAN submission and GitHub release use the same pull-request head in two runs</title>
+  <desc id="description">Before merge, a release branch builds a source tarball and submits it to CRAN without creating a tag or GitHub Release. After the release pull request merges, a default-branch run finds and verifies that original pull-request head, rebuilds its tarball, reads its NEWS section, then creates the tag and GitHub Release without resubmitting to CRAN.</desc>
+  <defs>
+    <style>
+      .paper { fill: #faf8f4 }
+      .band { fill: #f2efe8; stroke: #e3ded2; stroke-width: 1.5 }
+      .surface { fill: #fdfcf9; stroke: #e3ded2; stroke-width: 1.5 }
+      .ink { fill: #201d18 }
+      .muted { fill: #5d574c }
+      .accent { fill: #14584d }
+      .rule { fill: none; stroke: #e3ded2; stroke-width: 2 }
+      .route { fill: none; stroke: #14584d; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round }
+      .icon { fill: none; stroke: #14584d; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round }
+      .heading { font: 600 34px Fraunces, Georgia, serif }
+      .label { font: 600 17px 'Hanken Grotesk', Arial, sans-serif }
+      .body { font: 15px 'Hanken Grotesk', Arial, sans-serif }
+      .small { font: 600 12px 'Hanken Grotesk', Arial, sans-serif; letter-spacing: 1.3px }
+    </style>
+    <symbol id="branch" viewBox="0 0 32 32">
+      <circle cx="7" cy="5" r="3"/><circle cx="25" cy="9" r="3"/><circle cx="7" cy="27" r="3"/>
+      <path d="M7 8v16M7 20c0-6 18-2 18-8"/>
+    </symbol>
+    <symbol id="archive" viewBox="0 0 32 32">
+      <rect x="4" y="5" width="24" height="7" rx="1"/><path d="M6 12v15h20V12M12 18h8"/>
+    </symbol>
+    <symbol id="merge" viewBox="0 0 32 32">
+      <circle cx="7" cy="5" r="3"/><circle cx="7" cy="27" r="3"/><circle cx="25" cy="27" r="3"/>
+      <path d="M7 8v16m0-13c0 9 18 3 18 13"/>
+    </symbol>
+    <symbol id="verify" viewBox="0 0 32 32">
+      <path d="M16 3 27 7v8c0 7-4 11-11 14C9 26 5 22 5 15V7z"/><path d="m11 16 4 4 7-8"/>
+    </symbol>
+    <symbol id="news" viewBox="0 0 32 32">
+      <path d="M7 3h14l5 5v21H7zM21 3v6h5M11 15h11M11 20h11M11 25h7"/>
+    </symbol>
+    <symbol id="tag" viewBox="0 0 32 32">
+      <path d="M4 5h13l11 11-12 12L4 16z"/><circle cx="11" cy="11" r="2"/>
+    </symbol>
+  </defs>
+
+  <rect class="paper" width="1180" height="690"/>
+  <text class="heading ink" x="48" y="62">One submitted source, two separate runs</text>
+  <text class="body muted" x="49" y="91">The release branch submits to CRAN. After merge, the default branch publishes the original submitted tree.</text>
+  <path class="rule" d="M48 112H1132"/>
+
+  <rect class="band" x="48" y="145" width="1084" height="198" rx="6"/>
+  <text class="small accent" x="79" y="175">RELEASE BRANCH · BEFORE MERGE</text>
+  <g class="surface">
+    <rect x="79" y="195" width="294" height="109" rx="6"/>
+    <rect x="442" y="195" width="294" height="109" rx="6"/>
+    <rect x="805" y="195" width="294" height="109" rx="6"/>
+  </g>
+  <g class="route">
+    <path d="M373 249h69m-8-6 8 6-8 6"/>
+    <path d="M736 249h69m-8-6 8 6-8 6"/>
+  </g>
+  <g class="icon">
+    <use href="#branch" x="97" y="214" width="32" height="32"/>
+    <use href="#archive" x="460" y="214" width="32" height="32"/>
+    <use href="#merge" x="823" y="214" width="32" height="32"/>
+  </g>
+  <g class="ink label">
+    <text x="140" y="224">Release PR head</text>
+    <text x="503" y="224">Build and submit</text>
+    <text x="866" y="224">CRAN review, then merge</text>
+  </g>
+  <g class="muted body">
+    <text x="98" y="265">Original source commit and NEWS.md</text>
+    <text x="461" y="265">Source tarball goes to CRAN</text>
+    <text x="824" y="265">The release PR remains the source</text>
+  </g>
+  <text class="body muted" x="460" y="327">No tag or GitHub Release is created on this run.</text>
+
+  <path class="route" d="M224 304v153" stroke-dasharray="5 7"/>
+  <path class="route" d="m219 450 5 7 5-7"/>
+  <rect class="paper" x="247" y="370" width="197" height="25"/>
+  <text class="small accent" x="252" y="387">SAME PR HEAD SHA</text>
+  <text class="small accent" x="805" y="388">AFTER THE PR MERGES ↓</text>
+
+  <rect class="band" x="48" y="420" width="1084" height="198" rx="6"/>
+  <text class="small accent" x="79" y="450">DEFAULT BRANCH · AFTER MERGE</text>
+  <g class="surface">
+    <rect x="79" y="468" width="294" height="109" rx="6"/>
+    <rect x="442" y="468" width="294" height="109" rx="6"/>
+    <rect x="805" y="468" width="294" height="109" rx="6"/>
+  </g>
+  <g class="route">
+    <path d="M373 522h69m-8-6 8 6-8 6"/>
+    <path d="M736 522h69m-8-6 8 6-8 6"/>
+  </g>
+  <g class="icon">
+    <use href="#verify" x="97" y="487" width="32" height="32"/>
+    <use href="#news" x="460" y="487" width="32" height="32"/>
+    <use href="#tag" x="823" y="487" width="32" height="32"/>
+  </g>
+  <g class="ink label">
+    <text x="140" y="497">Find and verify PR head</text>
+    <text x="503" y="497">Rebuild and read NEWS</text>
+    <text x="866" y="497">Tag and GitHub Release</text>
+  </g>
+  <g class="muted body">
+    <text x="98" y="538">Checkout the submitted commit</text>
+    <text x="461" y="538">Tarball and matching NEWS section</text>
+    <text x="824" y="538">Both target the submitted commit</text>
+  </g>
+  <text class="body muted" x="79" y="603">The default-branch run does not resubmit to CRAN.</text>
+
+  <path class="rule" d="M48 643H1132"/>
+  <text class="body muted" x="49" y="671">The pull-request head, not later changes on the default branch, determines the release contents.</text>
+</svg>
