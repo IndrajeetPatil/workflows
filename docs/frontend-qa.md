@@ -57,6 +57,7 @@ duplicates (typos, rumdl, the staged-only Gitleaks scan) take seconds.
 
 Rust and Go tools are installed from release binaries verified against pinned
 SHA-256 checksums, which takes seconds rather than a Node or Python install.
+prek is pinned the same way, by version and archive checksum.
 
 ## Optional gates
 

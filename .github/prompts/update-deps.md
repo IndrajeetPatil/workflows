@@ -19,7 +19,7 @@ for callers before changing a workflow interface or permissions.
 | Standalone binaries (lychee, typos, rumdl, Gitleaks, actionlint, zizmor) | `*_VERSION` and `*_SHA256` in `frontend-qa.yaml` | Gitleaks in `security.yml`; typos with `crate-ci/typos` in `check-docs.yaml` |
 | zizmor | `ZIZMOR_VERSION` in `frontend-qa.yaml`, `uvx zizmor@…` in `security.yml` | The validation command in `AGENTS.md` |
 | conventional-pre-commit | `uvx --from conventional-pre-commit==…` in `conventional-commits.yaml` | The release callers pin in their prek configuration |
-| prek | `prek-version` in `frontend-qa.yaml` | Callers' `PREK_VERSION` and `minimum_prek_version`, which must not be newer |
+| prek | `prek-version` and `sha256` in `frontend-qa.yaml` | Callers' `PREK_VERSION` and `minimum_prek_version`, which must not be newer |
 | Python | The matrix in `python-test.yaml` | The matrix rules in `AGENTS.md` |
 
 1. Check current first-party documentation and releases for every public action
@@ -32,11 +32,12 @@ for callers before changing a workflow interface or permissions.
    installs, compute its SHA-256, and cross-check it against the release's
    published checksums when one exists. Update the version and checksum
    together, and keep the same version wherever the tool appears.
-3. Before bumping `prek-version`, confirm that the new prek release still
-   provides every hook id in the `prek baseline hooks present` step, including
-   the built-in hooks that ship with the runner. Raising it lets callers raise
-   their own prek pins; never lower it below a version a caller already
-   requires.
+3. Update `prek-version` together with the `sha256` of its
+   `x86_64-unknown-linux-gnu` archive, cross-checked like the binaries above.
+   Before bumping it, confirm that the new prek release still provides every
+   hook id in the `prek baseline hooks present` step, including the built-in
+   hooks that ship with the runner. Raising it lets callers raise their own
+   prek pins; never lower it below a version a caller already requires.
 4. When a new stable Python release is out, adopt it in `python-test.yaml` as
    `AGENTS.md` describes, and list the caller status checks that need renaming
    in the PR description.
