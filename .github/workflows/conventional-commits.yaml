@@ -11,10 +11,6 @@ on:
         description: Space-separated commit types allowed in addition to the Conventional Commits defaults.
         type: string
         default: ""
-      strict:
-        description: Also reject `fixup!` and merge commits.
-        type: boolean
-        default: true
 
 permissions:
   contents: read
@@ -50,7 +46,6 @@ jobs:
       - name: Validate commit messages and title
         env:
           EXTRA_TYPES: ${{ inputs.extra-types }}
-          STRICT: ${{ inputs.strict }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           PR_TITLE: ${{ github.event.pull_request.title }}
@@ -66,8 +61,8 @@ jobs:
             fi
             types+=("$type")
           done
-          flags=(--verbose)
-          [[ "$STRICT" == true ]] && flags+=(--strict)
+          # --strict also rejects fixup! and merge commits.
+          flags=(--verbose --strict)
 
           check() {
             uvx --from conventional-pre-commit==4.4.0 conventional-pre-commit \

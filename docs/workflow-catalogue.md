@@ -32,7 +32,7 @@ presentation cells. `prek` itself remains colorized via the `prek-action` defaul
 | [`pkgdown.yaml`](../.github/workflows/pkgdown.yaml) | Build and deploy a pkgdown site with verified canonical URLs; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests` |
 | [`pre-commit.yaml`](../.github/workflows/pre-commit.yaml) | Run pre-commit hooks; fails if hooks would modify files | — |
 | [`seo-files.yaml`](../.github/workflows/seo-files.yaml) | Deploy SEO and AI-discovery files (`robots.txt`, `.well-known/llms.txt`) to `gh-pages` after pkgdown build | `package-name` |
-| [`submit-cran.yaml`](../.github/workflows/submit-cran.yaml) | On a release branch, build and submit to CRAN without releasing; on the default branch after merge, rebuild and tag the submitted PR head and create a GitHub Release using the matching `NEWS.md` section without resubmitting | `extra-packages` |
+| [`submit-cran.yaml`](../.github/workflows/submit-cran.yaml) | On a release branch, build and submit to CRAN without releasing; on the default branch after merge, rebuild and tag the submitted PR head and create a GitHub Release using the matching `NEWS.md` section without resubmitting | — |
 | [`test-coverage.yaml`](../.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%) + examples/vignettes (enforces 100%) | — |
 
 See [hard-dependency checks](r-packages.md#hard-dependency-checks) for checking
@@ -63,7 +63,7 @@ regardless of the underlying tech stack.
 | Workflow | Description | Inputs |
 |----------|-------------|--------|
 | [`check-link-rot.yaml`](../.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
-| [`conventional-commits.yaml`](../.github/workflows/conventional-commits.yaml) | Check every pull-request commit and the pull-request title (the default squash subject) against [Conventional Commits](https://www.conventionalcommits.org) | `extra-types`, `strict` |
+| [`conventional-commits.yaml`](../.github/workflows/conventional-commits.yaml) | Check every pull-request commit and the pull-request title (the default squash subject) against [Conventional Commits](https://www.conventionalcommits.org) | `extra-types` |
 
 Trigger `conventional-commits.yaml` on the `edited` pull-request activity as
 well, so a corrected title is re-checked. Keep it in its own caller workflow:
