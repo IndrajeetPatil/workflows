@@ -1,11 +1,6 @@
 # No official GitHub Action exists for CRAN submission; uses devtools::submit_cran()
 on:
   workflow_call:
-    inputs:
-      extra-packages:
-        type: string
-        default: ''
-        description: 'Additional packages to install (e.g., any::pkg1, any::pkg2)'
 
 name: submit-cran
 
@@ -131,7 +126,6 @@ jobs:
           extra-packages: |
             any::devtools
             any::pkgbuild
-            ${{ inputs.extra-packages }}
 
       - name: Build source tarball
         id: build
