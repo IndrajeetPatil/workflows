@@ -24,6 +24,9 @@ owned by `IndrajeetPatil`.
   is the only exception).
 - Before changing a reusable workflow interface or permissions, search the
   `IndrajeetPatil` organization for callers and verify their granted scopes.
+- Add a `workflow_call` input or secret only when a calling repository needs
+  it, not in anticipation of future use. Every input is untrusted data that
+  widens the attack surface, so remove any that no caller still passes.
 - When a workflow starts using a new third-party action, document it in the
   README: callers that allow only selected actions must add it to their
   Actions policy.
