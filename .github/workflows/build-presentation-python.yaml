@@ -50,6 +50,9 @@ jobs:
       - name: Install RevealJS accessibility extension
         run: quarto add mcanouil/quarto-revealjs-a11y --no-prompt
 
+      - name: Install RevealJS read-aloud extension
+        run: quarto add IndrajeetPatil/quarto-read-aloud --no-prompt
+
       - name: Render slides
         run: |
           PANDOC_DIR="$(dirname "$(command -v pandoc)")"
