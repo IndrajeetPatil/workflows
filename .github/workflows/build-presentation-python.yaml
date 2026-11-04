@@ -15,7 +15,7 @@ jobs:
       - name: Restrict to IndrajeetPatil repositories
         if: github.repository_owner != 'IndrajeetPatil'
         run: |
-          echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
+          echo "::error::This workflow is restricted to repositories owned by IndrajeetPatil."
           exit 1
 
       - name: Checkout repository
@@ -50,6 +50,9 @@ jobs:
       - name: Install RevealJS accessibility extension
         run: quarto add mcanouil/quarto-revealjs-a11y --no-prompt
 
+      - name: Install RevealJS read-aloud extension
+        run: quarto add IndrajeetPatil/quarto-read-aloud --no-prompt
+
       - name: Render slides
         run: |
           PANDOC_DIR="$(dirname "$(command -v pandoc)")"
@@ -77,7 +80,7 @@ jobs:
       - name: Restrict to IndrajeetPatil repositories
         if: github.repository_owner != 'IndrajeetPatil'
         run: |
-          echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
+          echo "::error::This workflow is restricted to repositories owned by IndrajeetPatil."
           exit 1
 
       - name: Configure GitHub Pages
