@@ -81,16 +81,16 @@ jobs:
         env:
           LYCHEE_VERSION: "0.24.2"
           LYCHEE_SHA256: 1f4e0ef7f6554a6ed33dd7ac144fb2e1bbed98598e7af973042fc5cd43951c9a
-          TYPOS_VERSION: "1.51.1"
-          TYPOS_SHA256: 93c301fd4120ff076e2cc2a6d6a61cab4a4bdb81899287c0938b452e56d1f454
+          TYPOS_VERSION: "1.52.0"
+          TYPOS_SHA256: 6155d4114f9a0f5b8f6d4fda96266c9d5f6add71df80da7f684ee5e72eb14588
           RUMDL_VERSION: "0.3.2"
           RUMDL_SHA256: 395c4061041c5a25301c7b3564a93c4a661ed4df93427a77b6fc9e426ec8a13a
           GITLEAKS_VERSION: "8.30.1"
           GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
           ACTIONLINT_VERSION: "1.7.12"
           ACTIONLINT_SHA256: 8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8
-          ZIZMOR_VERSION: "1.31.1"
-          ZIZMOR_SHA256: d185f726bdaf92df78273217dfdd24ebcd6b0ef48cf3ce776ff5762b6e138c99
+          ZIZMOR_VERSION: "1.32.0"
+          ZIZMOR_SHA256: bb110cc765eca9cd7efb2e284a956be5974c60027b0970f16397d86208a9957b
         run: |
           bin_dir="$RUNNER_TEMP/qa-bin"
           mkdir -p "$bin_dir"
@@ -173,10 +173,10 @@ jobs:
         uses: j178/prek-action@44924fe9ef4a6f88253c4b6b1bf11c689d3ce53d # v3.1.0
         with:
           # Pinned so hook behaviour only changes with a deliberate bump.
-          prek-version: "0.5.9"
+          prek-version: "0.5.10"
           # The action skips verification for versions newer than its bundled
           # checksum table, so pin the x86_64-unknown-linux-gnu archive here.
-          sha256: 2fee13923018dd517c19dba032ddcae8010cadfb81bc47e742ad5e8981a3f126
+          sha256: 5c832a9ccd0855b7c054320d8921d90165a37459d3ac175923bdf121ff1aa9b1
           extra-args: --all-files --stage pre-commit
         env:
           # The next step runs the same `vp run check`; don't run it twice.
