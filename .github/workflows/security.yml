@@ -73,6 +73,6 @@ jobs:
           enable-cache: false
 
       - name: Run zizmor
-        run: uvx zizmor@1.31.1 --format=github --pedantic .github/workflows/
+        run: uvx zizmor@1.32.0 --format=github --pedantic .github/workflows/
         env:
           GH_TOKEN: ${{ github.token }}
