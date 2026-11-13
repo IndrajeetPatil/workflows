@@ -54,8 +54,12 @@ jobs:
 
 Reference these workflows by `@main`. They are maintained alongside their
 callers, so a branch reference delivers fixes to every caller at once instead
-of leaving SHA pins to go stale. The safeguard is on this side: `main` accepts
-changes only through pull requests that pass the Gitleaks and zizmor checks.
+of leaving SHA pins to go stale. They are first-party, and only the owner can
+contribute to any of the owner's repositories, so there is no external
+contributor who could change them. The safeguard is on this side: `main`
+accepts changes only through pull requests that pass the Gitleaks and zizmor
+checks. Code scanners such as CodeQL (`actions/unpinned-tag`) still flag the
+branch reference; dismiss those alerts as "won't fix" with this reason.
 Callers that run zizmor should allow this with a narrow policy and keep every
 third-party action SHA-pinned:
 
