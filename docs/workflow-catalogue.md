@@ -8,6 +8,7 @@ permissions.
 
 | Workflow | Description | Inputs |
 |----------|-------------|--------|
+| [`python-benchmarks.yaml`](../.github/workflows/python-benchmarks.yaml) | Run CodSpeed CPU simulation benchmarks with OIDC uploads | — |
 | [`python-docs.yaml`](../.github/workflows/python-docs.yaml) | Build and deploy Python package documentation to GitHub Pages | — |
 | [`python-qa.yaml`](../.github/workflows/python-qa.yaml) | Code quality checks, including build and test coverage | — |
 | [`python-test.yaml`](../.github/workflows/python-test.yaml) | Run tests across multiple OS and Python versions | — |
@@ -26,6 +27,7 @@ presentation cells. `prek` itself remains colorized via the `prek-action` defaul
 |----------|-------------|--------|
 | [`check-docs.yaml`](../.github/workflows/check-docs.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) and spelling using [typos](https://github.com/crate-ci/typos) | — |
 | [`check-formatting.yaml`](../.github/workflows/check-formatting.yaml) | Check and suggest code formatting using [air](https://github.com/posit-dev/air) | — |
+| [`r-benchmarks.yaml`](../.github/workflows/r-benchmarks.yaml) | Benchmark main R API functions with the CodSpeed executable harness and OIDC uploads | — |
 | [`R-CMD-check.yaml`](../.github/workflows/R-CMD-check.yaml) | R CMD check across multiple operating systems plus current, devel, and previous R releases; use `hard: true` for a hard-deps-only CI check (PR-only) | `hard` |
 | [`check-extra.yaml`](../.github/workflows/check-extra.yaml) | Parallel extra checks: no-warnings, random test order, README render | `extra-packages` |
 | [`lint.yaml`](../.github/workflows/lint.yaml) | Package linting with `{lintr}` | — |

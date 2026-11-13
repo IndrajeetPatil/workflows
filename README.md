@@ -14,7 +14,7 @@ after a pull request passes this repository's security checks.
 | Family | Use it for | Workflows |
 | --- | --- | --- |
 | Python | Package tests, quality checks and docs | [Python catalogue](docs/workflow-catalogue.md#python-packages) |
-| R | Package checks, sites, coverage and releases | [R catalogue](docs/workflow-catalogue.md#r-packages) |
+| R | Package checks, benchmarks, sites, coverage and releases | [R catalogue](docs/workflow-catalogue.md#r-packages) |
 | Presentations | Quarto RevealJS builds and deployment | [Presentation catalogue](docs/workflow-catalogue.md#presentations) |
 | Frontends | One shared Vite+ quality gate | [Frontend guide](docs/frontend-qa.md) |
 | Generic | Link and commit checks | [Generic catalogue](docs/workflow-catalogue.md#generic) |

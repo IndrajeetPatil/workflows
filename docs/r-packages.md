@@ -43,3 +43,47 @@ submitted pull-request head. The second run rebuilds the tarball and reads the
 matching `NEWS.md` section from that same commit.
 
 ![CRAN release lifecycle: a release-branch run submits the original pull-request head to CRAN, and a default-branch run after merge verifies that head before creating the tag and GitHub Release.](figures/cran-release.svg)
+
+## Benchmarks
+
+`r-benchmarks.yaml` runs the caller's `codspeed.yml` executable targets on
+Ubuntu 24.04 with R 4.6.1. It installs hard dependencies and optional tools
+from `Config/Needs/benchmark`, installs the checkout, records loaded package
+versions with `sessionInfo()`, and runs the official CodSpeed action in CPU
+simulation mode with subprocess tracking. BLAS and OpenMP use one thread.
+Dependencies are resolved from the configured package repository, not locked.
+
+Callers must grant `contents: read` and `id-token: write`. Keep pull-request,
+default-branch push, and manual triggers so new targets gain baselines. Import
+the caller into CodSpeed using its GitHub App before running uploads.
+
+```yaml
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  benchmarks:
+    uses: IndrajeetPatil/workflows/.github/workflows/r-benchmarks.yaml@main
+```
+
+### Coverage policy
+
+- Benchmark the main statistical or plotting entry points, rather than every
+  export. Cover representative workflows with fixed, small datasets.
+- Exclude meta-analysis functions. Helper functions and grouped plot wrappers
+  are outside the primary benchmark catalogue.
+- Maintain an explicit function list and local run instructions in the caller's
+  `benchmarks/README.md`. Keep target names, fixtures, and repetition counts
+  stable; document measurement scope when changing them.
+- Keep benchmarks outside package checks and exclude their tooling from CRAN
+  source bundles. Check returned data or build plots so each command does useful
+  work and fails when its workload breaks.
+- Command measurements include R startup and dependency loading. CPU simulation
+  excludes system calls; CodSpeed may flag these R workloads as dominated by
+  them. Interpret reports as simulated CPU work, not complete elapsed runtime.
+- Repeat the same source and environment when investigating stability. Matching
+  rounded report values alone do not establish sub-percent variance.
+
+Use feature-branch workflow references to validate coordinated workflow and
+caller PRs; normal callers use `@main` after the shared workflow is merged.
