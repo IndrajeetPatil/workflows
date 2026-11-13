@@ -63,8 +63,8 @@ grant.
 
 A reusable workflow runs under the **caller's** Actions policy. A caller that
 allows only selected actions must allow `IndrajeetPatil/*` and every
-third-party action the workflow uses; for the frontend workflows that is
-`voidzero-dev/setup-vp`, `j178/prek-action` and `astral-sh/setup-uv`, plus
+third-party action the workflow uses; these include `voidzero-dev/setup-vp`,
+`j178/prek-action`, `astral-sh/setup-uv` and `CodSpeedHQ/action`, plus
 GitHub-owned actions.
 
 Avoid `secrets: inherit` when a workflow needs only one named secret. Pass that
