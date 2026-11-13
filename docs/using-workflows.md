@@ -13,6 +13,15 @@ The repository's only standalone workflow is
 with zizmor in pedantic mode so future changes cannot silently weaken these
 controls.
 
+## Account restriction
+
+Every job begins with a guard that fails when `github.repository_owner` is not
+`IndrajeetPatil`, before checking out or executing caller code. Diagnostic steps
+that run after failure also require that owner. This restricts the caller
+repository's owner; it does not require the PR author or triggering actor to be
+the account owner. Because the workflows are public, another account can invoke
+them, but its jobs fail at the guard before package or deployment work runs.
+
 ## Call a workflow
 
 Reference a reusable workflow from your repository:
