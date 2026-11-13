@@ -36,6 +36,9 @@ owned by `IndrajeetPatil`.
 - Pin every external action to a full commit SHA and retain the most specific
   release version available in an inline comment. Do not use sliding major-version
   tags (e.g. `v2`) if a more specific version tag exists (e.g. `v2.14.0`).
+- Keep `.github/workflows/actions.lock` in sync with every workflow action
+  dependency. Generate it with GitHub's `gh actions-lock` extension; it records
+  transitive dependencies and source repository identity. Never edit it by hand.
 - Default `GITHUB_TOKEN` to `contents: read`. Give a job only the additional
   write scopes it needs, and isolate deploy or release credentials from jobs
   that build or test repository code.
@@ -98,6 +101,8 @@ gitleaks git --log-opts="--all" --no-banner --redact .
 uvx zizmor@1.32.0 --pedantic .github/workflows/
 git diff --check
 ```
+
+Also run `make actions-lock-verify` after dependency or workflow changes.
 
 Also inspect the complete diff and confirm that no standalone workflow trigger
 was introduced beyond the PR-only `security.yml` exception.

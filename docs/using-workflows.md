@@ -1,11 +1,13 @@
 # Using reusable workflows
 
-All external actions are **pinned to commit SHAs** to prevent supply chain
-attacks. The workflows default to read-only token access, disable persisted
-checkout credentials except for the one intentional push job, and bound every
-job with a timeout. Write credentials are isolated in deployment and release
-jobs rather than exposed while repository code and dependencies are built or
-tested.
+External actions are pinned to full commit SHAs, with the release versions in
+inline comments. The machine-generated [workflow dependency lockfile](../.github/workflows/actions.lock)
+also records the verified commit and source repository identity for direct and
+transitive action dependencies. The workflows default to read-only token
+access, disable persisted checkout credentials except for the one intentional
+push job, and bound every job with a timeout. Write credentials are isolated
+in deployment and release jobs rather than exposed while repository code and
+dependencies are built or tested.
 
 The repository's only standalone workflow is
 [`security.yml`](../.github/workflows/security.yml). It runs on pull requests to

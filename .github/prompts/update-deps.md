@@ -15,12 +15,30 @@ for callers before changing a workflow interface or permissions.
 
 | Dependency | Where it is pinned | Keep aligned with |
 | --- | --- | --- |
-| Third-party GitHub Actions | Every `uses:` line in `.github/workflows/` | The same action everywhere it appears |
+| Third-party GitHub Actions | Every `uses:` line in `.github/workflows/` | `.github/workflows/actions.lock` and every use of the same action |
+| Transitive GitHub Actions | `.github/workflows/actions.lock` | The action version selected by each workflow |
 | Standalone binaries (lychee, typos, rumdl, Gitleaks, actionlint, zizmor) | `*_VERSION` and `*_SHA256` in `frontend-qa.yaml` | Gitleaks in `security.yml`; typos with `crate-ci/typos` in `check-docs.yaml` |
 | zizmor | `ZIZMOR_VERSION` in `frontend-qa.yaml`, `uvx zizmor@…` in `security.yml` | The validation command in `AGENTS.md` |
 | conventional-pre-commit | `uvx --from conventional-pre-commit==…` in `conventional-commits.yaml` | The release callers pin in their prek configuration |
 | prek | `prek-version` and `sha256` in `frontend-qa.yaml` | Callers' `PREK_VERSION` and `minimum_prek_version`, which must not be newer |
 | Python | The matrix in `python-test.yaml` | The matrix rules in `AGENTS.md` |
+
+## Workflow dependency lockfile
+
+- `.github/workflows/actions.lock` covers direct and transitive action
+  dependencies. It is generated, not hand-edited, and the lockfile format is
+  in public preview.
+- Check the latest official `gh-actions-lock` release, keep
+  `ACTIONS_LOCK_VERSION` in the `Makefile` current, and install that exact
+  extension version.
+- After updating action refs to their latest supported full-SHA releases, run
+  `make actions-lock`. It regenerates the lockfile while preserving the
+  repository's full-SHA refs, then verifies coverage and provenance. Review the
+  complete lockfile diff and keep inline release versions matched to their
+  locked commits.
+- Run `make actions-lock-verify` for a verification-only check. The lockfile
+  does not cover reusable workflow calls, standalone binaries, or other build
+  inputs; maintain those with their existing policies below.
 
 1. Check current first-party documentation and releases for every public action
    used in any workflow file, including the repository-local `security.yml`.
@@ -98,9 +116,10 @@ gate from `frontend-qa.yaml`. Revalidate after each change.
 ## Validate and open the PR
 
 Run the validation commands in `AGENTS.md`, using the updated zizmor version,
-plus `typos .` and `rumdl check .`. Rerun them if anything changes afterwards,
-and inspect the complete diff to confirm that no standalone workflow trigger was
-introduced beyond the PR-only `security.yml` exception.
+plus `make actions-lock-verify`, `typos .` and `rumdl check .`. Rerun them if
+anything changes afterwards, and inspect the complete diff to confirm that no
+standalone workflow trigger was introduced beyond the PR-only `security.yml`
+exception.
 
 Open a ready-for-review PR using the gh CLI, instead of the GitHub MCP server,
 and explain the version bumps and any key refactorings as list items in the PR
