@@ -1,0 +1,54 @@
+name: R Benchmarks
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmarks:
+    name: Run CodSpeed benchmarks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      id-token: write # CodSpeed requests a short-lived OIDC upload token.
+    env:
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+    steps:
+      - name: Restrict to IndrajeetPatil repositories
+        if: github.repository_owner != 'IndrajeetPatil'
+        run: |
+          echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
+          exit 1
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: r-lib/actions/setup-r@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
+        with:
+          r-version: "4.6.1"
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
+        with:
+          needs: benchmark
+          cache-version: r-benchmarks-1-${{ hashFiles('DESCRIPTION') }}
+          install-pandoc: false
+          install-quarto: false
+          dependencies: '"hard"'
+      - name: Install the checkout
+        run: R CMD INSTALL .
+      - name: Record the benchmark environment
+        shell: Rscript {0}
+        run: |
+          package <- read.dcf("DESCRIPTION", fields = "Package")[[1L]]
+          library(package, character.only = TRUE)
+          sessionInfo()
+      - name: Run benchmarks and upload results
+        uses: CodSpeedHQ/action@af75f77f17a054769abefaa42fe8dc2975469b5f # v5.6.3
+        with:
+          mode: simulation
+          simulation-track-subprocess: true
