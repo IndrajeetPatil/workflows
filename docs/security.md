@@ -27,8 +27,18 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
 ## Actions and workflow dependencies
 
 - External actions are pinned to full commit SHAs, with their release versions
-  recorded in inline comments. Standalone release-tool archives are pinned to
-  versions and SHA-256 checksums, verified before extraction.
+  in inline comments. The generated
+  [`actions.lock`](../.github/workflows/actions.lock) also records a verified
+  commit and source repository identity for each direct and transitive action
+  dependency. Standalone release-tool archives are pinned to versions and
+  SHA-256 checksums, verified before extraction.
+- [GitHub workflow dependency lockfiles](https://docs.github.com/en/actions/concepts/security/workflow-dependency-lockfiles)
+  are in public preview. This lockfile covers action dependencies in this
+  repository's workflows; it does not lock reusable workflow calls made by
+  callers or other build inputs. Review format and verifier changes when
+  updating the official lockfile generator.
+- Use `make actions-lock` to regenerate the lockfile while preserving full-SHA
+  workflow refs, and `make actions-lock-verify` to check the result.
 - The owner's repositories call these first-party reusable workflows using
   `@main`. This intentionally delivers reviewed fixes to callers without
   waiting for each caller to update a SHA. The default branch is protected by

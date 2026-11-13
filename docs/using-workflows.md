@@ -1,11 +1,13 @@
 # Using reusable workflows
 
-All external actions are **pinned to commit SHAs** to prevent supply chain
-attacks. The workflows default to read-only token access, disable persisted
-checkout credentials except for the one intentional push job, and bound every
-job with a timeout. Write credentials are isolated in deployment and release
-jobs rather than exposed while repository code and dependencies are built or
-tested.
+External actions are pinned to full commit SHAs, with the release versions in
+inline comments. The machine-generated [workflow dependency lockfile](../.github/workflows/actions.lock)
+also records the verified commit and source repository identity for direct and
+transitive action dependencies. The workflows default to read-only token
+access, disable persisted checkout credentials except for the one intentional
+push job, and bound every job with a timeout. Write credentials are isolated
+in deployment and release jobs rather than exposed while repository code and
+dependencies are built or tested.
 
 The repository's only standalone workflow is
 [`security.yml`](../.github/workflows/security.yml). It runs on pull requests to
@@ -73,10 +75,15 @@ chain, but a called workflow cannot elevate scopes that its caller did not
 grant.
 
 A reusable workflow runs under the **caller's** Actions policy. A caller that
-allows only selected actions must allow `IndrajeetPatil/*` and every
-third-party action the workflow uses; these include `voidzero-dev/setup-vp`,
-`j178/prek-action`, `astral-sh/setup-uv` and `CodSpeedHQ/action`, plus
-GitHub-owned actions.
+allows only selected actions must allow `IndrajeetPatil/*`, the actions in the
+selected workflow's direct and transitive dependency graph, and GitHub-owned
+actions. The generated [`actions.lock`](../.github/workflows/actions.lock) is
+the complete dependency inventory. Direct third-party action publishers
+currently include `astral-sh/setup-uv`, `CodSpeedHQ/action`,
+`codecov/codecov-action`, `crate-ci/typos`,
+`JamesIves/github-pages-deploy-action`, `j178/prek-action`,
+`lycheeverse/lychee-action`, `posit-dev/setup-air`,
+`quarto-dev/quarto-actions`, `r-lib/actions` and `voidzero-dev/setup-vp`.
 
 Avoid `secrets: inherit` when a workflow needs only one named secret. Pass that
 secret explicitly so unrelated repository or organisation secrets are not made

@@ -6,7 +6,7 @@ permissions.
 
 ## Python Packages
 
-| Workflow | Description | Inputs |
+| Workflow | Description | Inputs / secrets |
 |----------|-------------|--------|
 | [`python-benchmarks.yaml`](../.github/workflows/python-benchmarks.yaml) | Run CodSpeed CPU simulation benchmarks with OIDC uploads | — |
 | [`python-docs.yaml`](../.github/workflows/python-docs.yaml) | Build and deploy Python package documentation to GitHub Pages | — |
@@ -23,7 +23,7 @@ presentation cells. `prek` itself remains colorized via the `prek-action` defaul
 
 ## R Packages
 
-| Workflow | Description | Inputs |
+| Workflow | Description | Inputs / secrets |
 |----------|-------------|--------|
 | [`check-docs.yaml`](../.github/workflows/check-docs.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) and spelling using [typos](https://github.com/crate-ci/typos) | — |
 | [`check-formatting.yaml`](../.github/workflows/check-formatting.yaml) | Check and suggest code formatting using [air](https://github.com/posit-dev/air) | — |
@@ -35,7 +35,7 @@ presentation cells. `prek` itself remains colorized via the `prek-action` defaul
 | [`pre-commit.yaml`](../.github/workflows/pre-commit.yaml) | Run pre-commit hooks; fails if hooks would modify files | — |
 | [`seo-files.yaml`](../.github/workflows/seo-files.yaml) | Deploy SEO and AI-discovery files (`robots.txt`, `.well-known/llms.txt`) to `gh-pages` after pkgdown build | `package-name` |
 | [`submit-cran.yaml`](../.github/workflows/submit-cran.yaml) | On a release branch, build and submit to CRAN without releasing; on the default branch after merge, rebuild and tag the submitted PR head and create a GitHub Release using the matching `NEWS.md` section without resubmitting | — |
-| [`test-coverage.yaml`](../.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%) + examples/vignettes (enforces 100%) | — |
+| [`test-coverage.yaml`](../.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%) + examples/vignettes (enforces 100%) | Optional `CODECOV_TOKEN`; PR uploads tolerate a missing token |
 
 See [hard-dependency checks](r-packages.md#hard-dependency-checks) for checking
 tools and isolated caches, and [CRAN releases](r-packages.md#cran-releases) for
@@ -43,7 +43,7 @@ the release boundary.
 
 ## Presentations
 
-| Workflow | Description | Inputs |
+| Workflow | Description | Inputs / secrets |
 |----------|-------------|--------|
 | [`build-presentation-python.yaml`](../.github/workflows/build-presentation-python.yaml) | Build and deploy Python/UV Quarto RevealJS presentation to GitHub Pages | — |
 | [`build-presentation-r.yaml`](../.github/workflows/build-presentation-r.yaml) | Build and deploy R Quarto RevealJS presentation to GitHub Pages | — |
@@ -55,7 +55,7 @@ alone does not enable speech.
 
 ## Frontends
 
-| Workflow | Description | Inputs |
+| Workflow | Description | Inputs / secrets |
 |----------|-------------|--------|
 | [`frontend-qa.yaml`](../.github/workflows/frontend-qa.yaml) | Standardised quality gate for [Vite+](https://viteplus.dev) frontends: spelling, Markdown, workflow lint and audit, secret scan, prek hooks, format/lint/types, unit tests, production build, dependency audit and link check | `working-directory`, `test`, `python`, `extra-command`, `browser-command`, `timeout-minutes` |
 
@@ -67,7 +67,7 @@ Generic workflows are language-agnostic and provide utility across diverse
 types of projects, ensuring high code quality and robust documentation
 regardless of the underlying tech stack.
 
-| Workflow | Description | Inputs |
+| Workflow | Description | Inputs / secrets |
 |----------|-------------|--------|
 | [`check-link-rot.yaml`](../.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
 | [`conventional-commits.yaml`](../.github/workflows/conventional-commits.yaml) | Check every pull-request commit and the pull-request title (the default squash subject) against [Conventional Commits](https://www.conventionalcommits.org) | `extra-types` |
