@@ -7,7 +7,7 @@ them in normal and hard-dependency modes.
 
 ## Hard-dependency checks
 
-![Two separate dependency caches based on DESCRIPTION: the normal check can restore Imports, Suggests and tools, while the hard-only check restores Imports and checking tools without Suggests.](figures/cache-isolation.png)
+![Two separate dependency caches based on DESCRIPTION: the normal check can restore Imports, Suggests and tools, while the hard-only check restores Imports and checking tools without Suggests.](figures/cache-isolation.webp)
 
 Setting `no-suggests: true` makes `pkgdown.yaml` validate that a package website
 can be built with hard package dependencies plus the documentation tooling,

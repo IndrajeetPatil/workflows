@@ -13,6 +13,8 @@ The repository's only standalone workflow is
 with zizmor in pedantic mode so future changes cannot silently weaken these
 controls.
 
+![Security by design: every job starts with the owner guard; actions are SHA-pinned, tokens are read-only by default, checkout credentials are disabled, untrusted inputs are validated, jobs have finite timeouts, and write credentials are isolated to release work. The separate pull-request security gate runs Gitleaks across full history and zizmor in pedantic mode.](figures/security-design.webp)
+
 ## Account restriction
 
 Every job begins with a guard that fails when `github.repository_owner` is not
