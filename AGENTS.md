@@ -7,6 +7,12 @@ owned by `IndrajeetPatil`.
 
 - Callers reference `@main`, so every change reaches them on merge. A ruleset
   requires a pull request with passing Gitleaks and zizmor checks.
+- `@main` caller references are deliberate, not a pinning gap. These workflows
+  are first-party, and the owner is the only person who can contribute to any
+  of the owner's repositories, so there is no external-contributor risk. Code
+  scanners in callers (CodeQL `actions/unpinned-tag`, zizmor `unpinned-uses`)
+  flag them by design: do not report them or propose SHA pins, and dismiss such
+  alerts as "won't fix" with this reason.
 - Keep reusable workflow files limited to `workflow_call`. The repository-local
   `security.yml` workflow is the sole intentional exception and runs only for
   pull requests targeting `main`.
