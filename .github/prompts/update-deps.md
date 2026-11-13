@@ -5,11 +5,13 @@ description: Update pinned actions and tools in the reusable workflows and keep 
 
 # Update Dependencies and Refactor Workflows
 
-This repository has no package manifest or lockfile. Its dependencies are the
-versions pinned inside `.github/workflows/`, and every caller picks up a change
-as soon as it reaches `main`. Follow `AGENTS.md` throughout, especially its
-security requirements and its rule to search the `IndrajeetPatil` account
-for callers before changing a workflow interface or permissions.
+This repository has no application package manifest. Workflow tool versions
+and action references are declared in `.github/workflows/`; direct and
+transitive action commits are recorded in `.github/workflows/actions.lock`.
+Every caller picks up a workflow change as soon as it reaches `main`. Follow
+`AGENTS.md` throughout, especially its security requirements and its rule to
+search the `IndrajeetPatil` account for callers before changing a workflow
+interface or permissions.
 
 ## What to update
 

@@ -75,10 +75,15 @@ chain, but a called workflow cannot elevate scopes that its caller did not
 grant.
 
 A reusable workflow runs under the **caller's** Actions policy. A caller that
-allows only selected actions must allow `IndrajeetPatil/*` and every
-third-party action the workflow uses; these include `voidzero-dev/setup-vp`,
-`j178/prek-action`, `astral-sh/setup-uv` and `CodSpeedHQ/action`, plus
-GitHub-owned actions.
+allows only selected actions must allow `IndrajeetPatil/*`, the actions in the
+selected workflow's direct and transitive dependency graph, and GitHub-owned
+actions. The generated [`actions.lock`](../.github/workflows/actions.lock) is
+the complete dependency inventory. Direct third-party action publishers
+currently include `astral-sh/setup-uv`, `CodSpeedHQ/action`,
+`codecov/codecov-action`, `crate-ci/typos`,
+`JamesIves/github-pages-deploy-action`, `j178/prek-action`,
+`lycheeverse/lychee-action`, `posit-dev/setup-air`,
+`quarto-dev/quarto-actions`, `r-lib/actions` and `voidzero-dev/setup-vp`.
 
 Avoid `secrets: inherit` when a workflow needs only one named secret. Pass that
 secret explicitly so unrelated repository or organisation secrets are not made
