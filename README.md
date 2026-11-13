@@ -9,7 +9,7 @@ Reusable workflows for package checks, documentation, presentations and
 frontend quality gates. Callers reference `@main`; changes here reach them
 after a pull request passes this repository's security checks.
 
-![Five workflow families, left to right: Python, R, presentations, frontends and generic repository checks.](docs/figures/workflow-families.png)
+![Five workflow families, left to right: Python code with a test flask, an R package, a presentation chart, a frontend browser with a checkmark, and generic link and workflow-node checks.](docs/figures/workflow-families.png)
 
 | Family | Use it for | Workflows |
 | --- | --- | --- |
