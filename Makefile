@@ -16,13 +16,7 @@ check-actions-lock-version:
 	fi
 
 actions-lock: check-actions-lock-version
-	@set -euo pipefail; \
-	temp_dir=$$(mktemp -d); \
-	cp .github/workflows/*.yaml .github/workflows/*.yml "$$temp_dir/"; \
-	trap 'cp "$$temp_dir"/*.yaml .github/workflows/; cp "$$temp_dir"/*.yml .github/workflows/; rm -rf "$$temp_dir"' EXIT; \
-	gh actions-lock --no-interactive; \
-	cp "$$temp_dir"/*.yaml .github/workflows/; \
-	cp "$$temp_dir"/*.yml .github/workflows/; \
+	gh actions-lock --no-interactive --no-narrow
 	gh actions-lock --verify
 
 actions-lock-verify: check-actions-lock-version
