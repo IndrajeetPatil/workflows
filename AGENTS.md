@@ -27,9 +27,9 @@ owned by `IndrajeetPatil`.
 - Add a `workflow_call` input or secret only when a calling repository needs
   it, not in anticipation of future use. Every input is untrusted data that
   widens the attack surface, so remove any that no caller still passes.
-- When a workflow starts using a new third-party action, document it in the
-  Actions policy section of `docs/using-workflows.md`: callers that allow only
-  selected actions must add it to their policy.
+- When a workflow starts using a new third-party action, add it to the Actions
+  policy paragraph under "Call a workflow" in `docs/using-workflows.md`:
+  callers that allow only selected actions must add it to their policy.
 
 ## Security requirements
 
