@@ -8,7 +8,7 @@ description: Update pinned actions and tools in the reusable workflows and keep 
 This repository has no package manifest or lockfile. Its dependencies are the
 versions pinned inside `.github/workflows/`, and every caller picks up a change
 as soon as it reaches `main`. Follow `AGENTS.md` throughout, especially its
-security requirements and its rule to search the `IndrajeetPatil` organization
+security requirements and its rule to search the `IndrajeetPatil` account
 for callers before changing a workflow interface or permissions.
 
 ## What to update

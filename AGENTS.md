@@ -5,9 +5,8 @@ owned by `IndrajeetPatil`.
 
 ## Scope
 
-- Never commit or push directly to the `main` branch. Always create a new
-  branch and submit changes via a pull request. A ruleset enforces this and
-  requires the Gitleaks and zizmor checks, because callers reference `@main`.
+- Callers reference `@main`, so every change reaches them on merge. A ruleset
+  requires a pull request with passing Gitleaks and zizmor checks.
 - Keep reusable workflow files limited to `workflow_call`. The repository-local
   `security.yml` workflow is the sole intentional exception and runs only for
   pull requests targeting `main`.
@@ -23,13 +22,14 @@ owned by `IndrajeetPatil`.
   caller drop a baseline check (`test: false` for frontends without unit tests
   is the only exception).
 - Before changing a reusable workflow interface or permissions, search the
-  `IndrajeetPatil` organization for callers and verify their granted scopes.
+  `IndrajeetPatil` account's repositories for callers and verify their granted
+  scopes.
 - Add a `workflow_call` input or secret only when a calling repository needs
   it, not in anticipation of future use. Every input is untrusted data that
   widens the attack surface, so remove any that no caller still passes.
-- When a workflow starts using a new third-party action, document it in the
-  README: callers that allow only selected actions must add it to their
-  Actions policy.
+- When a workflow starts using a new third-party action, add it to the Actions
+  policy paragraph under "Call a workflow" in `docs/using-workflows.md`:
+  callers that allow only selected actions must add it to their policy.
 
 ## Security requirements
 
@@ -54,9 +54,10 @@ owned by `IndrajeetPatil`.
 - Keep the pull-request security gate fail-closed: scan the complete Git history
   with Gitleaks and run zizmor in pedantic mode across every workflow.
 
-The Quarto accessibility extension is intentionally installed directly from
-upstream with `quarto add mcanouil/quarto-revealjs-a11y --no-prompt`. Do not add
-version pins, vendored archives, or checksum infrastructure for this extension.
+The presentation workflows intentionally install their Quarto extensions
+(`mcanouil/quarto-revealjs-a11y` and `IndrajeetPatil/quarto-read-aloud`)
+directly from upstream with `quarto add ... --no-prompt`. Do not add version
+pins, vendored archives, or checksum infrastructure for these extensions.
 
 ## Python toolchain and test matrix
 
