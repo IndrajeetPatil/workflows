@@ -63,10 +63,12 @@ owned by `IndrajeetPatil`.
 - Keep the pull-request security gate fail-closed: scan the complete Git history
   with Gitleaks and run zizmor in pedantic mode across every workflow.
 
-The presentation workflows intentionally install their Quarto extensions
+The presentation workflows pin their Quarto extensions
 (`mcanouil/quarto-revealjs-a11y` and `IndrajeetPatil/quarto-read-aloud`)
-directly from upstream with `quarto add ... --no-prompt`. Do not add version
-pins, vendored archives, or checksum infrastructure for these extensions.
+to exact commit SHAs of their latest releases via GitHub archive zip URLs
+(`quarto add https://github.com/<owner>/<repo>/archive/<commit-sha>.zip --no-prompt`),
+retaining release tags in inline comments. Do not add vendored archives or
+custom checksum infrastructure for these extensions.
 
 ## Python toolchain and test matrix
 

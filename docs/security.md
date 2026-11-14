@@ -48,9 +48,10 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
   zizmor checks. This moving reference gives up immutable version selection;
   repositories requiring a fixed workflow revision should use a reviewed
   commit reference and update it deliberately.
-- Quarto extensions used by the presentation workflows are installed directly
-  from their upstream repositories with `quarto add ... --no-prompt`, as
-  documented in the repository policy.
+- Quarto extensions used by the presentation workflows are pinned to exact
+  commit SHAs of their latest releases via GitHub archive URLs
+  (`quarto add https://github.com/<owner>/<repo>/archive/<commit-sha>.zip --no-prompt`),
+  with their release tags recorded in inline comments.
 - Dependabot checks GitHub Actions dependencies weekly and groups its update
   pull requests. Action source and requested permissions still need review
   when updates are accepted.
