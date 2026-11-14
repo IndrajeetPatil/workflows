@@ -37,6 +37,18 @@ owned by `IndrajeetPatil`.
   policy paragraph under "Call a workflow" in `docs/using-workflows.md`:
   callers that allow only selected actions must add it to their policy.
 
+## Pull request delivery
+
+- Publish pull requests ready for review; do not create drafts.
+- After opening or updating a pull request, wait for hosted checks. Investigate
+  failures and continue until all required checks pass; pending or skipped
+  required checks are not success.
+- Request Codex review when it is not automatic. Address merited findings and
+  repeat review until the current head is approved with no unresolved findings.
+  If Codex review usage is exhausted, leave the pull request open.
+- Squash-merge only after required checks pass and Codex approves the current
+  head. Respect branch protections and verify the merge state afterward.
+
 ## Security requirements
 
 - Pin every external action to a full commit SHA and retain the most specific
