@@ -4,6 +4,8 @@ This guide describes the security controls implemented by these reusable
 workflows and the responsibilities that remain with each calling repository.
 It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/reference/security/secure-use).
 
+![Security by design: every job starts with the owner guard; actions are SHA-pinned, tokens are read-only by default, checkout credentials are disabled, untrusted inputs are validated, jobs have finite timeouts, and write credentials are isolated to release work. The separate pull-request security gate runs Gitleaks across full history and zizmor in pedantic mode.](figures/security-design.webp)
+
 ## Trust boundaries
 
 - Every job checks that the calling repository belongs to `IndrajeetPatil`
