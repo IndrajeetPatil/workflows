@@ -115,6 +115,61 @@ These controls leave a few risks for each caller to assess and manage:
   repository owner must review those settings in GitHub and manage credentials
   there; workflow source alone cannot confirm their state.
 
+## Accepted risks
+
+The controls above are sized for how the owner's repositories are run, not for
+an open contribution model. The risks below are accepted only while the
+conditions hold. If a condition stops holding, revisit the matching risks.
+
+### Conditions
+
+- Every caller repository belongs to `IndrajeetPatil`, and the owner is its
+  only contributor. Nobody else opens pull requests or pushes branches.
+- The settings that enforce this live in GitHub, outside these workflow files,
+  so this repository cannot confirm their state. The owner checks them when
+  creating or changing a repository.
+- These workflows are first-party and are called only by the owner's
+  repositories.
+
+### Risks accepted under those conditions
+
+- **Moving `@main` references.** Callers receive changes on merge instead of
+  selecting a pinned commit. Accepted because only the owner can change
+  `main`, and a ruleset requires a pull request with passing Gitleaks and
+  zizmor checks. Residual risk: a malicious change that the owner merges, or
+  that arrives through a compromised owner account, reaches every caller at
+  once. Code scanner alerts about these references are dismissed as "won't fix"
+  with this reasoning.
+- **An owner guard that checks only the repository owner.** It does not verify
+  who authored a pull request or triggered a run. Accepted because the owner is
+  the only contributor, so there is no second identity to tell apart. The guard
+  still stops other accounts from running the public workflows.
+- **Caller-supplied commands in `frontend-qa.yaml`.** Optional inputs run as
+  Bash with read-only repository permissions and no secrets. Accepted because
+  the commands come from the caller's own workflow configuration, which only
+  the owner edits.
+- **Repository code running with `id-token: write`.** The Python and R
+  benchmark workflows run the caller's code and dependencies in a job that can
+  request a short-lived OIDC token for CodSpeed uploads. Accepted because the
+  token grants no repository write access and the code is written by the owner.
+  Residual risk: dependencies installed in that job run with the same access.
+- **A persisted checkout credential in `seo-files.yaml`.** The job needs it to
+  commit generated files to `gh-pages`. Accepted because it validates its
+  package-name input and does not consume artifacts from the triggering run.
+
+### Risks this reasoning does not cover
+
+- Malicious or compromised third-party actions, tools and package
+  dependencies. Commit pinning stops a retargeted tag but not a malicious
+  release accepted through an update, so review action source and requested
+  permissions before merging Dependabot pull requests.
+- Compromise of the owner's account, credentials or tokens, including any
+  bypass of the default-branch ruleset.
+- Loss of the sole-contributor condition, such as adding a collaborator,
+  accepting an outside pull request, or calling these workflows from a
+  repository owned by another account. Each requires reassessing the risks
+  above, starting with replacing `@main` with a reviewed commit reference.
+
 For setup examples and the caller's permission and Actions-policy requirements,
 see [Using reusable workflows](using-workflows.md). GitHub's reference covers
 additional controls such as [script injection](https://docs.github.com/en/actions/reference/security/secure-use#good-practices-for-mitigating-script-injection-attacks),
