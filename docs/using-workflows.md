@@ -1,5 +1,9 @@
 # Using reusable workflows
 
+This page documents how the owner's repositories call these workflows. They are
+not a public template: calls from other accounts' repositories fail at the owner
+guard.
+
 External actions are pinned to full commit SHAs, with the release versions in
 inline comments. The machine-generated [workflow dependency lockfile](../.github/workflows/actions.lock)
 also records the verified commit and source repository identity for direct and
@@ -28,7 +32,8 @@ them, but its jobs fail at the guard before package or deployment work runs.
 
 ## Call a workflow
 
-Reference a reusable workflow from your repository:
+A repository owned by `IndrajeetPatil` references a reusable workflow like
+this:
 
 ```yaml
 on:

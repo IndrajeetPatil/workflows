@@ -3,7 +3,9 @@
 > [!WARNING]
 > These workflows are for repositories owned by
 > [@IndrajeetPatil](https://github.com/IndrajeetPatil). They enforce that owner
-> guard and are not intended as general-purpose templates.
+> guard, so they fail in any other account's repositories, and they are not
+> intended as general-purpose templates. This documentation describes how the
+> owner's repositories use them; it is not a set-up guide for other users.
 
 Reusable workflows for package checks, documentation, presentations and
 frontend quality gates. Callers reference `@main`; changes here reach them
@@ -11,7 +13,7 @@ after a pull request passes this repository's security checks.
 
 ![Five workflow families, left to right: Python code with a test flask, an R package, a presentation chart, a frontend browser with a checkmark, and generic link and workflow-node checks.](docs/figures/workflow-families.webp)
 
-| Family | Use it for | Workflows |
+| Family | Purpose | Workflows |
 | --- | --- | --- |
 | Python | Package tests, quality checks and docs | [Python catalogue](docs/workflow-catalogue.md#python-packages) |
 | R | Package checks, benchmarks, sites, coverage and releases | [R catalogue](docs/workflow-catalogue.md#r-packages) |
@@ -21,7 +23,7 @@ after a pull request passes this repository's security checks.
 
 ## Quick start
 
-Add a caller workflow in your repository:
+A caller workflow in one of the owner's repositories looks like this:
 
 ```yaml
 on:

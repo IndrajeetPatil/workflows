@@ -46,8 +46,8 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
   waiting for each caller to update a SHA. The default branch is protected by
   an active ruleset that requires a pull request and passing Gitleaks and
   zizmor checks. This moving reference gives up immutable version selection;
-  repositories requiring a fixed workflow revision should use a reviewed
-  commit reference and update it deliberately.
+  a caller that ever needs a fixed workflow revision would have to use a
+  reviewed commit reference and update it deliberately.
 - Quarto extensions used by the presentation workflows are pinned to exact
   commit SHAs of their latest releases via GitHub archive URLs
   (`quarto add https://github.com/<owner>/<repo>/archive/<commit-sha>.zip --no-prompt`),
@@ -105,9 +105,9 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
   to the deployment job.
 - Secret storage, environment reviewers, OIDC trust conditions, fork-workflow
   approval, code scanning, audit-log review, secret rotation, and repository
-  alert settings are configured outside reusable workflow files. Each
-  repository owner must review those settings in GitHub and manage credentials
-  there; workflow source alone cannot confirm their state.
+  alert settings are configured outside reusable workflow files. The owner
+  reviews those settings in each repository and manages credentials in GitHub;
+  workflow source alone cannot confirm their state.
 
 ## Accepted risks
 
