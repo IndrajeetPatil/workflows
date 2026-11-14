@@ -10,7 +10,7 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
 
 These controls leave a few risks for each caller to assess and manage:
 
-![Accepted risks: using @main gives callers fast updates but a moving version; caller-configured commands are trusted code even with a read-only token; and each caller manages secrets, reviewers, and repository alerts.](figures/accepted-risks.webp)
+![Accepted risks and why they are acceptable: @main is a moving version protected by reviewed updates to the default branch; caller commands are trusted configuration and run with read-only access; repository-specific safeguards remain owner-managed settings.](figures/accepted-risks.webp)
 
 ## Trust boundaries
 
