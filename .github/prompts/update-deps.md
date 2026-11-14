@@ -23,6 +23,7 @@ interface or permissions.
 | zizmor | `ZIZMOR_VERSION` in `frontend-qa.yaml`, `uvx zizmor@…` in `security.yml` | The validation command in `AGENTS.md` |
 | conventional-pre-commit | `uvx --from conventional-pre-commit==…` in `conventional-commits.yaml` | The release callers pin in their prek configuration |
 | prek | `prek-version` and `sha256` in `frontend-qa.yaml` | Callers' `PREK_VERSION` and `minimum_prek_version`, which must not be newer |
+| Quarto extensions (`quarto-revealjs-a11y`, `quarto-read-aloud`) | Archive URLs in `build-presentation-python.yaml` and `build-presentation-r.yaml` | Latest upstream release commits |
 | Python | The matrix in `python-test.yaml` | The matrix rules in `AGENTS.md` |
 
 ## Workflow dependency lockfile
@@ -61,6 +62,12 @@ interface or permissions.
 4. When a new stable Python release is out, adopt it in `python-test.yaml` as
    `AGENTS.md` describes, and list the caller status checks that need renaming
    in the PR description.
+5. Check latest releases for the Quarto extensions
+   (`mcanouil/quarto-revealjs-a11y` and `IndrajeetPatil/quarto-read-aloud`).
+   When a new release is available, pin the extension to the exact commit SHA of
+   the release archive URL
+   (`https://github.com/<owner>/<repo>/archive/<commit-sha>.zip`), and record
+   the release tag in an inline comment.
 
 ## What not to pin
 
@@ -71,7 +78,6 @@ vendored copies for them:
   `required-version` or the latest release.
 - Quarto (`version: release`), Pandoc (`pandoc-version: latest`) and Air
   (`version: "latest"`).
-- The Quarto accessibility extension installed with `quarto add`.
 - Vite+, Node and pnpm in `frontend-qa.yaml`, which come from each caller's
   lockfile, `.node-version` and `packageManager`.
 
