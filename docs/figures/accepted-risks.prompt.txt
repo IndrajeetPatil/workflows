@@ -1,0 +1,10 @@
+Use case: infographic-diagram
+Asset type: wide editorial documentation illustration for the security guide to reusable GitHub Actions workflows.
+Primary request: highlight three accepted tradeoffs that remain with callers: using the moving @main reference trades immutable version selection for fast reviewed updates; caller-configured frontend QA commands are trusted code even though they run with read-only repository permissions; repository settings such as secrets, environment reviewers, OIDC trust conditions, and alerts remain each caller's responsibility.
+Scene/backdrop: warm paper #faf8f4 with generous whitespace.
+Subject: three airy columns separated by fine hairlines. First, a workflow path marked @main with an open version selector. Second, a command prompt passing from a caller repository into a frontend QA workflow. Third, a workflow boundary with a settings gear outside it.
+Style/medium: restrained flat editorial documentation illustration, precise fine linework rendered as a bitmap; near-black warm ink #201d18, muted ink #5d574c, hairlines #e3ded2, sparse teal-green #14584d. Clean sans labels and restrained editorial serif title. Flat, sparse, and legible at documentation size.
+Composition/framing: wide landscape with three balanced columns and ample whitespace.
+Text (verbatim): title "Accepted risks"; labels "@main", "Fast updates, moving version", "Caller commands", "Trusted code, read-only token", "Caller settings", "Secrets, reviewers, and alerts".
+Constraints: show tradeoffs as responsibilities or exposures, not as guaranteed safe; no additional text.
+Avoid: gradients, shadows, 3D, photos, textures, emoji, checks, fake statistics, extra labels, watermarks, bright panels, clutter.

@@ -6,6 +6,12 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
 
 ![Security by design: every job starts with the owner guard; actions are SHA-pinned, tokens are read-only by default, checkout credentials are disabled, untrusted inputs are validated, jobs have finite timeouts, and write credentials are isolated to release work. The separate pull-request security gate runs Gitleaks across full history and zizmor in pedantic mode.](figures/security-design.webp)
 
+## Accepted tradeoffs
+
+These controls leave a few risks for each caller to assess and manage:
+
+![Accepted risks: using @main gives callers fast updates but a moving version; caller-configured commands are trusted code even with a read-only token; and each caller manages secrets, reviewers, and repository alerts.](figures/accepted-risks.webp)
+
 ## Trust boundaries
 
 - Every job checks that the calling repository belongs to `IndrajeetPatil`
