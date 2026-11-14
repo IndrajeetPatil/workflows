@@ -6,12 +6,6 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
 
 ![Security by design: every job starts with the owner guard; actions are SHA-pinned, tokens are read-only by default, checkout credentials are disabled, untrusted inputs are validated, jobs have finite timeouts, and write credentials are isolated to release work. The separate pull-request security gate runs Gitleaks across full history and zizmor in pedantic mode.](figures/security-design.webp)
 
-## Accepted tradeoffs
-
-These controls leave a few risks for each caller to assess and manage:
-
-![Accepted risks and why they are acceptable: @main is a moving version protected by reviewed updates to the default branch; caller commands are trusted configuration and run with read-only access; repository-specific safeguards remain owner-managed settings.](figures/accepted-risks.webp)
-
 ## Trust boundaries
 
 - Every job checks that the calling repository belongs to `IndrajeetPatil`
@@ -130,6 +124,11 @@ conditions hold. If a condition stops holding, revisit the matching risks.
   creating or changing a repository.
 - These workflows are first-party and are called only by the owner's
   repositories.
+
+The figure summarizes the accepted risks and the conditions that make them
+reasonable for this contribution model:
+
+![Accepted risks and their rationale: moving @main references are protected by owner-only, pull-request-gated updates; the owner guard is sufficient while there is one contributor identity; caller commands use trusted configuration and a read-only token; OIDC access is short-lived and grants no repository writes; and the SEO workflow needs its persisted credential to update gh-pages after validating its input.](figures/accepted-risks.webp)
 
 ### Risks accepted under those conditions
 
