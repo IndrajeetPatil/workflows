@@ -125,6 +125,11 @@ conditions hold. If a condition stops holding, revisit the matching risks.
 - These workflows are first-party and are called only by the owner's
   repositories.
 
+The figure summarizes the accepted risks and the conditions that make them
+reasonable for this contribution model:
+
+![Accepted risks and their rationale: moving @main references are protected by owner-only, pull-request-gated updates; the owner guard is sufficient while there is one contributor identity; caller commands use trusted configuration and a read-only token; OIDC access is short-lived and grants no repository writes; and the SEO workflow needs its persisted credential to update gh-pages after validating its input.](figures/accepted-risks.webp)
+
 ### Risks accepted under those conditions
 
 - **Moving `@main` references.** Callers receive changes on merge instead of
