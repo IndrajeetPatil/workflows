@@ -48,10 +48,10 @@ jobs:
         run: uv sync --frozen --no-install-project --color=always
 
       - name: Install RevealJS accessibility extension
-        run: quarto add mcanouil/quarto-revealjs-a11y --no-prompt
+        run: quarto add https://github.com/mcanouil/quarto-revealjs-a11y/archive/6700ffd9ed11e1475474ab47e7c61580f1f22b9f.zip --no-prompt # 0.3.0
 
       - name: Install RevealJS read-aloud extension
-        run: quarto add IndrajeetPatil/quarto-read-aloud --no-prompt
+        run: quarto add https://github.com/IndrajeetPatil/quarto-read-aloud/archive/6cf960afe56c3a589c2c1868552832aedc53d0ba.zip --no-prompt # v0.2.0
 
       - name: Render slides
         run: |

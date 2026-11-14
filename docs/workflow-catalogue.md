@@ -48,7 +48,8 @@ the release boundary.
 | [`build-presentation-python.yaml`](../.github/workflows/build-presentation-python.yaml) | Build and deploy Python/UV Quarto RevealJS presentation to GitHub Pages | — |
 | [`build-presentation-r.yaml`](../.github/workflows/build-presentation-r.yaml) | Build and deploy R Quarto RevealJS presentation to GitHub Pages | — |
 
-Both presentation workflows install the latest
+Both presentation workflows install pinned releases of
+[`quarto-revealjs-a11y`](https://github.com/mcanouil/quarto-revealjs-a11y) and the
 [Read Aloud extension](https://github.com/IndrajeetPatil/quarto-read-aloud) before
 rendering. Callers opt in with `revealjs-plugins: [read-aloud]`; installation
 alone does not enable speech.
