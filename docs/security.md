@@ -12,14 +12,14 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
   before checking out source or running caller code. This limits the workflows
   to repositories under the account; it does not verify who authored a pull
   request.
-- Reusable workflows run with the caller's event, repository, policy and
+- Reusable workflows run with the caller's event, repository, policy, and
   token ceiling. The caller chooses when to invoke a workflow and which
   permissions and secrets to pass.
 - Reusable workflow files use `workflow_call`. The only standalone workflow in
   this repository is the pull-request security gate. The owner's current
   repository callers also use `workflow_run` for the SEO-file deployment after
   a successful `pkgdown` run on `main`; that job checks out `gh-pages`, uses a
-  validated package-name input and does not consume artifacts from the
+  validated package-name input, and does not consume artifacts from the
   triggering run. Do not add a privileged trigger that checks out or executes
   untrusted pull-request code or consumes its artifacts.
 - Build and test jobs process caller-controlled source. They have read-only
@@ -62,7 +62,7 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
   `pages: write` and `id-token: write` for GitHub Pages deployment,
   `id-token: write` for CodSpeed uploads, and `contents: write` for publishing
   to `gh-pages` or creating a release.
-- Checkout disables persisted credentials in build, test and deploy jobs. The
+- Checkout disables persisted credentials in build, test, and deploy jobs. The
   SEO-file workflow intentionally persists the checkout credential because it
   commits generated files to `gh-pages`; that job has `contents: write`.
 - Pages deployments and CodSpeed uploads use OIDC instead of long-lived cloud
@@ -94,7 +94,7 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
   Gitleaks and runs zizmor in pedantic mode against every workflow. An active
   default-branch ruleset requires both checks and requires changes to arrive
   through a pull request.
-- The frontend QA workflow also runs Gitleaks, actionlint and zizmor for
+- The frontend QA workflow also runs Gitleaks, actionlint, and zizmor for
   callers that use that gate. The repository's Python and R workflows run
   dependency and project checks appropriate to those toolchains.
 - Callers with an allow-list for Actions must permit this repository's
@@ -103,7 +103,7 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
   Pages callers, for example, need to grant `pages: write` and `id-token: write`
   to the deployment job.
 - Secret storage, environment reviewers, OIDC trust conditions, fork-workflow
-  approval, code scanning, audit-log review, secret rotation and repository
+  approval, code scanning, audit-log review, secret rotation, and repository
   alert settings are configured outside reusable workflow files. Each
   repository owner must review those settings in GitHub and manage credentials
   there; workflow source alone cannot confirm their state.
