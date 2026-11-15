@@ -30,6 +30,14 @@ jobs:
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
           fail: true
+          # Same file set as the action's default arguments, plus checks that
+          # lychee skips by default: --include-fragments fails links whose
+          # #anchor no longer exists, and --require-https fails http:// links
+          # whose site also serves HTTPS.
+          args: >-
+            --verbose --no-progress
+            --include-fragments --require-https
+            './**/*.md' './**/*.html' './**/*.rst'
 
   check-spelling:
     name: Check spelling

@@ -35,7 +35,11 @@ jobs:
           # nearly all of their outbound links in index.qmd, and the llms.txt /
           # llms-full.txt mirrors are plain text. Without these globs the check
           # reports success while never reading the files it exists to guard.
+          # --include-fragments fails links whose #anchor no longer exists on
+          # the target page, and --require-https fails http:// links whose
+          # site also serves HTTPS; by default lychee passes both.
           args: >-
             --verbose --no-progress
+            --include-fragments --require-https
             './**/*.md' './**/*.html' './**/*.rst'
             './**/*.qmd' './**/*.txt'
