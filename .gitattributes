@@ -1,0 +1,5 @@
+# Exclude automation files from language statistics.
+Makefile    linguist-detectable=false
+makefile    linguist-detectable=false
+*.mk        linguist-detectable=false
+*.mak       linguist-detectable=false

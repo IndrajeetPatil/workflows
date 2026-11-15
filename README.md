@@ -7,7 +7,7 @@
 > intended as general-purpose templates. This documentation describes how the
 > owner's repositories use them; it is not a set-up guide for other users.
 
-Reusable workflows for package checks, documentation, presentations and
+Reusable workflows for package checks, documentation, presentations, and
 frontend quality gates. Callers reference `@main`; changes here reach them
 after a pull request passes this repository's security checks.
 
@@ -15,8 +15,8 @@ after a pull request passes this repository's security checks.
 
 | Family | Purpose | Workflows |
 | --- | --- | --- |
-| Python | Package tests, quality checks and docs | [Python catalogue](docs/workflow-catalogue.md#python-packages) |
-| R | Package checks, benchmarks, sites, coverage and releases | [R catalogue](docs/workflow-catalogue.md#r-packages) |
+| Python | Package tests, quality checks, and docs | [Python catalogue](docs/workflow-catalogue.md#python-packages) |
+| R | Package checks, benchmarks, sites, coverage, and releases | [R catalogue](docs/workflow-catalogue.md#r-packages) |
 | Presentations | Quarto RevealJS builds and deployment | [Presentation catalogue](docs/workflow-catalogue.md#presentations) |
 | Frontends | One shared Vite+ quality gate | [Frontend guide](docs/frontend-qa.md) |
 | Generic | Link and commit checks | [Generic catalogue](docs/workflow-catalogue.md#generic) |
@@ -37,16 +37,22 @@ jobs:
 
 Grant the caller only the token permissions its selected workflow needs. See
 [usage and security](docs/using-workflows.md) for inputs, selected-action
-policies and secret handling, and [security practices](docs/security.md) for
+policies, and secret handling, and [security practices](docs/security.md) for
 the security model used by these workflows and their callers.
 
 ## Detailed guides
 
-- [Workflow catalogue](docs/workflow-catalogue.md): every reusable workflow and its inputs.
-- [Frontend QA](docs/frontend-qa.md): gate order, baseline hooks and optional commands.
-- [R package workflows](docs/r-packages.md): dependency caches, hard-dependency checks, and the CRAN release boundary.
+- [Workflow catalogue](docs/workflow-catalogue.md): every reusable workflow and
+  its inputs.
+
+- [Frontend QA](docs/frontend-qa.md): gate order, baseline hooks, and optional
+  commands.
+
+- [R package workflows](docs/r-packages.md): dependency caches, hard-dependency
+  checks, and the CRAN release boundary.
+
 - [Security practices](docs/security.md): workflow controls, caller
-  responsibilities and security boundaries.
+  responsibilities, and security boundaries.
 
 ## License
 
