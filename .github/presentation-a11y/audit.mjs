@@ -1,6 +1,7 @@
 // Audits every rendered HTML page in the site directory with axe-core.
-// RevealJS decks are audited slide by slide in every fragment state, and with
-// every tab of each panel tabset opened, so content hidden on load is covered.
+// RevealJS decks are audited slide by slide in every fragment state, opening
+// every tab of each panel tabset in each state, so content hidden on load is
+// covered.
 import { createReadStream } from "node:fs";
 import { glob, stat } from "node:fs/promises";
 import { createServer } from "node:http";
@@ -92,6 +93,28 @@ const settle = () =>
     () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))),
   );
 
+// Audits the current slide state, then again with each other tab of every
+// panel tabset on the slide opened in turn.
+async function auditTabs(file, where) {
+  await audit(file, where);
+  const tabs = await page.evaluate(
+    () => globalThis.Reveal.getCurrentSlide().querySelectorAll(".panel-tabset [role='tab']").length,
+  );
+  for (let tab = 0; tab < tabs; tab += 1) {
+    const opened = await page.evaluate((tabIndex) => {
+      const element = globalThis.Reveal.getCurrentSlide().querySelectorAll(
+        ".panel-tabset [role='tab']",
+      )[tabIndex];
+      if (element.getAttribute("aria-selected") === "true") return null;
+      element.click();
+      return element.textContent.trim();
+    }, tab);
+    if (opened === null) continue;
+    await settle();
+    await audit(file, `${where}, tab "${opened}"`);
+  }
+}
+
 for (const file of pages) {
   await page.goto(`${origin}/${file.split(path.sep).join("/")}`, { waitUntil: "networkidle" });
   await page.addStyleTag({
@@ -118,31 +141,14 @@ for (const file of pages) {
       return `slide ${slideIndex + 1}${slide.id ? ` (#${slide.id})` : ""}`;
     }, index);
     await settle();
-    await audit(file, where);
+    await auditTabs(file, where);
     // Step through every fragment state: fade-out, current-visible, and
     // similar fragments show content in some states only.
     for (let fragment = 1; ; fragment += 1) {
       const advanced = await page.evaluate(() => globalThis.Reveal.nextFragment());
       if (!advanced) break;
       await settle();
-      await audit(file, `${where}, fragment step ${fragment}`);
-    }
-    // With all fragments revealed, open each further tab of every panel tabset on the slide in turn.
-    const tabs = await page.evaluate(
-      () => globalThis.Reveal.getCurrentSlide().querySelectorAll(".panel-tabset [role='tab']").length,
-    );
-    for (let tab = 0; tab < tabs; tab += 1) {
-      const opened = await page.evaluate((tabIndex) => {
-        const element = globalThis.Reveal.getCurrentSlide().querySelectorAll(
-          ".panel-tabset [role='tab']",
-        )[tabIndex];
-        if (element.getAttribute("aria-selected") === "true") return null;
-        element.click();
-        return element.textContent.trim();
-      }, tab);
-      if (opened === null) continue;
-      await settle();
-      await audit(file, `${where}, tab "${opened}"`);
+      await auditTabs(file, `${where}, fragment step ${fragment}`);
     }
   }
   console.log(`Audited ${file}: ${slides} slides.`);
