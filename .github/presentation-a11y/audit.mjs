@@ -1,6 +1,6 @@
 // Audits every rendered HTML page in the site directory with axe-core.
-// RevealJS decks are audited slide by slide with all fragments shown and
-// every tab of each panel tabset opened, so hidden content is covered.
+// RevealJS decks are audited slide by slide in every fragment state, and with
+// every tab of each panel tabset opened, so content hidden on load is covered.
 import { createReadStream } from "node:fs";
 import { glob, stat } from "node:fs/promises";
 import { createServer } from "node:http";
@@ -101,7 +101,7 @@ for (const file of pages) {
     const reveal = globalThis.Reveal;
     if (!reveal?.getSlides) return 0;
     if (!reveal.isReady()) await new Promise((resolve) => reveal.on("ready", resolve));
-    reveal.configure({ fragments: false, transition: "none", backgroundTransition: "none" });
+    reveal.configure({ transition: "none", backgroundTransition: "none" });
     return reveal.getSlides().length;
   });
   if (slides === 0) {
@@ -113,12 +113,21 @@ for (const file of pages) {
       const reveal = globalThis.Reveal;
       const slide = reveal.getSlides()[slideIndex];
       const { h, v } = reveal.getIndices(slide);
-      reveal.slide(h, v);
+      // Fragment index -1 shows the slide before any fragment is revealed.
+      reveal.slide(h, v, -1);
       return `slide ${slideIndex + 1}${slide.id ? ` (#${slide.id})` : ""}`;
     }, index);
     await settle();
     await audit(file, where);
-    // Open each further tab of every panel tabset on the slide in turn.
+    // Step through every fragment state: fade-out, current-visible, and
+    // similar fragments show content in some states only.
+    for (let fragment = 1; ; fragment += 1) {
+      const advanced = await page.evaluate(() => globalThis.Reveal.nextFragment());
+      if (!advanced) break;
+      await settle();
+      await audit(file, `${where}, fragment step ${fragment}`);
+    }
+    // With all fragments revealed, open each further tab of every panel tabset on the slide in turn.
     const tabs = await page.evaluate(
       () => globalThis.Reveal.getCurrentSlide().querySelectorAll(".panel-tabset [role='tab']").length,
     );
