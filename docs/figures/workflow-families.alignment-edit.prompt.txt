@@ -1,9 +1,0 @@
-Use case: infographic-diagram
-Asset type: README explanatory illustration.
-Input image: Image 1 is the edit target.
-Primary request: Fix only the icon geometry in the first and fifth columns. Keep the middle three icons, all five labels, separators, spacing, background, line weights, palette, canvas size, and overall composition unchanged.
-First column "Python": draw one clean, recognizable Python mark using two separate interlocking rounded shapes; place a small chemistry flask as a separate object to its right and slightly below. Keep a visible gap between the Python mark and flask. No crossing or shared strokes. Ensure the flask rim, neck, body outline, and liquid are cleanly joined and geometrically coherent.
-Fifth column "Generic": draw a simple chain-link symbol as two clean interlocking oval links at the left of the icon area, and a separate two-node vertical workflow glyph at the right. Leave a visible gap between the chain and workflow glyph. Make each chain link a clear closed loop with an orderly interlock, no twisted or merged geometry. The two-node glyph has two equal circular nodes aligned on one straight vertical connector.
-Style/medium: flat editorial line illustration with smooth black ink strokes and restrained deep teal-green (#14584d) accents on warm paper (#faf8f4), as in Image 1.
-Constraints: Do not alter the exact labels: "Python", "R", "Presentations", "Frontends", "Generic". Preserve their positions and spelling. Do not alter the second, third, or fourth icon. Keep the five equal columns and thin warm-grey (#e3ded2) separators. Inspect the first and fifth icons for tangencies, accidental intersections, uneven joins, and distorted perspective.
-Avoid: Any layout change, new labels, extra symbols, shadows, gradients, texture, 3D, emoji, numbering, watermarks, malformed links, fused unrelated objects, or geometry changes outside the first and fifth columns.
