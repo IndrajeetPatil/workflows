@@ -100,16 +100,23 @@ custom checksum infrastructure for these extensions.
 
 - Preserve `dependencies: '"hard"'` for the `pkgdown.yaml` no-Suggests mode
   and the `R-CMD-check.yaml` hard mode.
+
 - Keep their dependency caches enabled under namespaces distinct from each
   other and from the normal Suggests-enabled jobs, derived from the caller's
   `DESCRIPTION`.
   The action's fallback cache key omits the lockfile hash, so a shared or static
   namespace can restore packages that are no longer hard dependencies and
   invalidate the hard-only check.
+
 - Do not routinely set the hard-only caches to `false`; that forces every run
   to rebuild the hard-dependency graph. Preserve the dependency-metadata hash
   in `cache-version`, and increment its static generation prefix only when all
   hard-only caches must be invalidated.
+
+- Set `cache: always` on every `setup-r-dependencies` step so the package
+  cache is saved right after installation. The default `true` saves only when
+  the whole job succeeds, so a failing check reinstalls every dependency on
+  each rerun.
 
 ## Validation
 

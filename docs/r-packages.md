@@ -5,6 +5,13 @@ workflow list and inputs. Declare package-specific checking tools in
 `Config/Needs/check` in the caller's `DESCRIPTION`; `R-CMD-check.yaml` installs
 them in normal and hard-dependency modes.
 
+## Dependency caches
+
+Every `setup-r-dependencies` step sets `cache: always`, which saves the R
+package cache immediately after dependencies are installed. A failing R CMD
+check, lint, coverage, or build step therefore still leaves a warm cache for
+the next run, instead of reinstalling every dependency until a job passes.
+
 ## Hard-dependency checks
 
 ![Two separate dependency caches based on DESCRIPTION: the normal check can restore Imports, Suggests and tools, while the hard-only check restores Imports and checking tools without Suggests.](figures/cache-isolation.webp)

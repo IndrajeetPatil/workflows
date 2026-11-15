@@ -47,6 +47,8 @@ jobs:
         if: inputs.no-suggests
         uses: r-lib/actions/setup-r-dependencies@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
         with:
+          # Save the package cache right after installation, even if later steps fail.
+          cache: always
           dependencies: '"hard"'
           # Isolate hard-only caches and invalidate them when DESCRIPTION changes.
           cache-version: hard-deps-1-${{ hashFiles('DESCRIPTION') }}
@@ -61,6 +63,8 @@ jobs:
         if: ${{ !inputs.no-suggests }}
         uses: r-lib/actions/setup-r-dependencies@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05 # v2.14.0
         with:
+          # Save the package cache right after installation, even if later steps fail.
+          cache: always
           extra-packages: |
             r-lib/pkgdown
             local::.
