@@ -54,6 +54,14 @@ Both presentation workflows install pinned releases of
 rendering. Callers opt in with `revealjs-plugins: [read-aloud]`; installation
 alone does not enable speech.
 
+After rendering, both workflows run Quarto's built-in
+[`quarto call axe`](https://quarto.org/docs/output-formats/html-accessibility.html#site-wide-accessibility-checks)
+accessibility check over `_site`, skipping Reveal's vendored `index_files/`
+pages. Any axe-core finding fails the build on pull requests and blocks
+deployment on pushes. The check sees each page as loaded, so contrast on
+later slides and content shown only at some fragment steps or in non-default
+tabs is not covered.
+
 ## Frontends
 
 | Workflow | Description | Inputs / secrets |
