@@ -1,0 +1,14 @@
+{
+  "name": "presentation-a11y",
+  "private": true,
+  "description": "axe-core accessibility audit for rendered Quarto RevealJS presentations",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "axe-core": "4.14.0",
+    "playwright": "1.65.1"
+  }
+}

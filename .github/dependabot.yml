@@ -8,3 +8,11 @@ updates:
       github-actions:
         patterns:
           - "*"
+  - package-ecosystem: npm
+    directory: /.github/presentation-a11y
+    schedule:
+      interval: weekly
+    groups:
+      presentation-a11y:
+        patterns:
+          - "*"

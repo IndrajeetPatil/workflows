@@ -1,0 +1,6 @@
+paths:
+  .github/workflows/build-presentation-*.yaml:
+    ignore:
+      # actionlint 1.7.12 does not know the documented `job.workflow_*` context
+      # properties yet: https://github.com/rhysd/actionlint/issues/757
+      - 'property "workflow_(repository|sha)" is not defined in object type'

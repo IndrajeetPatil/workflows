@@ -54,6 +54,13 @@ Both presentation workflows install pinned releases of
 rendering. Callers opt in with `revealjs-plugins: [read-aloud]`; installation
 alone does not enable speech.
 
+After rendering, both workflows audit every HTML page in `_site` with
+[axe-core](https://github.com/dequelabs/axe-core) in headless Chromium, using
+the WCAG 2.2 AA and best-practice rule sets. RevealJS decks are audited slide by
+slide with all fragments shown and every panel-tabset tab opened. Quarto's
+vendored `*_files` dependency pages are skipped. Any violation fails the build
+on pull requests and blocks deployment on pushes.
+
 ## Frontends
 
 | Workflow | Description | Inputs / secrets |
