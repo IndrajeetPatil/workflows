@@ -25,6 +25,7 @@ interface or permissions.
 | prek | `prek-version` and `sha256` in `frontend-qa.yaml` | Callers' `PREK_VERSION` and `minimum_prek_version`, which must not be newer |
 | Quarto extensions (`quarto-revealjs-a11y`, `quarto-read-aloud`) | Archive URLs in `build-presentation-python.yaml` and `build-presentation-r.yaml` | Latest upstream release commits |
 | Python | The matrix in `python-test.yaml` | The matrix rules in `AGENTS.md` |
+| R | The exact `r-version` in `r-benchmarks.yaml` (`R-CMD-check.yaml` uses the floating `release`, `devel` and `oldrel-1` aliases) | The latest stable R release from r-project.org or CRAN |
 
 ## Workflow dependency lockfile
 
@@ -62,7 +63,10 @@ interface or permissions.
 4. When a new stable Python release is out, adopt it in `python-test.yaml` as
    `AGENTS.md` describes, and list the caller status checks that need renaming
    in the PR description.
-5. Check latest releases for the Quarto extensions
+5. Check the latest stable R release (r-project.org or CRAN). Bump the exact
+   `r-version` in `r-benchmarks.yaml` to it, including patch releases, and keep
+   the `R-CMD-check.yaml` matrix on its floating aliases.
+6. Check latest releases for the Quarto extensions
    (`mcanouil/quarto-revealjs-a11y` and `IndrajeetPatil/quarto-read-aloud`).
    When a new release is available, pin the extension to the exact commit SHA of
    the release archive URL
