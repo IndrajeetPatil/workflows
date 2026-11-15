@@ -52,10 +52,6 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
   commit SHAs of their latest releases via GitHub archive URLs
   (`quarto add https://github.com/<owner>/<repo>/archive/<commit-sha>.zip --no-prompt`),
   with their release tags recorded in inline comments.
-- The presentation accessibility audit checks out its tooling from this
-  repository at the reusable workflow's own commit (`job.workflow_sha`) and
-  installs it with `npm ci --ignore-scripts` from the committed lockfile in
-  `.github/presentation-a11y`. Dependabot proposes updates to that lockfile.
 - Dependabot checks GitHub Actions dependencies weekly and groups its update
   pull requests. Action source and requested permissions still need review
   when updates are accepted.

@@ -15,7 +15,6 @@ workflows:
         - 'actions/configure-pages@v6.0.0'
         - 'actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346'
         - 'actions/deploy-pages@v5.0.1'
-        - 'actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1'
         - 'actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9'
         - 'actions/upload-pages-artifact@v5.0.0'
         - 'astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2'
@@ -31,7 +30,6 @@ workflows:
         - 'actions/configure-pages@v6.0.0'
         - 'actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346'
         - 'actions/deploy-pages@v5.0.1'
-        - 'actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1'
         - 'actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9'
         - 'actions/upload-pages-artifact@v5.0.0'
         - 'quarto-dev/quarto-actions@8a96df13519ee81fd526f2dfca5962811136661b'
@@ -210,11 +208,6 @@ dependencies:
         commit: 'sha1-ed597411d8f924073f98dfc5c65a23a2325f34cd'
         owner_id: 44036562
         repo_id: 205262760
-    'actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1':
-        ref: 'v7.1.0'
-        commit: 'sha1-949feb2413d6458794dcd2491c4babbbce0c15c1'
-        owner_id: 44036562
-        repo_id: 189476904
     'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a':
         ref: 'v7.0.1'
         commit: 'sha1-043fb46d1a93c77aae656e7c1c64a875d1fc6a0a'

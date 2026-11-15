@@ -27,11 +27,9 @@ owned by `IndrajeetPatil`.
   Inputs may add project-specific gates or adapt paths, but must not let a
   caller drop a baseline check (`test: false` for frontends without unit tests
   is the only exception).
-- Keep the axe-core accessibility audit in both presentation workflows
-  unconditional and before the Pages artifact upload, so violations fail pull
-  requests and block deployment. Its tooling in `.github/presentation-a11y` is
-  checked out at the reusable workflow's own commit; keep the R and Python
-  workflows' audit steps identical.
+- Keep the `quarto call axe` accessibility check in both presentation
+  workflows unconditional and before the Pages artifact upload, so findings
+  fail pull requests and block deployment.
 - Before changing a reusable workflow interface or permissions, search the
   `IndrajeetPatil` account's repositories for callers and verify their granted
   scopes.

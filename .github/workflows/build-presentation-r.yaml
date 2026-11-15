@@ -69,30 +69,10 @@ jobs:
         # _site; .well-known is the only hidden path the site should publish.
         run: find _site -mindepth 1 -path _site/.well-known -prune -o -name '.*' -prune -exec rm -rf {} +
 
-      - name: Check out accessibility audit tooling
-        # The tooling lives beside this reusable workflow, at the same commit.
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: ${{ job.workflow_repository }}
-          ref: ${{ job.workflow_sha }}
-          path: .presentation-a11y
-          sparse-checkout: .github/presentation-a11y
-          persist-credentials: false
-
-      - name: Set up Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: lts/*
-          package-manager-cache: false
-
-      - name: Install axe-core and Playwright
-        working-directory: .presentation-a11y/.github/presentation-a11y
-        run: |
-          npm ci --ignore-scripts --no-audit --no-fund
-          npx --no-install playwright install --with-deps --only-shell chromium
-
       - name: Audit accessibility with axe-core
-        run: node .presentation-a11y/.github/presentation-a11y/audit.mjs _site
+        # Fails on any axe-core finding in the rendered site. Reveal's vendored
+        # speaker-notes page under index_files/ is not part of the deck.
+        run: quarto call axe _site --exclude 'index_files/**' --fail-on minor
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
