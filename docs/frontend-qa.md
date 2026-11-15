@@ -32,7 +32,7 @@ checkout and is collected last, so it adds almost no wall-clock time.
 | Unit tests and coverage | `vp run test` | Vite+ task (required unless `test: false`) |
 | Production build | `vp run build` | Vite+ task (required) |
 | Production dependency advisories | `vp pm audit -- --prod` | — |
-| Link rot | [lychee](https://github.com/lycheeverse/lychee) | `lychee.toml` (the only way to configure it, so local and CI runs match) |
+| Link rot | [lychee](https://github.com/lycheeverse/lychee) with `--include-fragments --require-https` | `lychee.toml` (the only way to configure it; pass the same two flags locally so local and CI runs match) |
 
 ## Baseline hooks
 

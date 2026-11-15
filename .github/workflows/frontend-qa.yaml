@@ -115,8 +115,11 @@ jobs:
 
           echo "$bin_dir" >> "$GITHUB_PATH"
 
-      # Reads lychee.toml from the repository root. The process outlives this
-      # step and writes its exit status for the collecting step at the end.
+      # Reads lychee.toml from the repository root and always adds
+      # --include-fragments (dead #anchors fail) and --require-https (http://
+      # links to HTTPS-capable sites fail), which lychee skips by default. The
+      # process outlives this step and writes its exit status for the
+      # collecting step at the end.
       - name: Start link check (lychee)
         id: lychee-start
         env:
@@ -124,7 +127,7 @@ jobs:
         run: |
           # The inner script expands its own variables, so it is single-quoted.
           # shellcheck disable=SC2016
-          nohup bash -c 'lychee --no-progress . > "$RUNNER_TEMP/lychee.log" 2>&1; echo "$?" > "$RUNNER_TEMP/lychee.status"' \
+          nohup bash -c 'lychee --no-progress --include-fragments --require-https . > "$RUNNER_TEMP/lychee.log" 2>&1; echo "$?" > "$RUNNER_TEMP/lychee.status"' \
             > /dev/null 2>&1 &
 
       - name: Spelling (typos)
