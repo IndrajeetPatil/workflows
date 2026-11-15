@@ -11,7 +11,7 @@ Reusable workflows for package checks, documentation, presentations and
 frontend quality gates. Callers reference `@main`; changes here reach them
 after a pull request passes this repository's security checks.
 
-![Five workflow families, left to right: Python code with a test flask, an R package, a presentation chart, a frontend browser with a checkmark, and generic link and workflow-node checks.](docs/figures/workflow-families.webp)
+![Five workflow families in equal panels: the Python logo beside a test flask, an R inside a package box, a presentation slide with a chart, a browser with a checkmark, and a chain link beside a two-node workflow.](docs/figures/workflow-families.webp)
 
 | Family | Purpose | Workflows |
 | --- | --- | --- |
