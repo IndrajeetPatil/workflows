@@ -44,7 +44,7 @@ the security model used by these workflows and their callers.
 
 - [Workflow catalogue](docs/workflow-catalogue.md): every reusable workflow and its inputs.
 - [Frontend QA](docs/frontend-qa.md): gate order, baseline hooks and optional commands.
-- [R package workflows](docs/r-packages.md): hard-dependency caches and the CRAN release boundary.
+- [R package workflows](docs/r-packages.md): dependency caches, hard-dependency checks, and the CRAN release boundary.
 - [Security practices](docs/security.md): workflow controls, caller
   responsibilities and security boundaries.
 

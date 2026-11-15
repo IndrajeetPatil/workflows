@@ -113,6 +113,11 @@ custom checksum infrastructure for these extensions.
   in `cache-version`, and increment its static generation prefix only when all
   hard-only caches must be invalidated.
 
+- Set `cache: always` on every `setup-r-dependencies` step so the package
+  cache is saved right after installation. The default `true` saves only when
+  the whole job succeeds, so a failing check reinstalls every dependency on
+  each rerun.
+
 ## Validation
 
 Run these checks before publishing workflow changes:
