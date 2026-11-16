@@ -60,9 +60,9 @@ accessibility check over the rendered `_site`, skipping Reveal's vendored
 `index_files/` pages. Any axe-core finding fails the pull request; incomplete
 scans, such as a headless Chrome startup failure, are retried up to three
 times. Pushes skip the check, because callers' default branches accept changes
-only through pull requests that already passed it. The check sees each page as loaded, so contrast on
-later slides and content shown only at some fragment steps or in non-default
-tabs is not covered.
+only through pull requests that already passed it. The check sees each page as
+loaded, so contrast on later slides and content shown only at some fragment
+steps or in non-default tabs is not covered.
 
 ## Generic
 
