@@ -70,9 +70,23 @@ jobs:
         run: find _site -mindepth 1 -path _site/.well-known -prune -o -name '.*' -prune -exec rm -rf {} +
 
       - name: Audit accessibility with axe-core
+        # Pull requests only: callers' default branches accept changes solely
+        # through pull requests, so pushes deploy decks already checked here.
         # Fails on any axe-core finding in the rendered site. Reveal's vendored
         # speaker-notes page under index_files/ is not part of the deck.
-        run: quarto call axe _site --exclude 'index_files/**' --fail-on minor
+        # Exit 1 means findings and fails at once; exit 2 means an incomplete
+        # scan, such as headless Chrome failing to start, and is retried.
+        if: github.event_name == 'pull_request'
+        run: |
+          for attempt in 1 2 3; do
+            status=0
+            quarto call axe _site --exclude 'index_files/**' --fail-on minor || status=$?
+            if [ "$status" -ne 2 ]; then
+              exit "$status"
+            fi
+            echo "::warning::axe scan incomplete on attempt ${attempt} of 3"
+          done
+          exit 2
 
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
