@@ -7,18 +7,17 @@
 > intended as general-purpose templates. This documentation describes how the
 > owner's repositories use them; it is not a set-up guide for other users.
 
-Reusable workflows for package checks, documentation, presentations, and
-frontend quality gates. Callers reference `@main`; changes here reach them
-after a pull request passes this repository's security checks.
+Reusable workflows for package checks, documentation, and presentations.
+Callers reference `@main`; changes here reach them after a pull request
+passes this repository's security checks.
 
-![Five workflow families in equal panels: the Python logo beside a test flask, an R inside a package box, a presentation slide with a chart, a browser with a checkmark, and a chain link beside a two-node workflow.](docs/figures/workflow-families.webp)
+![Four workflow families in equal panels: the Python logo beside a test flask, an R inside a package box, a presentation slide with a chart, and a chain link beside a two-node workflow.](docs/figures/workflow-families.webp)
 
 | Family | Purpose | Workflows |
 | --- | --- | --- |
 | Python | Package tests, quality checks, and docs | [Python catalogue](docs/workflow-catalogue.md#python-packages) |
 | R | Package checks, benchmarks, sites, coverage, and releases | [R catalogue](docs/workflow-catalogue.md#r-packages) |
 | Presentations | Quarto RevealJS builds and deployment | [Presentation catalogue](docs/workflow-catalogue.md#presentations) |
-| Frontends | One shared Vite+ quality gate | [Frontend guide](docs/frontend-qa.md) |
 | Generic | Link and commit checks | [Generic catalogue](docs/workflow-catalogue.md#generic) |
 
 ## Quick start
@@ -44,9 +43,6 @@ the security model used by these workflows and their callers.
 
 - [Workflow catalogue](docs/workflow-catalogue.md): every reusable workflow and
   its inputs.
-
-- [Frontend QA](docs/frontend-qa.md): gate order, baseline hooks, and optional
-  commands.
 
 - [R package workflows](docs/r-packages.md): dependency caches, hard-dependency
   checks, and the CRAN release boundary.

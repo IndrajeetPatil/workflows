@@ -19,10 +19,9 @@ interface or permissions.
 | --- | --- | --- |
 | Third-party GitHub Actions | Every `uses:` line in `.github/workflows/` | `.github/workflows/actions.lock` and every use of the same action |
 | Transitive GitHub Actions | `.github/workflows/actions.lock` | The action version selected by each workflow |
-| Standalone binaries (lychee, typos, rumdl, Gitleaks, actionlint, zizmor) | `*_VERSION` and `*_SHA256` in `frontend-qa.yaml` | Gitleaks in `security.yml`; typos with `crate-ci/typos` in `check-docs.yaml` |
-| zizmor | `ZIZMOR_VERSION` in `frontend-qa.yaml`, `uvx zizmor@…` in `security.yml` | The validation command in `AGENTS.md` |
+| Gitleaks | `GITLEAKS_VERSION` and `GITLEAKS_SHA256` in `security.yml` | The latest release archive from `gitleaks/gitleaks` |
+| zizmor | `uvx zizmor@…` in `security.yml` | The validation command in `AGENTS.md` |
 | conventional-pre-commit | `uvx --from conventional-pre-commit==…` in `conventional-commits.yaml` | The release callers pin in their prek configuration |
-| prek | `prek-version` and `sha256` in `frontend-qa.yaml` | Callers' `PREK_VERSION` and `minimum_prek_version`, which must not be newer |
 | Quarto extensions (`quarto-revealjs-a11y`, `quarto-read-aloud`) | Archive URLs in `build-presentation-python.yaml` and `build-presentation-r.yaml` | Latest upstream release commits |
 | Python | The matrix in `python-test.yaml` | The matrix rules in `AGENTS.md` |
 | R | The exact `r-version` in `r-benchmarks.yaml` (`R-CMD-check.yaml` uses the floating `release`, `devel` and `oldrel-1` aliases) | The latest stable R release from r-project.org or CRAN |
@@ -50,23 +49,21 @@ interface or permissions.
    comment; when updating, replace both the SHA and the comment with the latest
    stable release. Never use floating tags such as `@main` or `@v2`. Dependabot
    groups action updates weekly, but do not assume its open PRs are current.
-2. For each standalone binary, download the exact release archive the workflow
+
+2. For Gitleaks in `security.yml`, download the exact release archive the workflow
    installs, compute its SHA-256, and cross-check it against the release's
    published checksums when one exists. Update the version and checksum
-   together, and keep the same version wherever the tool appears.
-3. Update `prek-version` together with the `sha256` of its
-   `x86_64-unknown-linux-gnu` archive, cross-checked like the binaries above.
-   Before bumping it, confirm that the new prek release still provides every
-   hook id in the `prek baseline hooks present` step, including the built-in
-   hooks that ship with the runner. Raising it lets callers raise their own
-   prek pins; never lower it below a version a caller already requires.
-4. When a new stable Python release is out, adopt it in `python-test.yaml` as
+   together.
+
+3. When a new stable Python release is out, adopt it in `python-test.yaml` as
    `AGENTS.md` describes, and list the caller status checks that need renaming
    in the PR description.
-5. Check the latest stable R release (r-project.org or CRAN). Bump the exact
+
+4. Check the latest stable R release (r-project.org or CRAN). Bump the exact
    `r-version` in `r-benchmarks.yaml` to it, including patch releases, and keep
    the `R-CMD-check.yaml` matrix on its floating aliases.
-6. Check latest releases for the Quarto extensions
+
+5. Check latest releases for the Quarto extensions
    (`mcanouil/quarto-revealjs-a11y` and `IndrajeetPatil/quarto-read-aloud`).
    When a new release is available, pin the extension to the exact commit SHA of
    the release archive URL
@@ -82,8 +79,6 @@ vendored copies for them:
   `required-version` or the latest release.
 - Quarto (`version: release`), Pandoc (`pandoc-version: latest`), and Air
   (`version: "latest"`).
-- Vite+, Node, and pnpm in `frontend-qa.yaml`, which come from each caller's
-  lockfile, `.node-version` and `packageManager`.
 
 ## Caller compatibility
 
@@ -122,8 +117,8 @@ Once everything is green, review the changelogs and documentation of the
 upgraded actions and tools and identify opportunities to simplify the
 workflows with new inputs, features, or defaults. Apply those simplifications
 where they reduce complexity or remove workarounds that are no longer needed,
-without weakening any `AGENTS.md` security requirement or dropping a baseline
-gate from `frontend-qa.yaml`. Revalidate after each change.
+without weakening any `AGENTS.md` security requirement. Revalidate after each
+change.
 
 ## Validate and open the PR
 

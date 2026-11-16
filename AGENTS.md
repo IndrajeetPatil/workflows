@@ -23,10 +23,6 @@ owned by `IndrajeetPatil`.
   from unrelated changes later added to `main`. Release notes must copy the
   matching `NEWS.md` section rather than use generated notes.
 - Preserve the owner guard as the first step in every job.
-- Keep `frontend-qa.yaml` a single job and its baseline gates unconditional.
-  Inputs may add project-specific gates or adapt paths, but must not let a
-  caller drop a baseline check (`test: false` for frontends without unit tests
-  is the only exception).
 - Keep the `quarto call axe` accessibility check in both presentation
   workflows unconditional and before the Pages artifact upload, so findings
   fail pull requests and block deployment.

@@ -63,15 +63,6 @@ workflows:
         - 'actions/checkout@v7.0.1'
         - 'astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2'
         - 'astral-sh/setup-uv@v10.3.3'
-    '.github/workflows/frontend-qa.yaml':
-        - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
-        - 'actions/checkout@v7.0.1'
-        - 'astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2'
-        - 'astral-sh/setup-uv@v10.3.3'
-        - 'j178/prek-action@44924fe9ef4a6f88253c4b6b1bf11c689d3ce53d'
-        - 'j178/prek-action@v3.1.0'
-        - 'voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76'
-        - 'voidzero-dev/setup-vp@v1.22.0'
     '.github/workflows/lint.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/checkout@v7.0.1'
@@ -367,13 +358,3 @@ dependencies:
             - 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a'
             - 'quarto-dev/quarto-actions@8a96df13519ee81fd526f2dfca5962811136661b'
             - 'r-lib/actions@9f58233a78a2a9fd874714be10f8bba627233339'
-    'voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76':
-        ref: 'v1.22.0'
-        commit: 'sha1-cab1ab9eaff52d4857875f4f2c016e36af8f2c76'
-        owner_id: 149750581
-        repo_id: 1133264797
-    'voidzero-dev/setup-vp@v1.22.0':
-        ref: 'v1.22.0'
-        commit: 'sha1-cab1ab9eaff52d4857875f4f2c016e36af8f2c76'
-        owner_id: 149750581
-        repo_id: 1133264797

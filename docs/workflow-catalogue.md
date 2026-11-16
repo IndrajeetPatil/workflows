@@ -62,14 +62,6 @@ deployment on pushes. The check sees each page as loaded, so contrast on
 later slides and content shown only at some fragment steps or in non-default
 tabs is not covered.
 
-## Frontends
-
-| Workflow | Description | Inputs / secrets |
-|----------|-------------|--------|
-| [`frontend-qa.yaml`](../.github/workflows/frontend-qa.yaml) | Standardised quality gate for [Vite+](https://viteplus.dev) frontends: spelling, Markdown, workflow lint and audit, secret scan, prek hooks, format/lint/types, unit tests, production build, dependency audit and link check | `working-directory`, `test`, `python`, `extra-command`, `browser-command`, `timeout-minutes` |
-
-See the [frontend QA guide](frontend-qa.md) for its gates, hooks, and optional commands.
-
 ## Generic
 
 Generic workflows are language-agnostic and provide utility across diverse
