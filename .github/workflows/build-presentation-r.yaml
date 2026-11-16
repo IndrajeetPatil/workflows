@@ -59,7 +59,7 @@ jobs:
           echo 'options(warn = 2)' >> .Rprofile
 
       - name: Install RevealJS read-aloud extension
-        run: quarto add https://github.com/IndrajeetPatil/quarto-read-aloud/archive/6cf960afe56c3a589c2c1868552832aedc53d0ba.zip --no-prompt # v0.2.0
+        run: quarto add https://github.com/IndrajeetPatil/quarto-read-aloud/archive/9ae3a52273436d79b3c1c49b13c1312924eb0431.zip --no-prompt # v0.3.0
 
       - name: Render slides
         run: quarto render
