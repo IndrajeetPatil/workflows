@@ -48,21 +48,39 @@ the release boundary.
 | [`build-presentation-python.yaml`](../.github/workflows/build-presentation-python.yaml) | Build and deploy Python/UV Quarto RevealJS presentation to GitHub Pages | — |
 | [`build-presentation-r.yaml`](../.github/workflows/build-presentation-r.yaml) | Build and deploy R Quarto RevealJS presentation to GitHub Pages | — |
 
-Both presentation workflows install pinned releases of
-[`quarto-revealjs-a11y`](https://github.com/mcanouil/quarto-revealjs-a11y) and the
-[Read Aloud extension](https://github.com/IndrajeetPatil/quarto-read-aloud) before
-rendering. Callers opt in with `revealjs-plugins: [read-aloud]`; installation
-alone does not enable speech.
+![Quarto presentation quality checks: three bands covering environment and pinned dependencies, strict slide builds and artifact hygiene, and pull-request axe-core accessibility audits with isolated push deployment.](figures/presentation-quality-checks.webp)
 
-On pull requests, both workflows run Quarto's built-in
-[`quarto call axe`](https://quarto.org/docs/output-formats/html-accessibility.html#site-wide-accessibility-checks)
-accessibility check over the rendered `_site`, skipping Reveal's vendored
-`index_files/` pages. Any axe-core finding fails the pull request; incomplete
-scans, such as a headless Chrome startup failure, are retried up to three
-times. Pushes skip the check, because callers' default branches accept changes
-only through pull requests that already passed it. The check sees each page as
-loaded, so contrast on later slides and content shown only at some fragment
-steps or in non-default tabs is not covered.
+Both presentation workflows enforce quality gates across three stages:
+
+- **Environment and dependencies:** every run starts with the owner guard
+  restricting execution to `IndrajeetPatil` repositories. Toolchains use pinned
+  Quarto and Pandoc releases with locked dependencies (`uv sync --frozen` for
+  Python, `setup-r-dependencies` with `cache: always` for R). Pinned releases of
+  [`quarto-revealjs-a11y`](https://github.com/mcanouil/quarto-revealjs-a11y) and
+  the [Read Aloud extension](https://github.com/IndrajeetPatil/quarto-read-aloud)
+  are installed from exact release archives before rendering. Callers opt in
+  with `revealjs-plugins: [read-aloud]`; installation alone does not enable
+  speech.
+
+- **Build and hygiene:** rendering fails closed on syntax, code, or template
+  errors. The R workflow turns warnings into errors via `options(warn = 2)` in
+  `.Rprofile` so evaluation issues fail the build. After rendering, an artifact
+  hygiene step prunes all hidden directories and files other than `.well-known`
+  from `_site`, preventing `.venv` or temporary dotfiles from publishing.
+
+- **Accessibility and deployment gates:** on pull requests, both workflows run
+  Quarto's built-in
+  [`quarto call axe`](https://quarto.org/docs/output-formats/html-accessibility.html#site-wide-accessibility-checks)
+  accessibility check over the rendered `_site`, skipping Reveal's vendored
+  `index_files/` pages. Any axe-core finding fails the pull request
+  (`--fail-on minor`); incomplete scans, such as a headless Chrome startup
+  failure, are retried up to three times. Pushes skip the check, because
+  callers' default branches accept changes only through pull requests that
+  already passed it. The check sees each page as loaded, so contrast on later
+  slides and content shown only at some fragment steps or in non-default tabs is
+  not covered. Pull requests use read-only tokens and never deploy; deployment
+  runs only on default-branch pushes via an isolated job with OIDC credentials
+  for GitHub Pages.
 
 ## Generic
 

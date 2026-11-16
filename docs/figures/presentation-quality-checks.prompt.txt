@@ -1,0 +1,29 @@
+Use case: infographic-diagram. Asset type: documentation diagram for reusable GitHub Actions workflows. Landscape 3:2, flat canvas warm paper #faf8f4, ink #201d18, muted ink #5d574c, fine hairlines #e3ded2, sparse accent deep teal #14584d for check paths, muted rust #9a3d2e only for failure stops. Fraunces-like serif title and band headings, Hanken-like sans labels, generous whitespace, flat outline icons, thin orthogonal arrows. Match the reference style of flat warm-paper editorial documentation diagrams from indrapatil.com. No shadows, gradients, texture, 3D, cards, boxed panels, emoji, decorative footers, ordinal numbering, or invented statistics.
+
+Title exactly: 'Quarto presentation quality checks'
+
+Layout: Three horizontal bands separated by fine horizontal hairlines (#e3ded2), each band having its heading and a one-line muted summary on the left, and its unboxed step-by-step flow on the right connected by thin orthogonal teal arrows (#14584d).
+
+Band 1 (top):
+- Left heading: 'Environment & dependencies'
+- Left summary: 'Lock runtimes, pin extensions, and guard access'
+- Right flow:
+  'Owner guard' (underneath note: 'Restricts to IndrajeetPatil') →
+  'Pinned runtimes' (underneath note: 'Quarto release · Pandoc latest · frozen deps') →
+  'Pinned extensions' (underneath note: 'quarto-revealjs-a11y & read-aloud exact SHAs')
+
+Band 2 (middle):
+- Left heading: 'Build & hygiene'
+- Left summary: 'Enforce strict rendering and sanitize published site'
+- Right flow:
+  'Warnings as errors' (underneath note: 'options(warn = 2) halts build on R warnings') →
+  'Quarto render' (underneath note: 'Fail-closed execution of slides & cells') →
+  'Artifact hygiene' (underneath note: 'Strip hidden files except .well-known')
+
+Band 3 (bottom):
+- Left heading: 'Accessibility & deploy gates'
+- Left summary: 'axe-core merge gate on pull requests and isolated push deployment'
+- Right flow:
+  'axe-core audit' (underneath note: 'quarto call axe --fail-on minor on PRs') →
+  'Fail-closed retry' (underneath note: 'Retry incomplete scans · instant fail on findings') →
+  'Deploy isolation' (underneath note: 'PRs read-only · push deploys via OIDC to Pages')
