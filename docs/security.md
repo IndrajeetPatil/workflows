@@ -143,10 +143,6 @@ reasonable for this contribution model:
   who authored a pull request or triggered a run. Accepted because the owner is
   the only contributor, so there is no second identity to tell apart. The guard
   still stops other accounts from running the public workflows.
-- **Caller-supplied commands in `frontend-qa.yaml`.** Optional inputs run as
-  Bash with read-only repository permissions and no secrets. Accepted because
-  the commands come from the caller's own workflow configuration, which only
-  the owner edits.
 - **Repository code running with `id-token: write`.** The Python and R
   benchmark workflows run the caller's code and dependencies in a job that can
   request a short-lived OIDC token for CodSpeed uploads. Accepted because the
