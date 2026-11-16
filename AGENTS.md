@@ -24,8 +24,9 @@ owned by `IndrajeetPatil`.
   matching `NEWS.md` section rather than use generated notes.
 - Preserve the owner guard as the first step in every job.
 - Keep the `quarto call axe` accessibility check in both presentation
-  workflows unconditional and before the Pages artifact upload, so findings
-  fail pull requests and block deployment.
+  workflows on every pull request. It is skipped on pushes because callers'
+  default branches accept changes only through pull requests. Retry only
+  incomplete scans (exit 2), never findings (exit 1).
 - Before changing a reusable workflow interface or permissions, search the
   `IndrajeetPatil` account's repositories for callers and verify their granted
   scopes.
