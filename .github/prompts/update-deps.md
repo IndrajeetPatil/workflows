@@ -20,7 +20,7 @@ interface or permissions.
 | Third-party GitHub Actions | Every `uses:` line in `.github/workflows/` | `.github/workflows/actions.lock` and every use of the same action |
 | Transitive GitHub Actions | `.github/workflows/actions.lock` | The action version selected by each workflow |
 | Gitleaks | `GITLEAKS_VERSION` and `GITLEAKS_SHA256` in `security.yml` | The latest release archive from `gitleaks/gitleaks` |
-| zizmor | `uvx zizmor@…` in `security.yml` | The validation command in `AGENTS.md` |
+| zizmor | `version` in `security.yml` (`zizmor-action`) | The validation command in `AGENTS.md` |
 | conventional-pre-commit | `uvx --from conventional-pre-commit==…` in `conventional-commits.yaml` | The release callers pin in their prek configuration |
 | Quarto extensions (`quarto-revealjs-a11y`, `quarto-read-aloud`) | Archive URLs in `build-presentation-python.yaml` and `build-presentation-r.yaml` | Latest upstream release commits |
 | Python | The matrix in `python-test.yaml` | The matrix rules in `AGENTS.md` |
