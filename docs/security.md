@@ -81,10 +81,7 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
   format. For example, the SEO workflow validates its package name before
   writing generated files, and the release workflow validates submitted commit
   metadata before fetching it.
-- The frontend QA workflow accepts optional project-specific Bash commands.
-  These inputs are executable code from the calling repository and run after
-  checkout with read-only repository permissions. Callers should define them
-  only in trusted workflow configuration and must not pass secrets to them.
+
 - Callers should avoid privileged triggers for workflows that check out or run
   pull-request code. In particular, do not combine `pull_request_target` or
   `workflow_run` with an untrusted checkout or artifact.
@@ -95,14 +92,16 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
   Gitleaks and runs zizmor in pedantic mode against every workflow. An active
   default-branch ruleset requires both checks and requires changes to arrive
   through a pull request.
-- The frontend QA workflow also runs Gitleaks, actionlint, and zizmor for
-  callers that use that gate. The repository's Python and R workflows run
-  dependency and project checks appropriate to those toolchains.
+
+- The repository's Python and R workflows run dependency and project checks
+  appropriate to those toolchains.
+
 - Callers with an allow-list for Actions must permit this repository's
   reusable workflows and every external action they use. Caller repositories
   must also grant the minimum permissions required by the selected workflow;
   Pages callers, for example, need to grant `pages: write` and `id-token: write`
   to the deployment job.
+
 - Secret storage, environment reviewers, OIDC trust conditions, fork-workflow
   approval, code scanning, audit-log review, secret rotation, and repository
   alert settings are configured outside reusable workflow files. The owner

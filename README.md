@@ -7,11 +7,11 @@
 > intended as general-purpose templates. This documentation describes how the
 > owner's repositories use them; it is not a set-up guide for other users.
 
-Reusable workflows for package checks, documentation, presentations, and
-frontend quality gates. Callers reference `@main`; changes here reach them
-after a pull request passes this repository's security checks.
+Reusable workflows for package checks, documentation, and presentations.
+Callers reference `@main`; changes here reach them after a pull request
+passes this repository's security checks.
 
-![Five workflow families in equal panels: the Python logo beside a test flask, an R inside a package box, a presentation slide with a chart, a browser with a checkmark, and a chain link beside a two-node workflow.](docs/figures/workflow-families.webp)
+![Four workflow families in equal panels: the Python logo beside a test flask, an R inside a package box, a presentation slide with a chart, and a chain link beside a two-node workflow.](docs/figures/workflow-families.webp)
 
 | Family | Purpose | Workflows |
 | --- | --- | --- |

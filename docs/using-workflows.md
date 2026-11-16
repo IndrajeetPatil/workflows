@@ -92,7 +92,7 @@ currently include `astral-sh/setup-uv`, `CodSpeedHQ/action`,
 `codecov/codecov-action`, `crate-ci/typos`,
 `JamesIves/github-pages-deploy-action`, `j178/prek-action`,
 `lycheeverse/lychee-action`, `posit-dev/setup-air`,
-`quarto-dev/quarto-actions`, `r-lib/actions` and `voidzero-dev/setup-vp`.
+`quarto-dev/quarto-actions`, and `r-lib/actions`.
 
 Avoid `secrets: inherit` when a workflow needs only one named secret. Pass that
 secret explicitly so unrelated repository or organisation secrets are not made
