@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-labelledby="title description">
+  <title id="title">Reusable GitHub Actions workflows social preview card</title>
+  <desc id="description">The repository name and a one-line summary beside a pull request, owner guard, and checks flow, with the four workflow families: Python tests, QA, and docs; R checks and CRAN releases; Quarto RevealJS presentation builds; and generic link and commit checks.</desc>
+  <defs>
+    <style>
+      .ink { fill: #201d18 } .muted { fill: #5d574c } .accent { fill: #14584d }
+      .rule { stroke: #e3ded2; stroke-width: 2 }
+      .icon { fill: none; stroke: #14584d; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round }
+      .route { fill: none; stroke: #14584d; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round }
+      .eyebrow { font: 600 20px 'Hanken Grotesk'; letter-spacing: 3px }
+      .title { font: 600 76px Fraunces; letter-spacing: -1px }
+      .sub { font: 400 27px 'Hanken Grotesk' }
+      .label { font: 600 28px 'Hanken Grotesk' }
+      .note { font: 400 20px 'Hanken Grotesk' }
+      .flow { font: 600 18px 'Hanken Grotesk' }
+    </style>
+  </defs>
+  <rect width="1280" height="640" fill="#faf8f4"/>
+
+  <!-- Left: identity -->
+  <text class="eyebrow accent" x="80" y="150">INDRAJEETPATIL / WORKFLOWS</text>
+  <text class="title ink" x="76" y="250">Reusable</text>
+  <text class="title ink" x="76" y="336">GitHub Actions</text>
+  <text class="title ink" x="76" y="422">workflows</text>
+  <text class="sub muted" x="80" y="480">Package checks, documentation, and</text>
+  <text class="sub muted" x="80" y="516">presentations, called from @main.</text>
+
+  <!-- Left bottom: flow motif -->
+  <g class="route" transform="translate(30 0)">
+    <circle cx="88" cy="566" r="7"/><path d="M100 566h92m-8-6 8 6-8 6"/>
+    <path d="M214 556l10 4v7c0 6-4 9-10 11-6-2-10-5-10-11v-7z"/><path d="M234 566h92m-8-6 8 6-8 6"/>
+    <path d="M340 566l6 6 12-13"/>
+  </g>
+  <text class="flow muted" x="118" y="600" text-anchor="middle">pull request</text>
+  <text class="flow muted" x="244" y="600" text-anchor="middle">owner guard</text>
+  <text class="flow muted" x="379" y="600" text-anchor="middle">checks</text>
+
+  <line class="rule" x1="700" y1="80" x2="700" y2="560"/>
+  <line class="rule" x1="760" y1="320" x2="1220" y2="320"/>
+  <line class="rule" x1="990" y1="110" x2="990" y2="530"/>
+
+  <!-- Python -->
+  <g class="icon" transform="translate(843 120)">
+    <path d="M30 4h-8a8 8 0 0 0-8 8v8h18v4H10a8 8 0 0 0-8 8v8a8 8 0 0 0 8 8h4v-8a8 8 0 0 1 8-8h14a8 8 0 0 0 8-8V12a8 8 0 0 0-8-8z"/>
+    <path d="M30 68h8a8 8 0 0 0 8-8v-8H28v-4h18a8 8 0 0 0 8-8v-8a8 8 0 0 0-8-8h-4v8a8 8 0 0 1-8 8H20a8 8 0 0 0-8 8v12a8 8 0 0 0 8 8z"/>
+    <circle cx="22" cy="12" r="1.6"/><circle cx="34" cy="60" r="1.6"/>
+  </g>
+  <text class="label ink" x="870" y="235" text-anchor="middle">Python</text>
+  <text class="note muted" x="870" y="264" text-anchor="middle">tests, QA, and docs</text>
+
+  <!-- R -->
+  <g class="icon" transform="translate(1072 118)">
+    <path d="M38 4 70 18v38L38 72 6 56V18z"/><path d="M6 18l32 14 32-14M38 32v40"/>
+    <path d="M16 36v20m0-20h6a4.5 4.5 0 0 1 0 9h-6m5 0 7 11"/>
+  </g>
+  <text class="label ink" x="1110" y="235" text-anchor="middle">R</text>
+  <text class="note muted" x="1110" y="264" text-anchor="middle">checks and CRAN releases</text>
+
+  <!-- Presentations -->
+  <g class="icon" transform="translate(832 360)">
+    <rect x="2" y="4" width="72" height="48" rx="2"/><path d="M38 52v14m-12 6 12-6 12 6"/>
+    <path d="M14 42V30m12 12V20m12 22V26m12 16V14m12 28V24"/>
+  </g>
+  <text class="label ink" x="870" y="475" text-anchor="middle">Presentations</text>
+  <text class="note muted" x="870" y="504" text-anchor="middle">Quarto RevealJS builds</text>
+
+  <!-- Generic -->
+  <g class="icon" transform="translate(1058 352) scale(1.3)">
+    <path d="M30 26l8-8a12 12 0 0 1 17 17l-8 8"/><path d="M42 46l-8 8a12 12 0 0 1-17-17l8-8"/><path d="M28 44l16-16"/>
+  </g>
+  <text class="label ink" x="1110" y="475" text-anchor="middle">Generic</text>
+  <text class="note muted" x="1110" y="504" text-anchor="middle">links and commits</text>
+</svg>

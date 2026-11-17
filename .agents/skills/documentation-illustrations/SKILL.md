@@ -187,3 +187,20 @@ position, arrow, icon, color, and label") followed by the exact modification.
 - **Documentation embedding:** Embed figures in Markdown using descriptive alt
   text that outlines the diagram contents, followed by structured text
   detailing each stage or band.
+
+## Social preview card
+
+- `docs/figures/social-card.svg` is the hand-authored source of the
+  repository's GitHub social preview, in the house style at 1280x640.
+
+- Render it to `docs/figures/social-card.png` with headless Chrome, which uses
+  the locally installed Fraunces and Hanken Grotesk fonts:
+
+  ```bash
+  "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless \
+    --hide-scrollbars --window-size=1280,640 \
+    --screenshot="$PWD/docs/figures/social-card.png" \
+    "file://$PWD/docs/figures/social-card.svg"
+  ```
+
+- Upload the PNG under Settings, General, Social preview after it changes.
