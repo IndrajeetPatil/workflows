@@ -9,7 +9,7 @@
 
 Reusable workflows for package checks, documentation, and presentations.
 Callers reference `@main`; changes here reach them after a pull request
-passes this repository's security checks.
+passes this repository's security and prek checks.
 
 ![Four workflow families in equal panels: the Python logo beside a test flask, an R inside a package box, a presentation slide with a chart, and a chain link beside a two-node workflow.](docs/figures/workflow-families.webp)
 

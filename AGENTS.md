@@ -6,7 +6,7 @@ owned by `IndrajeetPatil`.
 ## Scope
 
 - Callers reference `@main`, so every change reaches them on merge. A ruleset
-  requires a pull request with passing Gitleaks and zizmor checks.
+  requires a pull request with passing Gitleaks, zizmor, and prek checks.
 - `@main` caller references are deliberate, not a pinning gap. These workflows
   are first-party, and the owner is the only person who can contribute to any
   of the owner's repositories, so there is no external-contributor risk. Code
@@ -14,8 +14,8 @@ owned by `IndrajeetPatil`.
   flag them by design: do not report them or propose SHA pins, and dismiss such
   alerts as "won't fix" with this reason.
 - Keep reusable workflow files limited to `workflow_call`. The repository-local
-  `security.yml` workflow is the sole intentional exception and runs only for
-  pull requests targeting `main`.
+  `security.yml` and `prek.yml` workflows are the only intentional exceptions
+  and run only for pull requests targeting `main`.
 - Keep `submit-cran.yaml` two-stage: non-default release branches may submit to
   CRAN but must not create tags or GitHub Releases; the default branch may
   create the release after merge but must not resubmit to CRAN. The release tag,
@@ -120,9 +120,15 @@ custom checksum infrastructure for these extensions.
 
 ## Validation
 
+Install the Git hooks once with `prek install`. They run the hooks in
+`prek.toml` on every commit and check commit messages against Conventional
+Commits; `prek.yml` runs the same hooks on every pull request. Run them from
+a feature branch: `no-commit-to-branch` fails on `main` by design.
+
 Run these checks before publishing workflow changes:
 
 ```bash
+prek run --all-files
 actionlint
 gitleaks git --log-opts="--all" --no-banner --redact .
 uvx zizmor@1.32.0 --pedantic .github/workflows/
@@ -132,4 +138,4 @@ git diff --check
 Also run `make actions-lock-verify` after dependency or workflow changes.
 
 Also inspect the complete diff and confirm that no standalone workflow trigger
-was introduced beyond the PR-only `security.yml` exception.
+was introduced beyond the PR-only `security.yml` and `prek.yml` exceptions.

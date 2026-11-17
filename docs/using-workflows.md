@@ -13,11 +13,14 @@ push job, and bound every job with a timeout. Write credentials are isolated
 in deployment and release jobs rather than exposed while repository code and
 dependencies are built or tested.
 
-The repository's only standalone workflow is
-[`security.yml`](../.github/workflows/security.yml). It runs on pull requests to
-`main`, scans the complete Git history with Gitleaks, and audits every workflow
-with zizmor in pedantic mode so future changes cannot silently weaken these
-controls.
+The repository's only standalone workflows are
+[`security.yml`](../.github/workflows/security.yml) and
+[`prek.yml`](../.github/workflows/prek.yml). Both run on pull requests to
+`main`. `security.yml` scans the complete Git history with Gitleaks and audits
+every workflow with zizmor in pedantic mode so future changes cannot silently
+weaken these controls. `prek.yml` runs the repository's own
+[prek](https://prek.j178.dev/) hooks: actionlint, spelling, Markdown lint, and
+file hygiene checks.
 
 ![Security by design: every job starts with the owner guard; actions are SHA-pinned, tokens are read-only by default, checkout credentials are disabled, untrusted inputs are validated, jobs have finite timeouts, and write credentials are isolated to release work. The separate pull-request security gate runs Gitleaks across full history and zizmor in pedantic mode.](figures/security-design.webp)
 
