@@ -1,0 +1,5 @@
+# typos spell-checker configuration: https://github.com/crate-ci/typos
+
+[default.extend-words]
+# `*.mak` is a Makefile extension in .gitattributes.
+mak = "mak"

@@ -15,13 +15,14 @@ It follows [GitHub's secure-use reference](https://docs.github.com/en/actions/re
 - Reusable workflows run with the caller's event, repository, policy, and
   token ceiling. The caller chooses when to invoke a workflow and which
   permissions and secrets to pass.
-- Reusable workflow files use `workflow_call`. The only standalone workflow in
-  this repository is the pull-request security gate. The owner's current
-  repository callers also use `workflow_run` for the SEO-file deployment after
-  a successful `pkgdown` run on `main`; that job checks out `gh-pages`, uses a
-  validated package-name input, and does not consume artifacts from the
-  triggering run. Do not add a privileged trigger that checks out or executes
-  untrusted pull-request code or consumes its artifacts.
+- Reusable workflow files use `workflow_call`. The only standalone workflows
+  in this repository are the pull-request security gate and prek hooks. The
+  owner's current repository callers also use `workflow_run` for the SEO-file
+  deployment after a successful `pkgdown` run on `main`; that job checks out
+  `gh-pages`, uses a validated package-name input, and does not consume
+  artifacts from the triggering run. Do not add a privileged trigger that
+  checks out or executes untrusted pull-request code or consumes its
+  artifacts.
 - Build and test jobs process caller-controlled source. They have read-only
   repository permissions and do not receive deployment credentials. Publishing
   is handled in separate jobs after a successful build or release validation.

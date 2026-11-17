@@ -1,0 +1,91 @@
+minimum_prek_version = "0.5.11"
+default_install_hook_types = ["pre-commit", "commit-msg"]
+default_stages = ["pre-commit"]
+
+[update]
+freeze = true
+cooldown_days = 0
+
+[[repos]]
+repo = "https://github.com/rhysd/actionlint"
+rev = "914e7df21a07ef503a81201c76d2b11c789d3fca" # frozen: v1.7.12
+hooks = [{ id = "actionlint" }]
+
+[[repos]]
+repo = "https://github.com/zizmorcore/zizmor-pre-commit"
+rev = "06a39750ec31860bb44f2acf67182c40016cd1e7" # frozen: v1.32.0
+# Matches the pedantic audit in security.yml, which CI runs instead.
+hooks = [{ id = "zizmor", args = ["--pedantic"] }]
+
+[[repos]]
+repo = "https://github.com/rvben/rumdl-pre-commit"
+rev = "df5a947a3af0dba56640e644c6b9316184749168" # frozen: v0.3.4
+hooks = [{ id = "rumdl-check" }]
+
+[[repos]]
+repo = "https://github.com/crate-ci/typos"
+rev = "276087d9a4f06398b3e04825487805e2d7375888" # frozen: v1.52.2
+hooks = [{ id = "typos" }]
+
+[[repos]]
+repo = "https://github.com/compilerla/conventional-pre-commit"
+rev = "33b50eb042bee26eac0ee96ad84aa9c1b4dccdd8" # frozen: v4.5.0
+hooks = [
+  # Strict mode also rejects fixup! and merge commit messages.
+  { id = "conventional-pre-commit", stages = [
+    "commit-msg",
+  ], args = [
+    "--strict",
+    "--verbose",
+  ] },
+]
+
+[[repos]]
+repo = "local"
+
+# Staged-diff secret scan with a locally installed gitleaks; CI scans the
+# complete history in security.yml and skips this hook.
+[[repos.hooks]]
+id = "gitleaks"
+name = "gitleaks (staged secret scan)"
+language = "system"
+entry = "gitleaks git --pre-commit --redact --staged --verbose"
+pass_filenames = false
+
+# Needs the `gh actions-lock` extension, so CI skips it.
+[[repos.hooks]]
+id = "actions-lock-verify"
+name = "actions.lock matches workflow dependencies"
+language = "system"
+entry = "make actions-lock-verify"
+files = "^\\.github/workflows/"
+pass_filenames = false
+
+[[repos.hooks]]
+id = "forbid-submodules"
+name = "forbid submodules"
+language = "fail"
+entry = "submodules are not allowed in this repository:"
+types = ["directory"]
+
+[[repos]]
+repo = "builtin"
+hooks = [
+  { id = "trailing-whitespace" },
+  { id = "end-of-file-fixer" },
+  { id = "check-yaml" },
+  { id = "check-toml" },
+  { id = "check-json" },
+  { id = "check-merge-conflict" },
+  { id = "check-case-conflict" },
+  { id = "check-shebang-scripts-are-executable" },
+  { id = "check-executables-have-shebangs" },
+  { id = "check-symlinks" },
+  { id = "destroyed-symlinks" },
+  { id = "check-illegal-windows-names" },
+  { id = "mixed-line-ending" },
+  { id = "check-added-large-files", args = ["--maxkb=1024"] },
+  { id = "detect-private-key" },
+  { id = "fix-byte-order-marker" },
+  { id = "no-commit-to-branch", args = ["--branch=main"] },
+]
