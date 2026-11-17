@@ -5,6 +5,17 @@ workflow list and inputs. Declare package-specific checking tools in
 `Config/Needs/check` in the caller's `DESCRIPTION`; `R-CMD-check.yaml` installs
 them in normal and hard-dependency modes.
 
+## Quality checks
+
+![R package quality checks: three bands covering static analysis and hygiene, multi-OS R CMD check with hard-dependency cache isolation, and zero-warning execution with 100% line and branch coverage gates.](figures/r-package-quality-checks.webp)
+
+R package workflows enforce quality gates across three stages: static analysis
+and hygiene (formatting with `air`, linting with `{lintr}`, spelling, and link
+integrity), cross-platform package checks with isolated hard-dependency
+validation, and strict execution rigor (zero-warning policy across examples,
+tests, vignettes, and README rendering, randomized test execution order, and
+100% line and branch coverage gates).
+
 ## Dependency caches
 
 Every `setup-r-dependencies` step sets `cache: always`, which saves the R
@@ -14,7 +25,7 @@ the next run, instead of reinstalling every dependency until a job passes.
 
 ## Hard-dependency checks
 
-![Two separate dependency caches based on DESCRIPTION: the normal check can restore Imports, Suggests and tools, while the hard-only check restores Imports and checking tools without Suggests.](figures/cache-isolation.webp)
+![Two separate dependency caches based on DESCRIPTION: the normal check can restore Imports, Suggests, and tools, while the hard-only check restores Imports and checking tools without Suggests.](figures/cache-isolation.webp)
 
 Setting `no-suggests: true` makes `pkgdown.yaml` validate that a package website
 can be built with hard package dependencies plus the documentation tooling,

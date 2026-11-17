@@ -13,6 +13,29 @@ permissions.
 | [`python-qa.yaml`](../.github/workflows/python-qa.yaml) | Code quality checks, including build and test coverage | — |
 | [`python-test.yaml`](../.github/workflows/python-test.yaml) | Run tests across multiple OS and Python versions | — |
 
+![Python package quality checks: three bands covering environment and static checks, cross-platform test matrix with strict coverage gates, and CPU benchmarks with documentation deployment.](figures/python-package-quality-checks.webp)
+
+Python package workflows enforce quality gates across three stages:
+
+- **Environment and static checks:** every run starts with the owner guard
+  restricting execution to `IndrajeetPatil` repositories. Dependency resolution
+  uses pinned Python versions with locked environments
+  (`uv sync --locked --all-extras --dev`). Static QA checks run via `make qa` to
+  enforce linting, formatting, and type checks, while `uv build` verifies package
+  build hygiene.
+
+- **Test matrix and coverage gates:** tests run across a full operating system
+  matrix on Ubuntu across all supported Python versions (3.12 through 3.15), and
+  on macOS and Windows for the latest stable release (3.15). Test execution uses
+  locked dependencies (`uv run --locked pytest`), and code quality enforcement
+  demands 100% test coverage (`coverage report --fail-under=100`), failing closed
+  if any code branch or line lacks coverage.
+
+- **Benchmarks and documentation:** CPU simulation benchmarks run via CodSpeed
+  under single-threaded execution with short-lived OIDC uploads. Documentation
+  is generated with `zensical build` and deployed to GitHub Pages only on
+  default-branch pushes with isolated OIDC write credentials.
+
 The repository's internal zizmor audit enables ANSI color in captured CI logs
 with job-level `FORCE_COLOR=1` and `CLICOLOR_FORCE=1`, while retaining its
 GitHub annotation format. In the reusable Python and presentation workflows,
@@ -36,6 +59,30 @@ presentation cells. `prek` itself remains colorized via the `prek-action` defaul
 | [`seo-files.yaml`](../.github/workflows/seo-files.yaml) | Deploy SEO and AI-discovery files (`robots.txt`, `.well-known/llms.txt`) to `gh-pages` after pkgdown build | `package-name` |
 | [`submit-cran.yaml`](../.github/workflows/submit-cran.yaml) | On a release branch, build and submit to CRAN without releasing; on the default branch after merge, rebuild and tag the submitted PR head and create a GitHub Release using the matching `NEWS.md` section without resubmitting | — |
 | [`test-coverage.yaml`](../.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100% line and branch coverage) + examples/vignettes (enforces 100%) | Optional `CODECOV_TOKEN`; PR uploads tolerate a missing token |
+
+![R package quality checks: three bands covering static analysis and hygiene, multi-OS R CMD check with hard-dependency cache isolation, and zero-warning execution with 100% line and branch coverage gates.](figures/r-package-quality-checks.webp)
+
+R package workflows enforce quality gates across three stages:
+
+- **Static analysis and hygiene:** formatting is checked with `air`, and style
+  is audited with `{lintr}`, failing on any lint finding. Documentation checks
+  guard against link rot and broken anchor fragments with `lychee` while enforcing
+  HTTPS, and verify spelling with `typos`. Pre-commit hooks run in a fail-closed
+  mode that rejects any changes made by hooks.
+
+- **Package checks and isolation:** R CMD check runs across macOS, Windows, and
+  Ubuntu across current, developmental, and previous R releases. Dependencies are
+  saved with `cache: always` to preserve dependencies on failed runs. On pull
+  requests, a dedicated hard-dependencies check runs with only hard dependencies
+  and checking tools in an isolated cache, preventing suggested packages from
+  masking undeclared dependencies.
+
+- **Execution rigor and coverage gates:** extra checks run in parallel,
+  turning warnings into errors (`warn = 2L`) across examples, tests, vignettes,
+  and README rendering. A randomized test order step runs tests with a shuffled
+  seed to catch hidden inter-test state dependencies. Strict coverage gates
+  require 100% line coverage and 100% branch coverage on unit tests, and 100%
+  coverage across all examples and vignettes.
 
 See [hard-dependency checks](r-packages.md#hard-dependency-checks) for checking
 tools and isolated caches, and [CRAN releases](r-packages.md#cran-releases) for

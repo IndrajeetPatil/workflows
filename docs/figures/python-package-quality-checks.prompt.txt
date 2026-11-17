@@ -1,0 +1,29 @@
+Use case: infographic-diagram. Asset type: documentation diagram for reusable GitHub Actions workflows. Landscape 3:2, flat canvas warm paper #faf8f4, ink #201d18, muted ink #5d574c, fine hairlines #e3ded2, deep teal #14584d accent for all step outline icons and connecting arrows, muted rust #9a3d2e only for failure stops. Fraunces-like serif title and band headings, Hanken-like sans labels, generous whitespace, flat outline icons in deep teal #14584d, thin orthogonal teal arrows. Match the reference style of flat warm-paper editorial documentation diagrams from indrapatil.com and r-package-quality-checks.webp. No shadows, gradients, texture, 3D, cards, boxed panels, emoji, decorative footers, ordinal numbering, or invented statistics.
+
+Title exactly: 'Python package quality checks'
+
+Layout: Three horizontal bands separated by fine horizontal hairlines (#e3ded2), each band having its heading and a one-line muted summary on the left, and its unboxed step-by-step flow on the right connected by thin orthogonal teal arrows (#14584d).
+
+Band 1 (top):
+- Left heading: 'Environment & static checks'
+- Left summary: 'Lock runtimes, enforce static checks, and verify package build'
+- Right flow (each step with a deep teal #14584d outline icon):
+  'Owner guard' (underneath note: 'Restricts to IndrajeetPatil') →
+  'Locked dependencies' (underneath note: 'uv sync --locked · frozen dev env') →
+  'Static QA & build' (underneath note: 'make qa · uv build package')
+
+Band 2 (middle):
+- Left heading: 'Test matrix & coverage'
+- Left summary: 'Cross-platform test execution and strict 100% coverage gate'
+- Right flow (each step with a deep teal #14584d outline icon):
+  'Matrix testing' (underneath note: 'Ubuntu 3.12–3.15 · macOS & Windows 3.15') →
+  'pytest execution' (underneath note: 'Fail-closed locked test suite') →
+  '100% coverage gate' (underneath note: 'coverage report --fail-under=100')
+
+Band 3 (bottom):
+- Left heading: 'Benchmarks & documentation'
+- Left summary: 'Track CPU performance and publish verified documentation'
+- Right flow (each step with a deep teal #14584d outline icon):
+  'CodSpeed benchmarks' (underneath note: 'CPU simulation · short-lived OIDC upload') →
+  'Doc build' (underneath note: 'zensical build site') →
+  'Isolated deploy' (underneath note: 'PRs read-only · push deploys to Pages')
