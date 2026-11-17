@@ -40,4 +40,6 @@ jobs:
         env:
           # security.yml scans the complete history with Gitleaks and audits
           # workflows with zizmor; the lock check needs the gh extension.
-          SKIP: gitleaks,zizmor,actions-lock-verify
+          # no-commit-to-branch guards local commits only, so CI never fails
+          # on main if this workflow gains a push trigger.
+          SKIP: gitleaks,zizmor,actions-lock-verify,no-commit-to-branch

@@ -8,6 +8,7 @@ description: Update pinned actions and tools in the reusable workflows and keep 
 This repository has no application package manifest. Workflow tool versions
 and action references are declared in `.github/workflows/`; direct and
 transitive action commits are recorded in `.github/workflows/actions.lock`.
+This repository's own prek hooks are pinned in `prek.toml`.
 Every caller picks up a workflow change as soon as it reaches `main`. Follow
 `AGENTS.md` throughout, especially its security requirements and its rule to
 search the `IndrajeetPatil` account for callers before changing a workflow
@@ -20,8 +21,10 @@ interface or permissions.
 | Third-party GitHub Actions | Every `uses:` line in `.github/workflows/` | `.github/workflows/actions.lock` and every use of the same action |
 | Transitive GitHub Actions | `.github/workflows/actions.lock` | The action version selected by each workflow |
 | Gitleaks | `GITLEAKS_VERSION` and `GITLEAKS_SHA256` in `security.yml` | The latest release archive from `gitleaks/gitleaks` |
-| zizmor | `version` in `security.yml` (`zizmor-action`) | The validation command in `AGENTS.md` |
-| conventional-pre-commit | `uvx --from conventional-pre-commit==…` in `conventional-commits.yaml` | The release callers pin in their prek configuration |
+| zizmor | `version` in `security.yml` (`zizmor-action`) | The validation command in `AGENTS.md` and the `zizmor-pre-commit` rev in `prek.toml` |
+| conventional-pre-commit | `uvx --from conventional-pre-commit==…` in `conventional-commits.yaml` | The `conventional-pre-commit` rev in `prek.toml` and the release callers pin in their prek configuration |
+| prek | `minimum_prek_version` in `prek.toml`; `prek-version: latest-known` in `prek.yml` follows the `prek-action` pin | The latest `j178/prek` release |
+| prek hooks | Frozen `rev` commit SHAs in `prek.toml` | The latest release of each hook repository |
 | Quarto extensions (`quarto-revealjs-a11y`, `quarto-read-aloud`) | Archive URLs in `build-presentation-python.yaml` and `build-presentation-r.yaml` | Latest upstream release commits |
 | Python | The matrix in `python-test.yaml` | The matrix rules in `AGENTS.md` |
 | R | The exact `r-version` in `r-benchmarks.yaml` (`R-CMD-check.yaml` uses the floating `release`, `devel` and `oldrel-1` aliases) | The latest stable R release from r-project.org or CRAN |
@@ -63,7 +66,13 @@ interface or permissions.
    `r-version` in `r-benchmarks.yaml` to it, including patch releases, and keep
    the `R-CMD-check.yaml` matrix on its floating aliases.
 
-5. Check latest releases for the Quarto extensions
+5. Run `prek update` to move every hook in `prek.toml` to its latest release.
+   `[update] freeze = true` keeps each `rev` a commit SHA with a
+   `# frozen: vX.Y.Z` comment. Raise `minimum_prek_version` to the latest
+   prek release, and keep the zizmor and conventional-pre-commit hooks on the
+   same versions as `security.yml` and `conventional-commits.yaml`.
+
+6. Check latest releases for the Quarto extensions
    (`mcanouil/quarto-revealjs-a11y` and `IndrajeetPatil/quarto-read-aloud`).
    When a new release is available, pin the extension to the exact commit SHA of
    the release archive URL
@@ -122,11 +131,11 @@ change.
 
 ## Validate and open the PR
 
-Run the validation commands in `AGENTS.md`, using the updated zizmor version,
-plus `make actions-lock-verify`, `typos .`, and `rumdl check .`. Rerun them if
-anything changes afterwards, and inspect the complete diff to confirm that no
-standalone workflow trigger was introduced beyond the PR-only `security.yml`
-exception.
+Run the validation commands in `AGENTS.md`, using the updated zizmor version
+and hooks, plus `make actions-lock-verify`. Rerun them if anything changes
+afterwards, and inspect the complete diff to confirm that no standalone
+workflow trigger was introduced beyond the PR-only `security.yml` and
+`prek.yml` exceptions.
 
 Open a ready-for-review PR using the gh CLI, instead of the GitHub MCP server,
 and explain the version bumps and any key refactorings as list items in the PR

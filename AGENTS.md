@@ -122,7 +122,8 @@ custom checksum infrastructure for these extensions.
 
 Install the Git hooks once with `prek install`. They run the hooks in
 `prek.toml` on every commit and check commit messages against Conventional
-Commits; `prek.yml` runs the same hooks on every pull request.
+Commits; `prek.yml` runs the same hooks on every pull request. Run them from
+a feature branch: `no-commit-to-branch` fails on `main` by design.
 
 Run these checks before publishing workflow changes:
 
