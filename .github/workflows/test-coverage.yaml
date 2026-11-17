@@ -45,17 +45,27 @@ jobs:
 
       - name: Test coverage
         run: |
-          options(crayon.enabled = TRUE)
+          options(
+            crayon.enabled = TRUE,
+            # also record which branches of each `if` and `switch()` were taken
+            covr.branch_coverage = TRUE
+          )
           cov <- covr::package_coverage(
             quiet = FALSE,
             clean = FALSE,
             install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
           )
+          covr::cobertura(cov)
           pct <- covr::percent_coverage(cov)
           cat(sprintf("\nCode coverage: %.2f%%\n", pct))
-          covr::to_cobertura(cov)
-          if (pct < 100) {
-            stop(sprintf("Code coverage is %.2f%%, which is below the required 100%%", pct))
+          branch_pct <- covr::percent_coverage(cov, by = "branch")
+          # a package without any `if` or `switch()` has no branches to cover
+          if (is.nan(branch_pct)) branch_pct <- 100
+          cat(sprintf("Branch coverage: %.2f%%\n", branch_pct))
+          if (pct < 100 || branch_pct < 100) {
+            # list the missed lines and branches of each file
+            print(cov, missing = TRUE)
+            stop("Line and branch coverage must both be 100%")
           }
         shell: Rscript {0}
 
