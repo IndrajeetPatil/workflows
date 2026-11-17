@@ -2,14 +2,6 @@
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   workflow_call:
-    inputs:
-      branch-coverage:
-        description: >-
-          Also require 100% branch coverage of `if` and `switch()` in R code
-          (covr's experimental `covr.branch_coverage` option).
-        type: boolean
-        required: false
-        default: false
     secrets:
       CODECOV_TOKEN:
         required: false
@@ -28,7 +20,6 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       # testthat defaults to 2 parallel workers; GitHub-hosted runners have 4 vCPUs.
       TESTTHAT_CPUS: 4
-      BRANCH_COVERAGE: ${{ inputs.branch-coverage }}
 
     steps:
       - name: Restrict to IndrajeetPatil repositories
@@ -56,7 +47,8 @@ jobs:
         run: |
           options(
             crayon.enabled = TRUE,
-            covr.branch_coverage = identical(Sys.getenv("BRANCH_COVERAGE"), "true")
+            # also record which branches of each `if` and `switch()` were taken
+            covr.branch_coverage = TRUE
           )
           cov <- covr::package_coverage(
             quiet = FALSE,
@@ -66,12 +58,10 @@ jobs:
           covr::cobertura(cov)
           pct <- covr::percent_coverage(cov)
           cat(sprintf("\nCode coverage: %.2f%%\n", pct))
-          if (getOption("covr.branch_coverage")) {
-            branch_pct <- covr::percent_coverage(cov, by = "branch")
-            cat(sprintf("Branch coverage: %.2f%%\n", branch_pct))
-          } else {
-            branch_pct <- 100
-          }
+          branch_pct <- covr::percent_coverage(cov, by = "branch")
+          # a package without any `if` or `switch()` has no branches to cover
+          if (is.nan(branch_pct)) branch_pct <- 100
+          cat(sprintf("Branch coverage: %.2f%%\n", branch_pct))
           if (pct < 100 || branch_pct < 100) {
             # list the missed lines and branches of each file
             print(cov, missing = TRUE)
