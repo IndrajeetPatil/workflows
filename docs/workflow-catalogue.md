@@ -35,7 +35,7 @@ presentation cells. `prek` itself remains colorized via the `prek-action` defaul
 | [`pre-commit.yaml`](../.github/workflows/pre-commit.yaml) | Run pre-commit hooks; fails if hooks would modify files | — |
 | [`seo-files.yaml`](../.github/workflows/seo-files.yaml) | Deploy SEO and AI-discovery files (`robots.txt`, `.well-known/llms.txt`) to `gh-pages` after pkgdown build | `package-name` |
 | [`submit-cran.yaml`](../.github/workflows/submit-cran.yaml) | On a release branch, build and submit to CRAN without releasing; on the default branch after merge, rebuild and tag the submitted PR head and create a GitHub Release using the matching `NEWS.md` section without resubmitting | — |
-| [`test-coverage.yaml`](../.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%) + examples/vignettes (enforces 100%) | Optional `CODECOV_TOKEN`; PR uploads tolerate a missing token |
+| [`test-coverage.yaml`](../.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100%; use `branch-coverage: true` to also enforce 100% branch coverage) + examples/vignettes (enforces 100%) | `branch-coverage`; optional `CODECOV_TOKEN`; PR uploads tolerate a missing token |
 
 See [hard-dependency checks](r-packages.md#hard-dependency-checks) for checking
 tools and isolated caches, and [CRAN releases](r-packages.md#cran-releases) for
