@@ -1,0 +1,29 @@
+Use case: infographic-diagram. Asset type: documentation diagram for reusable GitHub Actions workflows. Landscape 3:2, flat canvas warm paper #faf8f4, ink #201d18, muted ink #5d574c, fine hairlines #e3ded2, sparse accent deep teal #14584d for check paths, muted rust #9a3d2e only for failure stops. Fraunces-like serif title and band headings, Hanken-like sans labels, generous whitespace, flat outline icons, thin orthogonal arrows. Match the reference style of flat warm-paper editorial documentation diagrams from indrapatil.com. No shadows, gradients, texture, 3D, cards, boxed panels, emoji, decorative footers, ordinal numbering, or invented statistics.
+
+Title exactly: 'R package quality checks'
+
+Layout: Three horizontal bands separated by fine horizontal hairlines (#e3ded2), each band having its heading and a one-line muted summary on the left, and its unboxed step-by-step flow on the right connected by thin orthogonal teal arrows (#14584d).
+
+Band 1 (top):
+- Left heading: 'Static analysis & hygiene'
+- Left summary: 'Code formatting, package linting, spelling, and link integrity'
+- Right flow:
+  'Formatting & lint' (underneath note: 'air format --check · lintr error on lint') →
+  'Documentation hygiene' (underneath note: 'typos spelling · lychee broken links & anchors') →
+  'Pre-commit hooks' (underneath note: 'Fail-closed if hooks modify files')
+
+Band 2 (middle):
+- Left heading: 'Package checks & isolation'
+- Left summary: 'Cross-platform R CMD check with isolated hard-dependency validation'
+- Right flow:
+  'Multi-OS matrix' (underneath note: 'macOS · Windows · Ubuntu devel, release, oldrel') →
+  'R CMD check' (underneath note: 'Full suite with setup-r-dependencies cache') →
+  'Hard-dependency check' (underneath note: 'PR gate without Suggests · dedicated cache')
+
+Band 3 (bottom):
+- Left heading: 'Execution rigor & coverage'
+- Left summary: 'Zero-warning policy, randomized order, and 100% coverage gates'
+- Right flow:
+  'Strict execution' (underneath note: 'warn = 2L on examples, tests, vignettes & README') →
+  'Randomized tests' (underneath note: 'testthat shuffle order to catch hidden state') →
+  '100% coverage gate' (underneath note: '100% line & branch coverage · examples & vignettes')
