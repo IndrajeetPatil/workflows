@@ -9,35 +9,44 @@ cooldown_days = 0
 [[repos]]
 repo = "https://github.com/rhysd/actionlint"
 rev = "914e7df21a07ef503a81201c76d2b11c789d3fca" # frozen: v1.7.12
-hooks = [{ id = "actionlint" }]
+
+[[repos.hooks]]
+id = "actionlint"
 
 [[repos]]
 repo = "https://github.com/zizmorcore/zizmor-pre-commit"
 rev = "06a39750ec31860bb44f2acf67182c40016cd1e7" # frozen: v1.32.0
+
 # Matches the pedantic audit in security.yml, which CI runs instead.
-hooks = [{ id = "zizmor", args = ["--pedantic"] }]
+[[repos.hooks]]
+id = "zizmor"
+args = ["--pedantic"]
 
 [[repos]]
 repo = "https://github.com/rvben/rumdl-pre-commit"
 rev = "539ea2e1c5a0eb8adeb5fe0b1e2eb66fa5827042" # frozen: v0.3.5
-hooks = [{ id = "rumdl-check" }]
+
+[[repos.hooks]]
+id = "rumdl-check"
 
 [[repos]]
 repo = "https://github.com/crate-ci/typos"
 rev = "276087d9a4f06398b3e04825487805e2d7375888" # frozen: v1.52.2
-hooks = [{ id = "typos" }]
+
+[[repos.hooks]]
+id = "typos"
 
 [[repos]]
 repo = "https://github.com/compilerla/conventional-pre-commit"
 rev = "33b50eb042bee26eac0ee96ad84aa9c1b4dccdd8" # frozen: v4.5.0
-hooks = [
-  # Strict mode also rejects fixup! and merge commit messages.
-  { id = "conventional-pre-commit", stages = [
-    "commit-msg",
-  ], args = [
-    "--strict",
-    "--verbose",
-  ] },
+
+# Strict mode also rejects fixup! and merge commit messages.
+[[repos.hooks]]
+id = "conventional-pre-commit"
+stages = ["commit-msg"]
+args = [
+  "--strict",
+  "--verbose",
 ]
 
 [[repos]]
@@ -70,22 +79,56 @@ types = ["directory"]
 
 [[repos]]
 repo = "builtin"
-hooks = [
-  { id = "trailing-whitespace" },
-  { id = "end-of-file-fixer" },
-  { id = "check-yaml" },
-  { id = "check-toml" },
-  { id = "check-json" },
-  { id = "check-merge-conflict" },
-  { id = "check-case-conflict" },
-  { id = "check-shebang-scripts-are-executable" },
-  { id = "check-executables-have-shebangs" },
-  { id = "check-symlinks" },
-  { id = "destroyed-symlinks" },
-  { id = "check-illegal-windows-names" },
-  { id = "mixed-line-ending" },
-  { id = "check-added-large-files", args = ["--maxkb=1024"] },
-  { id = "detect-private-key" },
-  { id = "fix-byte-order-marker" },
-  { id = "no-commit-to-branch", args = ["--branch=main"] },
-]
+
+[[repos.hooks]]
+id = "trailing-whitespace"
+
+[[repos.hooks]]
+id = "end-of-file-fixer"
+
+[[repos.hooks]]
+id = "check-yaml"
+
+[[repos.hooks]]
+id = "check-toml"
+
+[[repos.hooks]]
+id = "check-json"
+
+[[repos.hooks]]
+id = "check-merge-conflict"
+
+[[repos.hooks]]
+id = "check-case-conflict"
+
+[[repos.hooks]]
+id = "check-shebang-scripts-are-executable"
+
+[[repos.hooks]]
+id = "check-executables-have-shebangs"
+
+[[repos.hooks]]
+id = "check-symlinks"
+
+[[repos.hooks]]
+id = "destroyed-symlinks"
+
+[[repos.hooks]]
+id = "check-illegal-windows-names"
+
+[[repos.hooks]]
+id = "mixed-line-ending"
+
+[[repos.hooks]]
+id = "check-added-large-files"
+args = ["--maxkb=1024"]
+
+[[repos.hooks]]
+id = "detect-private-key"
+
+[[repos.hooks]]
+id = "fix-byte-order-marker"
+
+[[repos.hooks]]
+id = "no-commit-to-branch"
+args = ["--branch=main"]
