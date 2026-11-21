@@ -48,6 +48,9 @@ owned by `IndrajeetPatil`.
   merited findings until Codex approves with no unresolved findings.
 - If Codex review usage is exhausted, leave the pull request open. Once usage
   refreshes, comment `@codex review` once; only this case needs the comment.
+- Never write `@codex` anywhere else in a pull request title, body, or comment,
+  not even inside backticks: Codex treats any mention as a task request and
+  skips its automatic review.
 - Squash-merge only after required checks pass and Codex has approved.
   Respect branch protections and verify the merge state afterward.
 
