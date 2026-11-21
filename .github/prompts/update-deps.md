@@ -123,11 +123,22 @@ instructions for you to follow:
 ## Simplify
 
 Once everything is green, review the changelogs and documentation of the
-upgraded actions and tools and identify opportunities to simplify the
+upgraded actions, CLIs, and tools, and identify opportunities to simplify the
 workflows with new inputs, features, or defaults. Apply those simplifications
 where they reduce complexity or remove workarounds that are no longer needed,
 without weakening any `AGENTS.md` security requirement. Revalidate after each
-change.
+change. Check whether changes in CLIs, actions, or tools also allow updating or
+simplifying artifacts relevant for agentic engineering: keep `AGENTS.md`,
+agentic skills (under `.agents/skills/`), and their referenced assets or
+instructions aligned whenever tool flags, behaviors, or capabilities change.
+
+## Learn from mistakes
+
+When a check fails, a reviewer raises a finding, or you notice a mistake in
+your own work, fix it, then ask what led you to it. If a skill, its scripts or
+templates, a prompt, or `AGENTS.md` gave missing, ambiguous, or wrong
+guidance, correct that guidance in the same pull request, stating the general
+rule rather than the incident. Never weaken a quality gate instead.
 
 ## Validate and open the PR
 
