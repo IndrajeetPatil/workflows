@@ -43,11 +43,16 @@ owned by `IndrajeetPatil`.
 - After opening or updating a pull request, wait for hosted checks. Investigate
   failures and continue until all required checks pass; pending or skipped
   required checks are not success.
-- Request Codex review when it is not automatic. Address merited findings and
-  repeat review until the current head is approved with no unresolved findings.
-  If Codex review usage is exhausted, leave the pull request open.
-- Squash-merge only after required checks pass and Codex approves the current
-  head. Respect branch protections and verify the merge state afterward.
+- Codex reviews every pull request automatically and decides itself whether
+  later pushes need another review, so never comment `@codex review`. Address
+  merited findings until Codex approves with no unresolved findings.
+- If Codex review usage is exhausted, leave the pull request open. Once usage
+  refreshes, comment `@codex review` once; only this case needs the comment.
+- Never write `@codex` anywhere else in a pull request title, body, or comment,
+  not even inside backticks: Codex treats any mention as a task request and
+  skips its automatic review.
+- Squash-merge only after required checks pass and Codex has approved.
+  Respect branch protections and verify the merge state afterward.
 
 ## Security requirements
 
