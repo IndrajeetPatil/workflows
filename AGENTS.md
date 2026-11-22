@@ -161,7 +161,7 @@ repository:
 - Never add agent or tool attribution to commits, PRs, or comments.
 
 - After opening or pushing, wait for hosted CI to finish. Inspect failed jobs,
-  fix the cause, run the local checks (`make check` and `make hooks`), push,
+  fix the cause, run the local checks described under Validation, push,
   and repeat. Skipped, queued, or failing required checks are not success.
 
 - If an automatic AI review (Codex, for the owner) runs on the PR, wait for
