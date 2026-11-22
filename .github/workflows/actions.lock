@@ -11,7 +11,7 @@ workflows:
         - 'actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d'
         - 'actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346'
         - 'actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9'
-        - 'astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2'
+        - 'astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d'
         - 'quarto-dev/quarto-actions@8a96df13519ee81fd526f2dfca5962811136661b'
         - 'r-lib/actions@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05'
     '.github/workflows/build-presentation-r.yaml':
@@ -36,7 +36,7 @@ workflows:
         - 'lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8'
     '.github/workflows/conventional-commits.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
-        - 'astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2'
+        - 'astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d'
     '.github/workflows/lint.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'r-lib/actions@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05'
@@ -54,22 +54,22 @@ workflows:
         - 'j178/prek-action@7b101f8338a08d2bd6fdb3625e4e7692428763a3'
     '.github/workflows/python-benchmarks.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
-        - 'astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2'
-        - 'codspeedhq/action@af75f77f17a054769abefaa42fe8dc2975469b5f'
+        - 'astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d'
+        - 'codspeedhq/action@b1f28b5eccf7cb5bfe6a2a89cb3053eb67f1150c'
     '.github/workflows/python-docs.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346'
         - 'actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9'
-        - 'astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2'
+        - 'astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d'
     '.github/workflows/python-qa.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
-        - 'astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2'
+        - 'astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d'
     '.github/workflows/python-test.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
-        - 'astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2'
+        - 'astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d'
     '.github/workflows/r-benchmarks.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
-        - 'codspeedhq/action@af75f77f17a054769abefaa42fe8dc2975469b5f'
+        - 'codspeedhq/action@b1f28b5eccf7cb5bfe6a2a89cb3053eb67f1150c'
         - 'r-lib/actions@f9a764fea8d5c63df6ef9a5c7795bf7deb5d7e05'
     '.github/workflows/security.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
@@ -144,9 +144,9 @@ dependencies:
         repo_id: 496012378
         uses:
             - 'actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f'
-    'astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2':
-        ref: 'v10.3.3'
-        commit: 'sha1-68559e99cc807c1eb7e9238fd43a15bba460eec2'
+    'astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d':
+        ref: 'v10.4.0'
+        commit: 'sha1-1db35dd8eee11c5894872e0b383ae6c406cf738d'
         owner_id: 115962839
         repo_id: 846733598
     'codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5':
@@ -156,9 +156,9 @@ dependencies:
         repo_id: 200299178
         uses:
             - 'actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd'
-    'codspeedhq/action@af75f77f17a054769abefaa42fe8dc2975469b5f':
-        ref: 'v5.6.3'
-        commit: 'sha1-af75f77f17a054769abefaa42fe8dc2975469b5f'
+    'codspeedhq/action@b1f28b5eccf7cb5bfe6a2a89cb3053eb67f1150c':
+        ref: 'v5.8.0'
+        commit: 'sha1-b1f28b5eccf7cb5bfe6a2a89cb3053eb67f1150c'
         owner_id: 116658140
         repo_id: 561699778
         uses:
