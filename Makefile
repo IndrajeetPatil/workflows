@@ -1,4 +1,4 @@
-ACTIONS_LOCK_VERSION ?= v0.5.0
+ACTIONS_LOCK_VERSION ?= v0.5.1
 
 SHELL := /bin/bash
 .SHELLFLAGS := -eu -o pipefail -c
