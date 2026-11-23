@@ -10,6 +10,7 @@ permissions.
 |----------|-------------|--------|
 | [`python-benchmarks.yaml`](../.github/workflows/python-benchmarks.yaml) | Run CodSpeed CPU simulation benchmarks with OIDC uploads | — |
 | [`python-docs.yaml`](../.github/workflows/python-docs.yaml) | Build and deploy Python package documentation to GitHub Pages | — |
+| [`python-mutation-test.yaml`](../.github/workflows/python-mutation-test.yaml) | Run `make mutation-test` with mutmut and upload the `mutants/` report | — |
 | [`python-qa.yaml`](../.github/workflows/python-qa.yaml) | Code quality checks, including build and test coverage | — |
 | [`python-test.yaml`](../.github/workflows/python-test.yaml) | Run tests across multiple OS and Python versions | — |
 
@@ -29,7 +30,11 @@ Python package workflows enforce quality gates across three stages:
   on macOS and Windows for the latest stable release (3.15). Test execution uses
   locked dependencies (`uv run --locked pytest`), and code quality enforcement
   demands 100% test coverage (`coverage report --fail-under=100`), failing closed
-  if any code branch or line lacks coverage.
+  if any code branch or line lacks coverage. Mutation testing runs the
+  caller's `make mutation-test` target with mutmut and uploads the `mutants/`
+  directory as the `mutmut-report` artifact, even when surviving mutants fail
+  the job; callers trigger it on demand or on a schedule because full runs are
+  slow.
 
 - **Benchmarks and documentation:** CPU simulation benchmarks run via CodSpeed
   under single-threaded execution with short-lived OIDC uploads. Documentation
