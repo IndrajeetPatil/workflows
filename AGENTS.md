@@ -136,7 +136,7 @@ Run these checks before publishing workflow changes:
 prek run --all-files
 actionlint
 gitleaks git --log-opts="--all" --no-banner --redact .
-uvx zizmor@1.32.0 --pedantic .github/workflows/
+uvx zizmor@1.33.1 --pedantic .github/workflows/
 git diff --check
 ```
 
