@@ -51,7 +51,7 @@ jobs:
         run: quarto add https://github.com/mcanouil/quarto-revealjs-a11y/archive/6700ffd9ed11e1475474ab47e7c61580f1f22b9f.zip --no-prompt # 0.3.0
 
       - name: Install RevealJS read-aloud extension
-        run: quarto add https://github.com/IndrajeetPatil/quarto-read-aloud/archive/9ae3a52273436d79b3c1c49b13c1312924eb0431.zip --no-prompt # v0.3.0
+        run: quarto add https://github.com/IndrajeetPatil/quarto-read-aloud/archive/68d867b978fab85cc6b949a8de5306434c16572d.zip --no-prompt # v0.3.1
 
       - name: Render slides
         run: |
