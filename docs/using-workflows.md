@@ -21,20 +21,19 @@ every workflow with zizmor in pedantic mode so future changes cannot silently
 weaken these controls. `prek.yml` runs the repository's own
 [prek](https://prek.j178.dev/) hooks: actionlint, zizmor, Gitleaks, spelling,
 Markdown lint, actions.lock verification, and file hygiene checks. Every other
-repository uses an identical copy of `prek.yml`, so it has no owner guard,
-skips no hooks, and installs Vite+, pnpm, or uv when the repository uses them.
+non-template repository uses an identical copy of `prek.yml`, which skips no
+hooks and installs Vite+, pnpm, or uv when the repository uses them.
 
 ![Security by design: every job starts with the owner guard; actions are SHA-pinned, tokens are read-only by default, checkout credentials are disabled, untrusted inputs are validated, jobs have finite timeouts, and write credentials are isolated to release work. The separate pull-request security gate runs Gitleaks across full history and zizmor in pedantic mode.](figures/security-design.webp)
 
 ## Account restriction
 
-Every reusable workflow job begins with a guard that fails when
-`github.repository_owner` is not `IndrajeetPatil`, before checking out or
-executing caller code. Diagnostic steps that run after failure also require
-that owner. This restricts the caller repository's owner; it does not require
-the PR author or triggering actor to be the account owner. Because the
-workflows are public, another account can invoke them, but its jobs fail at
-the guard before package or deployment work runs.
+Every job begins with a guard that fails when `github.repository_owner` is not
+`IndrajeetPatil`, before checking out or executing caller code. Diagnostic steps
+that run after failure also require that owner. This restricts the caller
+repository's owner; it does not require the PR author or triggering actor to be
+the account owner. Because the workflows are public, another account can invoke
+them, but its jobs fail at the guard before package or deployment work runs.
 
 ## Call a workflow
 

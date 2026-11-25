@@ -1,8 +1,9 @@
 name: prek
 
 # Runs the repository's prek hooks on every pull request. This file is
-# identical in every repository: the hook config alone decides what runs, so
-# a hook that should never run is left out of the config, not skipped here.
+# identical in every non-template repository: the hook config alone decides
+# what runs, so a hook that should never run is left out of the config, not
+# skipped here.
 on:
   pull_request:
     branches: [main]
@@ -21,6 +22,12 @@ jobs:
     timeout-minutes: 20
 
     steps:
+      - name: Restrict to IndrajeetPatil repositories
+        if: github.repository_owner != 'IndrajeetPatil'
+        run: |
+          echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
+          exit 1
+
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
