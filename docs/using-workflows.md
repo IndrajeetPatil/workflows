@@ -19,8 +19,10 @@ The repository's only standalone workflows are
 `main`. `security.yml` scans the complete Git history with Gitleaks and audits
 every workflow with zizmor in pedantic mode so future changes cannot silently
 weaken these controls. `prek.yml` runs the repository's own
-[prek](https://prek.j178.dev/) hooks: actionlint, spelling, Markdown lint, and
-file hygiene checks.
+[prek](https://prek.j178.dev/) hooks: actionlint, zizmor, Gitleaks, spelling,
+Markdown lint, actions.lock verification, and file hygiene checks. It is also
+the reusable prek workflow for every non-template repository; web apps whose
+hooks need their locked dependencies call `prek-web-app.yml` instead.
 
 ![Security by design: every job starts with the owner guard; actions are SHA-pinned, tokens are read-only by default, checkout credentials are disabled, untrusted inputs are validated, jobs have finite timeouts, and write credentials are isolated to release work. The separate pull-request security gate runs Gitleaks across full history and zizmor in pedantic mode.](figures/security-design.webp)
 
@@ -95,7 +97,7 @@ currently include `astral-sh/setup-uv`, `CodSpeedHQ/action`,
 `codecov/codecov-action`, `crate-ci/typos`,
 `JamesIves/github-pages-deploy-action`, `j178/prek-action`,
 `lycheeverse/lychee-action`, `posit-dev/setup-air`,
-`quarto-dev/quarto-actions`, and `r-lib/actions`.
+`quarto-dev/quarto-actions`, `r-lib/actions`, and `voidzero-dev/setup-vp`.
 
 Avoid `secrets: inherit` when a workflow needs only one named secret. Pass that
 secret explicitly so unrelated repository or organisation secrets are not made

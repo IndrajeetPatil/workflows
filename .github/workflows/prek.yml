@@ -1,9 +1,13 @@
 name: prek
 
-# Runs this repository's own prek hooks (prek.toml) on every pull request.
+# Runs the caller's prek hooks: this repository's own on pull requests, and
+# every non-template repository's whose hooks need no project dependencies
+# (web apps call prek-web-app.yml). The hook config alone decides what runs,
+# so a hook that should never run is left out of the config, not skipped here.
 on:
   pull_request:
     branches: [main]
+  workflow_call:
 
 permissions:
   contents: read
@@ -16,7 +20,7 @@ jobs:
   prek:
     name: prek hooks
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Restrict to IndrajeetPatil repositories
@@ -38,8 +42,5 @@ jobs:
           prek-version: latest-known
           extra-args: --all-files --stage pre-commit
         env:
-          # security.yml scans the complete history with Gitleaks and audits
-          # workflows with zizmor; the lock check needs the gh extension.
-          # no-commit-to-branch guards local commits only, so CI never fails
-          # on main if this workflow gains a push trigger.
-          SKIP: gitleaks,zizmor,actions-lock-verify,no-commit-to-branch
+          # Read-only token for hooks that call gh, such as actions.lock checks.
+          GH_TOKEN: ${{ github.token }}

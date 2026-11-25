@@ -15,7 +15,8 @@ owned by `IndrajeetPatil`.
   alerts as "won't fix" with this reason.
 - Keep reusable workflow files limited to `workflow_call`. The repository-local
   `security.yml` and `prek.yml` workflows are the only intentional exceptions
-  and run only for pull requests targeting `main`.
+  and run only for pull requests targeting `main`; `prek.yml` is also
+  reusable.
 - Keep `submit-cran.yaml` two-stage: non-default release branches may submit to
   CRAN but must not create tags or GitHub Releases; the default branch may
   create the release after merge but must not resubmit to CRAN. The release tag,
@@ -23,6 +24,12 @@ owned by `IndrajeetPatil`.
   from unrelated changes later added to `main`. Release notes must copy the
   matching `NEWS.md` section rather than use generated notes.
 - Preserve the owner guard as the first step in every job.
+- Every non-template repository runs its hooks in CI by calling `prek.yml`,
+  or `prek-web-app.yml` when its hooks need the locked web-app dependencies.
+  Neither sets `SKIP`: a hook that should not run is left out of that
+  repository's hook config instead. Keep the two identical apart from the
+  Vite+ step and the web-app variant withholding `GH_TOKEN` from hooks that
+  run project code.
 - Keep the `quarto call axe` accessibility check in both presentation
   workflows on every pull request. It is skipped on pushes because callers'
   default branches accept changes only through pull requests. Retry only
