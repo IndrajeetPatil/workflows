@@ -25,7 +25,8 @@ owned by `IndrajeetPatil`.
 - Preserve the owner guard as the first step in every job.
 - `prek.yml` is the canonical prek workflow, copied verbatim into every
   non-template repository; web apps copy `templates/prek-web-app.yml` as
-  `prek.yml` instead. Keep the two identical apart from the Vite+ step. Neither
+  `prek.yml` instead. Keep the two identical apart from the Vite+ step and the
+  web-app variant withholding `GH_TOKEN` from hooks that run project code. Neither
   sets `SKIP`: a hook that should not run is left out of that repository's
   hook config instead.
 - Keep the `quarto call axe` accessibility check in both presentation
