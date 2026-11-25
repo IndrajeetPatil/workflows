@@ -22,7 +22,11 @@ owned by `IndrajeetPatil`.
   tarball, and NEWS must come from the original submitted pull-request head, not
   from unrelated changes later added to `main`. Release notes must copy the
   matching `NEWS.md` section rather than use generated notes.
-- Preserve the owner guard as the first step in every job.
+- Preserve the owner guard as the first step in every reusable workflow job.
+- `prek.yml` is the canonical prek workflow, copied verbatim into every
+  repository, template repositories included, so it has no owner guard and
+  never sets `SKIP`. A hook that should not run is left out of that
+  repository's hook config instead.
 - Keep the `quarto call axe` accessibility check in both presentation
   workflows on every pull request. It is skipped on pushes because callers'
   default branches accept changes only through pull requests. Retry only

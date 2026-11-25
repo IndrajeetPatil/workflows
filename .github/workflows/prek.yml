@@ -1,6 +1,8 @@
 name: prek
 
-# Runs this repository's own prek hooks (prek.toml) on every pull request.
+# Runs the repository's prek hooks on every pull request. This file is
+# identical in every repository: the hook config alone decides what runs, so
+# a hook that should never run is left out of the config, not skipped here.
 on:
   pull_request:
     branches: [main]
@@ -16,18 +18,36 @@ jobs:
   prek:
     name: prek hooks
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
-      - name: Restrict to IndrajeetPatil repositories
-        if: github.repository_owner != 'IndrajeetPatil'
-        run: |
-          echo "::error::This workflow is private and only available to repositories under IndrajeetPatil."
-          exit 1
-
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+
+      # Hooks that call project tooling need the project's dependencies.
+      - name: Install Vite+ and dependencies
+        if: hashFiles('vite.config.*') != ''
+        uses: voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76 # v1.22.0
+        with:
+          node-version-file: .node-version
+          cache: true
+          cache-toolchain: true
+          run-install: |
+            args: [--frozen-lockfile]
+
+      - name: Install pnpm
+        if: hashFiles('vite.config.*') == '' && hashFiles('pnpm-lock.yaml') != ''
+        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+
+      - name: Install pnpm dependencies
+        if: hashFiles('vite.config.*') == '' && hashFiles('pnpm-lock.yaml') != ''
+        run: pnpm install --frozen-lockfile
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+        with:
+          enable-cache: false
 
       # A hook that rewrites a file fails the step.
       - name: Run prek hooks
@@ -38,8 +58,5 @@ jobs:
           prek-version: latest-known
           extra-args: --all-files --stage pre-commit
         env:
-          # security.yml scans the complete history with Gitleaks and audits
-          # workflows with zizmor; the lock check needs the gh extension.
-          # no-commit-to-branch guards local commits only, so CI never fails
-          # on main if this workflow gains a push trigger.
-          SKIP: gitleaks,zizmor,actions-lock-verify,no-commit-to-branch
+          # Read-only token for hooks that call gh, such as actions.lock checks.
+          GH_TOKEN: ${{ github.token }}
