@@ -12,7 +12,6 @@ rev = "914e7df21a07ef503a81201c76d2b11c789d3fca" # frozen: v1.7.12
 
 [[repos.hooks]]
 id = "actionlint"
-files = "^(\\.github/workflows|templates)/.+\\.ya?ml$"
 
 [[repos]]
 repo = "https://github.com/zizmorcore/zizmor-pre-commit"
@@ -22,7 +21,6 @@ rev = "c7d31dc612dffdd4d3b2f2b88b9660d3ab057ee8" # frozen: v1.33.1
 [[repos.hooks]]
 id = "zizmor"
 args = ["--pedantic"]
-files = "^(\\.github/workflows|templates)/.+\\.ya?ml$"
 
 [[repos]]
 repo = "https://github.com/rvben/rumdl-pre-commit"

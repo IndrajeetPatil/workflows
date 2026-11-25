@@ -144,6 +144,8 @@ regardless of the underlying tech stack.
 |----------|-------------|--------|
 | [`check-link-rot.yaml`](../.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
 | [`conventional-commits.yaml`](../.github/workflows/conventional-commits.yaml) | Check every pull-request commit and the pull-request title (the default squash subject) against [Conventional Commits](https://www.conventionalcommits.org) | `extra-types` |
+| [`prek.yml`](../.github/workflows/prek.yml) | Run every [prek](https://prek.j178.dev/) hook in the caller's config, with no `SKIP` list; fails if a hook would modify files | — |
+| [`prek-web-app.yml`](../.github/workflows/prek-web-app.yml) | `prek.yml` for web apps: installs Vite+ and the locked dependencies first, and passes hooks no GitHub token | — |
 
 Trigger `conventional-commits.yaml` on the `edited` pull-request activity as
 well, so a corrected title is re-checked. Keep it in its own caller workflow:

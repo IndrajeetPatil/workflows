@@ -1,13 +1,13 @@
 name: prek
 
-# Runs the repository's prek hooks on every pull request. This file is
-# identical in every non-template repository whose hooks need no project
-# dependencies; web apps use templates/prek-web-app.yml. The hook config alone
-# decides what runs, so a hook that should never run is left out of the
-# config, not skipped here.
+# Runs the caller's prek hooks: this repository's own on pull requests, and
+# every non-template repository's whose hooks need no project dependencies
+# (web apps call prek-web-app.yml). The hook config alone decides what runs,
+# so a hook that should never run is left out of the config, not skipped here.
 on:
   pull_request:
     branches: [main]
+  workflow_call:
 
 permissions:
   contents: read

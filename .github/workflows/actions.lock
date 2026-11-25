@@ -49,6 +49,10 @@ workflows:
     '.github/workflows/pre-commit.yaml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'j178/prek-action@7b101f8338a08d2bd6fdb3625e4e7692428763a3'
+    '.github/workflows/prek-web-app.yml':
+        - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
+        - 'j178/prek-action@7b101f8338a08d2bd6fdb3625e4e7692428763a3'
+        - 'voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76'
     '.github/workflows/prek.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'j178/prek-action@7b101f8338a08d2bd6fdb3625e4e7692428763a3'
@@ -218,6 +222,11 @@ dependencies:
             - 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a'
             - 'quarto-dev/quarto-actions@8a96df13519ee81fd526f2dfca5962811136661b'
             - 'r-lib/actions@9f58233a78a2a9fd874714be10f8bba627233339'
+    'voidzero-dev/setup-vp@cab1ab9eaff52d4857875f4f2c016e36af8f2c76':
+        ref: 'v1.22.0'
+        commit: 'sha1-cab1ab9eaff52d4857875f4f2c016e36af8f2c76'
+        owner_id: 149750581
+        repo_id: 1133264797
     'zizmorcore/zizmor-action@1b4550e929643b8b26a62303c6bd64814271a4f1':
         ref: 'v0.9.2'
         commit: 'sha1-1b4550e929643b8b26a62303c6bd64814271a4f1'

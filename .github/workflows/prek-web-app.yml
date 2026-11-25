@@ -1,13 +1,11 @@
 name: prek
 
-# Runs the repository's prek hooks on every pull request, after installing
-# Vite+ and the locked dependencies. Copied as .github/workflows/prek.yml,
-# identical in every non-template web-app repository. The hook config alone
-# decides what runs, so a hook that should never run is left out of the
-# config, not skipped here.
+# Runs the caller's prek hooks after installing Vite+ and the locked
+# dependencies, for non-template web apps whose hooks run project tooling.
+# The hook config alone decides what runs, so a hook that should never run is
+# left out of the config, not skipped here.
 on:
-  pull_request:
-    branches: [main]
+  workflow_call:
 
 permissions:
   contents: read
