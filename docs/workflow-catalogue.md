@@ -60,7 +60,6 @@ presentation cells. `prek` itself remains colorized via the `prek-action` defaul
 | [`check-extra.yaml`](../.github/workflows/check-extra.yaml) | Parallel extra checks: no-warnings, random test order, README render | `extra-packages` |
 | [`lint.yaml`](../.github/workflows/lint.yaml) | Package linting with `{lintr}` | — |
 | [`pkgdown.yaml`](../.github/workflows/pkgdown.yaml) | Build and deploy a pkgdown site with verified canonical URLs; use `no-suggests: true` for a hard-deps-only CI check | `no-suggests` |
-| [`pre-commit.yaml`](../.github/workflows/pre-commit.yaml) | Run pre-commit hooks; fails if hooks would modify files | — |
 | [`seo-files.yaml`](../.github/workflows/seo-files.yaml) | Deploy SEO and AI-discovery files (`robots.txt`, `.well-known/llms.txt`) to `gh-pages` after pkgdown build | `package-name` |
 | [`submit-cran.yaml`](../.github/workflows/submit-cran.yaml) | On a release branch, build and submit to CRAN without releasing; on the default branch after merge, rebuild and tag the submitted PR head and create a GitHub Release using the matching `NEWS.md` section without resubmitting | — |
 | [`test-coverage.yaml`](../.github/workflows/test-coverage.yaml) | Two parallel coverage jobs: unit tests (enforces 100% line and branch coverage) + examples/vignettes (enforces 100%) | Optional `CODECOV_TOKEN`; PR uploads tolerate a missing token |
