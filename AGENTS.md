@@ -24,8 +24,10 @@ owned by `IndrajeetPatil`.
   matching `NEWS.md` section rather than use generated notes.
 - Preserve the owner guard as the first step in every job.
 - `prek.yml` is the canonical prek workflow, copied verbatim into every
-  non-template repository. It never sets `SKIP`: a hook that should not run is
-  left out of that repository's hook config instead.
+  non-template repository; web apps copy `templates/prek-web-app.yml` as
+  `prek.yml` instead. Keep the two identical apart from the Vite+ step. Neither
+  sets `SKIP`: a hook that should not run is left out of that repository's
+  hook config instead.
 - Keep the `quarto call axe` accessibility check in both presentation
   workflows on every pull request. It is skipped on pushes because callers'
   default branches accept changes only through pull requests. Retry only

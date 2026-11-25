@@ -22,7 +22,9 @@ weaken these controls. `prek.yml` runs the repository's own
 [prek](https://prek.j178.dev/) hooks: actionlint, zizmor, Gitleaks, spelling,
 Markdown lint, actions.lock verification, and file hygiene checks. Every other
 non-template repository uses an identical copy of `prek.yml`, which skips no
-hooks and installs Vite+, pnpm, or uv when the repository uses them.
+hooks. Web apps whose hooks need their dependencies copy
+[`templates/prek-web-app.yml`](../templates/prek-web-app.yml) as `prek.yml`
+instead; it also installs Vite+ and the locked dependencies.
 
 ![Security by design: every job starts with the owner guard; actions are SHA-pinned, tokens are read-only by default, checkout credentials are disabled, untrusted inputs are validated, jobs have finite timeouts, and write credentials are isolated to release work. The separate pull-request security gate runs Gitleaks across full history and zizmor in pedantic mode.](figures/security-design.webp)
 
@@ -97,7 +99,9 @@ currently include `astral-sh/setup-uv`, `CodSpeedHQ/action`,
 `codecov/codecov-action`, `crate-ci/typos`,
 `JamesIves/github-pages-deploy-action`, `j178/prek-action`,
 `lycheeverse/lychee-action`, `posit-dev/setup-air`,
-`quarto-dev/quarto-actions`, and `r-lib/actions`.
+`quarto-dev/quarto-actions`, and `r-lib/actions`. Web-app repositories that
+copy [`prek-web-app.yml`](../templates/prek-web-app.yml) also need
+`voidzero-dev/setup-vp`.
 
 Avoid `secrets: inherit` when a workflow needs only one named secret. Pass that
 secret explicitly so unrelated repository or organisation secrets are not made
