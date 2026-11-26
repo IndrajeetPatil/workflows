@@ -10,11 +10,11 @@ permissions.
 |----------|-------------|--------|
 | [`python-benchmarks.yaml`](../.github/workflows/python-benchmarks.yaml) | Run CodSpeed CPU simulation benchmarks with OIDC uploads | — |
 | [`python-docs.yaml`](../.github/workflows/python-docs.yaml) | Build and deploy Python package documentation to GitHub Pages | — |
-| [`python-mutation-test.yaml`](../.github/workflows/python-mutation-test.yaml) | Run `make mutation-test` with mutmut and upload the `mutants/` report | — |
+| [`python-mutation-test.yaml`](../.github/workflows/python-mutation-test.yaml) | Run `make mutation-test` with mutmut and upload the `mutants/` report even when mutation testing fails | — |
 | [`python-qa.yaml`](../.github/workflows/python-qa.yaml) | Code quality checks, including build and test coverage | — |
 | [`python-test.yaml`](../.github/workflows/python-test.yaml) | Run tests across multiple OS and Python versions | — |
 
-![Python package quality checks: three bands covering environment and static checks, cross-platform test matrix with strict coverage gates, and CPU benchmarks with documentation deployment.](figures/python-package-quality-checks.webp)
+![Python package quality checks: three bands covering environment and static checks, cross-platform tests with coverage and mutation analysis, and CPU benchmarks with documentation deployment.](figures/python-package-quality-checks.webp)
 
 Python package workflows enforce quality gates across three stages:
 
@@ -54,7 +54,7 @@ presentation cells. `prek` itself remains colorized via the `prek-action` defaul
 | Workflow | Description | Inputs / secrets |
 |----------|-------------|--------|
 | [`check-docs.yaml`](../.github/workflows/check-docs.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) and spelling using [typos](https://github.com/crate-ci/typos) | — |
-| [`check-formatting.yaml`](../.github/workflows/check-formatting.yaml) | Check and suggest code formatting using [air](https://github.com/posit-dev/air) | — |
+| [`check-formatting.yaml`](../.github/workflows/check-formatting.yaml) | Check R code formatting using [air](https://github.com/posit-dev/air) | — |
 | [`r-benchmarks.yaml`](../.github/workflows/r-benchmarks.yaml) | Benchmark main R API functions with the CodSpeed executable harness and OIDC uploads | — |
 | [`R-CMD-check.yaml`](../.github/workflows/R-CMD-check.yaml) | R CMD check across multiple operating systems plus current, devel, and previous R releases; use `hard: true` for a hard-deps-only CI check (PR-only) | `hard` |
 | [`check-extra.yaml`](../.github/workflows/check-extra.yaml) | Parallel extra checks: no-warnings, random test order, README render | `extra-packages` |
@@ -170,3 +170,47 @@ jobs:
   conventional-commits:
     uses: IndrajeetPatil/workflows/.github/workflows/conventional-commits.yaml@main
 ```
+
+### Documentation checks
+
+Use `check-docs.yaml` for repositories whose documentation is Markdown, HTML,
+or reStructuredText. It runs lychee across those files and checks spelling with
+typos. Use `check-link-rot.yaml` for repositories with additional plain-text or
+Quarto sources: it checks Markdown, HTML, reStructuredText, Quarto, and text
+files, including link fragments, and requires HTTPS where available. Both
+checks fail when a broken link or spelling issue is found.
+
+`check-formatting.yaml` is for R repositories. It installs air and checks the
+repository with `air format . --check`; it does not rewrite files.
+
+### Web application checks
+
+`e2e.yaml` installs the Node version from `.node-version`, installs the frozen
+Vite+ lockfile dependencies and Playwright browsers, then runs
+`vp exec playwright test`. It uploads the Playwright report for 14 days, even
+when tests fail, so callers can inspect the failure details.
+
+`lighthouse.yaml` installs the same Vite+ toolchain and executes a caller
+command, defaulting to `vp run lighthouse`. The `command` input can select a
+project-specific audit command; `reports-path` selects the report directory
+and defaults to `.lighthouseci/`. The workflow uploads that directory as a
+14-day artifact and fails if the directory contains no files.
+
+Both web workflows cancel an older run for the same workflow and ref when a
+newer run starts. Their caller should provide `.node-version`, a frozen lock
+file, and the corresponding project scripts and Playwright configuration.
+
+### Commit messages and hooks
+
+`conventional-commits.yaml` validates every commit in the pull request and its
+title, which becomes the default squash commit subject. Call it on `edited` as
+well as the usual pull-request activities so title-only changes are checked
+without rerunning heavier jobs. The optional `extra-types` input accepts
+space-separated lowercase commit types in addition to the standard types.
+
+Use `prek.yml` when hooks need no project dependencies. It runs all configured
+hooks and fails if a hook modifies a file; leave hooks that should not run out
+of the caller's hook configuration instead of using `SKIP`. Web applications
+whose hooks execute project code or require locked dependencies should use
+`prek-web-app.yml`. That variant installs Vite+ and the frozen dependencies
+first and withholds the GitHub token from hooks.
