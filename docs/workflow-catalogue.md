@@ -143,6 +143,7 @@ regardless of the underlying tech stack.
 |----------|-------------|--------|
 | [`check-link-rot.yaml`](../.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
 | [`conventional-commits.yaml`](../.github/workflows/conventional-commits.yaml) | Check every pull-request commit and the pull-request title (the default squash subject) against [Conventional Commits](https://www.conventionalcommits.org) | `extra-types` |
+| [`e2e.yaml`](../.github/workflows/e2e.yaml) | Run Playwright end-to-end tests against web apps with Vite+, uploading report artifacts | — |
 | [`lighthouse.yaml`](../.github/workflows/lighthouse.yaml) | Run Lighthouse CI audits against web apps with Vite+, uploading report artifacts | `command`, `reports-path` |
 | [`prek.yml`](../.github/workflows/prek.yml) | Run every [prek](https://prek.j178.dev/) hook in the caller's config, with no `SKIP` list; fails if a hook would modify files | — |
 | [`prek-web-app.yml`](../.github/workflows/prek-web-app.yml) | `prek.yml` for web apps: installs Vite+ and the locked dependencies first, and passes hooks no GitHub token | — |
