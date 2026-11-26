@@ -135,18 +135,14 @@ Both presentation workflows enforce quality gates across three stages:
 
 ## Generic
 
-Generic workflows are language-agnostic and provide utility across diverse
-types of projects, ensuring high code quality and robust documentation
-regardless of the underlying tech stack.
+Generic workflows provide repository checks that apply across language and
+project types.
 
 | Workflow | Description | Inputs / secrets |
 |----------|-------------|--------|
 | [`check-link-rot.yaml`](../.github/workflows/check-link-rot.yaml) | Check for broken links using [lychee](https://github.com/lycheeverse/lychee) | — |
 | [`conventional-commits.yaml`](../.github/workflows/conventional-commits.yaml) | Check every pull-request commit and the pull-request title (the default squash subject) against [Conventional Commits](https://www.conventionalcommits.org) | `extra-types` |
-| [`e2e.yaml`](../.github/workflows/e2e.yaml) | Run Playwright end-to-end tests against web apps with Vite+, uploading report artifacts | — |
-| [`lighthouse.yaml`](../.github/workflows/lighthouse.yaml) | Run Lighthouse CI audits against web apps with Vite+, uploading report artifacts | `command`, `reports-path` |
 | [`prek.yml`](../.github/workflows/prek.yml) | Run every [prek](https://prek.j178.dev/) hook in the caller's config, with no `SKIP` list; fails if a hook would modify files | — |
-| [`prek-web-app.yml`](../.github/workflows/prek-web-app.yml) | `prek.yml` for web apps: installs Vite+ and the locked dependencies first, and passes hooks no GitHub token | — |
 
 Trigger `conventional-commits.yaml` on the `edited` pull-request activity as
 well, so a corrected title is re-checked. Keep it in its own caller workflow:
@@ -183,7 +179,25 @@ checks fail when a broken link or spelling issue is found.
 `check-formatting.yaml` is for R repositories. It installs air and checks the
 repository with `air format . --check`; it does not rewrite files.
 
-### Web application checks
+### Commit messages and hooks
+
+`conventional-commits.yaml` validates every commit in the pull request and its
+title, which becomes the default squash commit subject. Call it on `edited` as
+well as the usual pull-request activities so title-only changes are checked
+without rerunning heavier jobs. The optional `extra-types` input accepts
+space-separated lowercase commit types in addition to the standard types.
+
+Use `prek.yml` when hooks need no project dependencies. It runs all configured
+hooks and fails if a hook modifies a file; leave hooks that should not run out
+of the caller's hook configuration instead of using `SKIP`.
+
+## Web applications
+
+| Workflow | Description | Inputs / secrets |
+|----------|-------------|--------|
+| [`e2e.yaml`](../.github/workflows/e2e.yaml) | Run Playwright end-to-end tests with Vite+ and upload the report | — |
+| [`lighthouse.yaml`](../.github/workflows/lighthouse.yaml) | Run Lighthouse CI audits with Vite+ and upload reports | `command`, `reports-path` |
+| [`prek-web-app.yml`](../.github/workflows/prek-web-app.yml) | Run prek hooks after installing Vite+ and locked dependencies, without passing hooks a GitHub token | — |
 
 `e2e.yaml` installs the Node version from `.node-version`, installs the frozen
 Vite+ lockfile dependencies and Playwright browsers, then runs
@@ -200,17 +214,6 @@ Both web workflows cancel an older run for the same workflow and ref when a
 newer run starts. Their caller should provide `.node-version`, a frozen lock
 file, and the corresponding project scripts and Playwright configuration.
 
-### Commit messages and hooks
-
-`conventional-commits.yaml` validates every commit in the pull request and its
-title, which becomes the default squash commit subject. Call it on `edited` as
-well as the usual pull-request activities so title-only changes are checked
-without rerunning heavier jobs. The optional `extra-types` input accepts
-space-separated lowercase commit types in addition to the standard types.
-
-Use `prek.yml` when hooks need no project dependencies. It runs all configured
-hooks and fails if a hook modifies a file; leave hooks that should not run out
-of the caller's hook configuration instead of using `SKIP`. Web applications
-whose hooks execute project code or require locked dependencies should use
-`prek-web-app.yml`. That variant installs Vite+ and the frozen dependencies
-first and withholds the GitHub token from hooks.
+Web applications whose hooks execute project code or require locked
+dependencies should use `prek-web-app.yml`. It installs Vite+ and the frozen
+dependencies first and withholds the GitHub token from hooks.

@@ -7,18 +7,20 @@
 > intended as general-purpose templates. This documentation describes how the
 > owner's repositories use them; it is not a set-up guide for other users.
 
-Reusable workflows for package checks, documentation, and presentations.
+Reusable workflows for package checks, documentation, web applications, and
+presentations.
 Callers reference `@main`; changes here reach them after a pull request
 passes this repository's security and prek checks.
 
-![Four workflow families in equal panels: the Python logo beside a test flask, an R inside a package box, a presentation slide with a chart, and a chain link beside a two-node workflow.](docs/figures/workflow-families.webp)
+![Five workflow families in equal panels: Python package checks, R package checks, Quarto presentations, generic link and commit checks, and web application testing and audits.](docs/figures/workflow-families.webp)
 
 | Family | Purpose | Workflows |
 | --- | --- | --- |
 | Python | Package tests, mutation testing, quality checks, and docs | [Python catalogue](docs/workflow-catalogue.md#python-packages) |
 | R | Package checks, benchmarks, sites, coverage, and releases | [R catalogue](docs/workflow-catalogue.md#r-packages) |
 | Presentations | Quarto RevealJS builds and deployment | [Presentation catalogue](docs/workflow-catalogue.md#presentations) |
-| Generic | Link and commit checks | [Generic catalogue](docs/workflow-catalogue.md#generic) |
+| Generic | Documentation, link, commit, and hook checks | [Generic catalogue](docs/workflow-catalogue.md#generic) |
+| Web applications | Playwright end-to-end tests, Lighthouse audits, and Vite+ hooks | [Web application catalogue](docs/workflow-catalogue.md#web-applications) |
 
 ## Quick start
 
