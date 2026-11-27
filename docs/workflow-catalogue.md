@@ -197,8 +197,20 @@ of the caller's hook configuration instead of using `SKIP`.
 | Workflow | Description | Inputs / secrets |
 |----------|-------------|--------|
 | [`e2e.yaml`](../.github/workflows/e2e.yaml) | Run Playwright end-to-end tests with Vite+ and upload the report | — |
+| [`frontend-qa.yaml`](../.github/workflows/frontend-qa.yaml) | Run frontend quality checks with Vite+ (lint, types, CSS quality, tests, fallow, and build) | `install-chromium` |
 | [`lighthouse.yaml`](../.github/workflows/lighthouse.yaml) | Run Lighthouse CI audits with Vite+ and upload reports | `command`, `reports-path` |
 | [`prek-web-app.yml`](../.github/workflows/prek-web-app.yml) | Run prek hooks after installing Vite+ and locked dependencies, without passing hooks a GitHub token | — |
+
+`frontend-qa.yaml` installs the Node version from `.node-version` and frozen
+dependencies with Vite+, then executes the frontend quality gates with readable
+step logs: file naming (`ls-lint`, when configured), format and linting
+(`vp check --deny-warnings --continue-on-error`), TypeScript project reference
+typechecks (`vp exec tsc -b`), CSS code quality (`vp run css-quality`), Vitest unit
+tests and coverage (`vp test --coverage`), Fallow dead code and complexity analysis
+(`vp run fallow`), type coverage (when configured in `package.json`), and the
+production build (`vp build --logLevel warn`). When `install-chromium` is `true`,
+it provisions Playwright Chromium before testing for suites using Vitest Browser
+Mode. On failure, coverage reports and test results are uploaded for 14 days.
 
 `e2e.yaml` installs the Node version from `.node-version`, installs the frozen
 Vite+ lockfile dependencies and Playwright browsers, then runs
