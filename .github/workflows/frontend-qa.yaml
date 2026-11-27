@@ -52,7 +52,7 @@ jobs:
         run: vp check --deny-warnings --continue-on-error
 
       - name: Type checking
-        run: vp exec tsc -b
+        run: vp exec tsc --build
 
       - name: CSS code quality
         run: vp run css-quality
@@ -65,7 +65,7 @@ jobs:
 
       - name: Type coverage
         run: |
-          if node -e 'const p = JSON.parse(require("fs").readFileSync("package.json","utf8")); process.exit(p.scripts && p.scripts["type-coverage"] ? 0 : 1)'; then
+          if node --eval 'const p = JSON.parse(require("fs").readFileSync("package.json","utf8")); process.exit(p.scripts && p.scripts["type-coverage"] ? 0 : 1)'; then
             vp run type-coverage
           fi
 
