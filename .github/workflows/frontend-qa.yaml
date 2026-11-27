@@ -2,11 +2,6 @@ name: frontend-qa
 
 on:
   workflow_call:
-    inputs:
-      install-chromium:
-        description: "Install Playwright Chromium for browser-based unit tests."
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -44,20 +39,19 @@ jobs:
           run-install: |
             args: [--frozen-lockfile, --, --loglevel=warn]
 
-      - name: Install Playwright Chromium (browser tests)
-        if: inputs.install-chromium
+      - name: Install browser for testing
         run: vp exec playwright install --with-deps chromium
 
-      - name: File naming (ls-lint)
+      - name: File naming
         run: |
           if [ -f .ls-lint.yml ] || [ -f .ls-lint.yaml ] || [ -f .ls-lint.json ]; then
             vp run file-naming
           fi
 
-      - name: Format, lint, and types
+      - name: Format and lint
         run: vp check --deny-warnings --continue-on-error
 
-      - name: Types (tsc)
+      - name: Type checking
         run: vp exec tsc -b
 
       - name: CSS code quality
@@ -66,7 +60,7 @@ jobs:
       - name: Unit tests and coverage
         run: vp test --coverage
 
-      - name: Fallow (dead code, duplication, complexity)
+      - name: Dead code, duplication, and complexity
         run: vp run fallow
 
       - name: Type coverage
