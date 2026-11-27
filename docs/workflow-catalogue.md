@@ -204,7 +204,7 @@ of the caller's hook configuration instead of using `SKIP`.
 `frontend-qa.yaml` installs the Node version from `.node-version` and frozen
 dependencies with Vite+, installs Playwright Chromium for browser-based tests,
 then executes the frontend quality gates with readable step logs: file naming
-(`ls-lint`, when configured), format and linting, TypeScript project reference
+(`ls-lint`), format and linting, TypeScript project reference
 type checking, CSS code quality, Vitest unit tests and coverage, Fallow dead
 code and complexity analysis, type coverage (when configured in `package.json`),
 and the production build. On failure, coverage reports and test results are

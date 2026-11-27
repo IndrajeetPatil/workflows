@@ -43,10 +43,7 @@ jobs:
         run: vp exec playwright install --with-deps chromium
 
       - name: File naming
-        run: |
-          if [ -f .ls-lint.yml ] || [ -f .ls-lint.yaml ] || [ -f .ls-lint.json ]; then
-            vp run file-naming
-          fi
+        run: vp run file-naming
 
       - name: Format and lint
         run: vp check --deny-warnings --continue-on-error
