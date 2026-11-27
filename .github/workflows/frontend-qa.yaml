@@ -2,11 +2,6 @@ name: frontend-qa
 
 on:
   workflow_call:
-    inputs:
-      install-chromium:
-        description: "Install Playwright Chromium for browser-based unit tests."
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -44,21 +39,17 @@ jobs:
           run-install: |
             args: [--frozen-lockfile, --, --loglevel=warn]
 
-      - name: Install Playwright Chromium (browser tests)
-        if: inputs.install-chromium
+      - name: Install browser for testing
         run: vp exec playwright install --with-deps chromium
 
-      - name: File naming (ls-lint)
-        run: |
-          if [ -f .ls-lint.yml ] || [ -f .ls-lint.yaml ] || [ -f .ls-lint.json ]; then
-            vp run file-naming
-          fi
+      - name: File naming
+        run: vp run file-naming
 
-      - name: Format, lint, and types
+      - name: Format and lint
         run: vp check --deny-warnings --continue-on-error
 
-      - name: Types (tsc)
-        run: vp exec tsc -b
+      - name: Type checking
+        run: vp exec tsc --build
 
       - name: CSS code quality
         run: vp run css-quality
@@ -66,12 +57,12 @@ jobs:
       - name: Unit tests and coverage
         run: vp test --coverage
 
-      - name: Fallow (dead code, duplication, complexity)
+      - name: Dead code, duplication, and complexity
         run: vp run fallow
 
       - name: Type coverage
         run: |
-          if node -e 'const p = JSON.parse(require("fs").readFileSync("package.json","utf8")); process.exit(p.scripts && p.scripts["type-coverage"] ? 0 : 1)'; then
+          if node --eval 'const p = JSON.parse(require("fs").readFileSync("package.json","utf8")); process.exit(p.scripts && p.scripts["type-coverage"] ? 0 : 1)'; then
             vp run type-coverage
           fi
 
