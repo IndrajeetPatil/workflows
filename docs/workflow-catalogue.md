@@ -26,8 +26,9 @@ Python package workflows enforce quality gates across three stages:
   build hygiene.
 
 - **Test matrix and coverage gates:** tests run across a full operating system
-  matrix on Ubuntu across all supported Python versions (3.12 through 3.15), and
-  on macOS and Windows for the latest stable release (3.15). Test execution uses
+  matrix on Ubuntu across all supported Python versions (3.12 through 3.15,
+  including free-threaded 3.15t), and on macOS and Windows for the latest stable
+  release (3.15). Test execution uses
   locked dependencies (`uv run --locked pytest`), and code quality enforcement
   demands 100% test coverage (`coverage report --fail-under=100`), failing closed
   if any code branch or line lacks coverage. Mutation testing runs the
