@@ -23,6 +23,8 @@ jobs:
             python-version: "3.14"
           - os: ubuntu-latest
             python-version: "3.15"
+          - os: ubuntu-latest
+            python-version: "3.15t"
           # Only the latest stable Python release runs on all three platforms.
           - os: macos-latest
             python-version: "3.15"
